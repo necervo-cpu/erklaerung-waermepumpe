@@ -908,6 +908,11 @@ svg#circuitSvg {
   color: var(--ink);
 }
 
+.t-acc-panel.is-open,
+.t-acc-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
 .fault-acc-body {
   padding: 0 18px 18px;
   display: flex;
@@ -1242,7 +1247,12 @@ svg#circuitSvg {
   .fault-card-btn {
     padding: 14px;
   }
-  .fault-acc-body {
+  .t-acc-panel.is-open,
+.t-acc-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.fault-acc-body {
     padding: 12px 14px 14px;
   }
   .thermo-grid {

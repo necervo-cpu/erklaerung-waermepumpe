@@ -57,10 +57,14 @@ function createAccordionPanel(
 ): HTMLDivElement {
   const panel = document.createElement("div");
   panel.className = `t-acc-panel${isOpen ? " is-open" : ""}`;
+  panel.setAttribute("data-open", String(isOpen));
   panel.id = `fault-panel-${fault.id}`;
 
   const inner = document.createElement("div");
-  inner.className = "t-acc-panel-inner fault-acc-body";
+  inner.className = "t-acc-panel-inner";
+
+  const body = document.createElement("div");
+  body.className = "fault-acc-body";
 
   // Schweregrad-Zeile
   const severityRow = document.createElement("div");
@@ -69,22 +73,22 @@ function createAccordionPanel(
   severityBadge.className = "fault-code tabular";
   severityBadge.textContent = fault.severity;
   severityRow.appendChild(severityBadge);
-  inner.appendChild(severityRow);
+  body.appendChild(severityRow);
 
   // Symptome
   const symptomsP = document.createElement("p");
   symptomsP.className = "section-text";
   symptomsP.textContent = fault.symptoms;
-  inner.appendChild(createFaultSection("Typische Symptome", symptomsP));
+  body.appendChild(createFaultSection("Typische Symptome", symptomsP));
 
   // Ursachen & Prüfschritte
-  inner.appendChild(
+  body.appendChild(
     createFaultSection(
       "Mögliche Ursachen (Praxis-Checkliste)",
       createBulletList(fault.causes)
     )
   );
-  inner.appendChild(
+  body.appendChild(
     createFaultSection(
       "Messbild & Prüfschritte",
       createBulletList(fault.checks),
@@ -112,9 +116,10 @@ function createAccordionPanel(
   });
 
   if (actionsWrap.childElementCount > 0) {
-    inner.appendChild(actionsWrap);
+    body.appendChild(actionsWrap);
   }
 
+  inner.appendChild(body);
   panel.appendChild(inner);
   return panel;
 }
