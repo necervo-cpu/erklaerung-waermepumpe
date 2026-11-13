@@ -10,7 +10,7 @@
 
 export type ThemeMode = "auto" | "light" | "dark";
 
-const THEME_STORAGE_KEY = "app-theme-mode";
+const THEME_STORAGE_KEY = "app-theme-mode-v2";
 
 /**
  * Prüft per Type-Guard, ob ein unbekannter Wert ein gültiger ThemeMode ist.

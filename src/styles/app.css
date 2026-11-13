@@ -764,23 +764,19 @@ svg#circuitSvg {
   overflow-wrap: break-word;
 }
 
-.comp-card-meta {
+.comp-metric-pill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.comp-metric-pill {
+  align-self: flex-start;
+  margin-top: 4px;
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--muted);
   background: var(--input-bg);
   border: 1px solid var(--border-subtle);
-  padding: 4px 9px;
+  padding: 3px 9px;
   border-radius: 999px;
-  max-width: 155px;
-  text-align: right;
+  max-width: 100%;
   overflow-wrap: break-word;
 }
 

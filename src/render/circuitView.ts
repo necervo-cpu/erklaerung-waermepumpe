@@ -204,28 +204,23 @@ export function renderComponentDetail(
     previewEl.className = "comp-card-preview";
     previewEl.textContent = comp.location[sysKey];
 
-    textCol.appendChild(titleEl);
-    textCol.appendChild(previewEl);
-    lead.appendChild(badge);
-    lead.appendChild(textCol);
-
-    const metaRight = document.createElement("div");
-    metaRight.className = "comp-card-meta";
-
     const metricPill = document.createElement("span");
     metricPill.className = "comp-metric-pill tabular";
     metricPill.textContent = thermo.outMetric;
+
+    textCol.appendChild(titleEl);
+    textCol.appendChild(previewEl);
+    textCol.appendChild(metricPill);
+    lead.appendChild(badge);
+    lead.appendChild(textCol);
 
     const chevron = document.createElement("span");
     chevron.className = "comp-chevron";
     chevron.setAttribute("aria-hidden", "true");
     chevron.appendChild(createChevronSvg());
 
-    metaRight.appendChild(metricPill);
-    metaRight.appendChild(chevron);
-
     topRow.appendChild(lead);
-    topRow.appendChild(metaRight);
+    topRow.appendChild(chevron);
     trigger.appendChild(topRow);
     trigger.addEventListener("click", () => onSelectComponent(comp.id));
 
