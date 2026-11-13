@@ -1,8 +1,9 @@
 /**
  * Modul: Fachdaten der Fehleranalyse & Störungsbilder (faults.ts)
- * Zweck: Praxiserprobte Fehlerdiagnose für Wärmepumpen (HD-, ND-, Heißgas- und Abtaufehler).
+ * Zweck: Praxiserprobte Fehlerdiagnose für Wärmepumpen (HD-, ND-, Heißgas- und Abtaufehler
+ *   sowie typische Alltagsstörungen: Taktung, Heizstab-Dauerbetrieb und Durchflussstörungen).
  * Verantwortlichkeit: Enthält Ursachen, Symptome, Prüfschritte und Zuordnungen zu Kältekreiskomponenten.
- * Sicherheitsrelevanz: Fachlich abgesicherte Diagnoseanleitungen zur Vermeidung von Verdichterschäden.
+ * Sicherheitsrelevanz: Fachlich abgesicherte Diagnoseanleitungen zur Vermeidung von Verdichterschäden und Effizienzverlusten.
  */
 
 import type { FaultData } from "../types/circuit";
@@ -92,5 +93,71 @@ export const FAULTS: readonly FaultData[] = [
       "Mindestvolumenstrom während der Kreislaufumkehr sicherstellen (alle Ventile/Pufferkreis prüfen)."
     ],
     relatedComponents: [1, 5, 3]
+  },
+  {
+    id: "cycling",
+    code: "Taktung",
+    title: "Häufiges Takten (Kurzzeitbetrieb)",
+    severity: "Verschleiß & Effizienzverlust",
+    preview: "Verdichter schaltet ständig ein und aus, erreicht keine stabilen Laufzeiten.",
+    symptoms:
+      "Ständige Verdichterstarts innerhalb weniger Minuten, extrem kurze Laufzeiten (< 10–15 Minuten pro Takt), drastisch erhöhter mechanischer Verschleiß, unruhige Raumtemperaturen und spürbarer Einbruch der Jahresarbeitszahl (JAZ).",
+    causes: [
+      "Einzelraumregler (ERR) bzw. Thermostatventile abgedreht oder gedrosselt (Mindestvolumenstrom bricht weg).",
+      "Fehlender oder mangelhafter hydraulischer Abgleich im Heizsystem.",
+      "Zu geringes wirksames Heizungswasservolumen (fehlender oder zu kleiner Pufferspeicher / Reihenrücklaufspeicher).",
+      "Wärmepumpe für das Gebäude stark überdimensioniert (minimale Modulationsgrenze des Inverters liegt über der Heizlast).",
+      "Zu kleine Schalthysterese (Einschalt- bzw. Ausschaltschwelle im Regler zu eng parametriert)."
+    ],
+    checks: [
+      "Verdichterstarts und mittlere Laufzeit pro Start in der Wärmepumpensteuerung auslesen (Sollwert: > 20–30 min/Takt, < 15–20 Starts/Tag).",
+      "Thermostatventile testweise vollständig öffnen, um vollen Anlagendurchfluss freizugeben.",
+      "Spreizung (ΔT) und tatsächlichen Volumenstrom (l/min) während des Betriebs mit den Hersteller-Mindestwerten abgleichen."
+    ],
+    relatedComponents: [2, 3]
+  },
+  {
+    id: "heater",
+    code: "Heizstab-Aktiv",
+    title: "Zu hohe Stromkosten / Heizstab-Dauerbetrieb",
+    severity: "Hoher Stromverbrauch / JAZ-Einbruch",
+    preview: "Elektrischer Heizstab schaltet unbemerkt zu früh oder dauerhaft zu.",
+    symptoms:
+      "Unerwartet hohe Stromrechnung, drastischer Einbruch der Jahresarbeitszahl (JAZ). Heizstab-Symbol in der Fachanzeige leuchtet auch bei milden Plustemperaturen dauerhaft oder sehr häufig.",
+    causes: [
+      "Heizkurve zu steil eingestellt: Wärmepumpe kann die geforderte hohe Vorlauftemperatur verdichterseitig nicht mehr allein erreichen.",
+      "Bivalenzpunkt im Regler zu hoch parametriert (z. B. bereits bei +5 °C statt -5 °C bis -7 °C).",
+      "Freigabestufe / Verzögerungszeit des elektrischen Zuheizers (Heizstabs) falsch oder zu kurz parametriert.",
+      "Dauerhafte Warmwasser-Zirkulation ohne Zeitfenster (Zirkulationspumpe kühlt den Speicher permanent aus)."
+    ],
+    checks: [
+      "Betriebsstunden und Schaltimpulse des elektrischen Heizstabs in der Reglerstatistik auslesen.",
+      "Soll-Vorlauftemperatur und Heizkurven-Neigung prüfen sowie stufenweise absenken (z. B. auf 35 °C bei FBH bzw. 45–50 °C bei Radiatoren).",
+      "Bivalenztemperatur und Hysteresen in den Fachhandwerker-Einstellungen kontrollieren.",
+      "Laufzeiten der Warmwasser-Zirkulationspumpe zeitlich auf Bedarfszeiten (z. B. morgens/abends) begrenzen."
+    ],
+    relatedComponents: [3, 2]
+  },
+  {
+    id: "flow",
+    code: "Durchflussfehler",
+    title: "Durchflussstörung / Luft & Schlamm",
+    severity: "Volumenstrom blockiert",
+    preview: "Zu geringer Heizwasser-Durchfluss führt zu Störabschaltung oder ungleichmäßiger Erwärmung.",
+    symptoms:
+      "Durchflussfehler (z. B. Fehlercode Durchflusssensor / Strömungswächter) im Display, Heizkörper oder Fußbodenheizkreise bleiben kalt, gluckernde Strömungsgeräusche, häufige Hochdruckabschaltungen beim Start des Verdichters.",
+    causes: [
+      "Schmutzfänger oder Magnetitschlammabscheider im Rücklauf mit Partikeln / Magnetit zugesetzt.",
+      "Luftpolster im Plattenwärmetauscher oder in den oberen Verteilerebenen des Heizkreises.",
+      "Zu geringer Anlagendruck durch Druckverlust oder defektes / druckloses Membran-Druckausdehnungsgefäß (MAG).",
+      "Heizkreispumpe schwergängig, defekt oder auf zu geringer fester Drehzahlstufe arretiert."
+    ],
+    checks: [
+      "Anlagendruck manometerseitig im kalten und warmen Zustand prüfen (Sollwert meist 1,5–2,0 bar).",
+      "Magnetit- und Schlammabscheider fachgerecht abschiebern, spülen und Siebe reinigen.",
+      "Heizkreis und Plattenwärmetauscher über Schnellentlüfter gründlich entlüften.",
+      "Pumpen-Durchflusswert in der Regelung (l/min bzw. m³/h) ablesen und mit dem Mindestvolumenstrom der Wärmepumpe vergleichen."
+    ],
+    relatedComponents: [3, 9]
   }
 ];

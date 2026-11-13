@@ -26,6 +26,7 @@ import {
   renderFaultsView,
   type FaultsDomElements
 } from "./render/faultsView";
+import { renderNiceToKnowView } from "./render/niceToKnowView";
 
 /**
  * Typsicherer DOM-Helper, der ein Element anfordert oder einen aussagekräftigen Fehler wirft.
@@ -94,21 +95,29 @@ const faultsElements: FaultsDomElements = {
 // Globale Layout-Elemente
 const viewCircuit = requireElement<HTMLElement>("#viewCircuit");
 const viewFaults = requireElement<HTMLElement>("#viewFaults");
+const viewNiceToKnow = requireElement<HTMLElement>("#viewNiceToKnow");
 const btnViewCircuit = requireElement<HTMLButtonElement>("#btnViewCircuit");
 const btnViewFaults = requireElement<HTMLButtonElement>("#btnViewFaults");
+const btnViewNiceToKnow = requireElement<HTMLButtonElement>("#btnViewNiceToKnow");
+const niceGrid = requireElement<HTMLElement>("#niceGrid");
 const btnThemeToggle = requireElement<HTMLButtonElement>("#btnThemeToggle");
 const themeIconLabel = requireElement<HTMLElement>("#themeIconLabel");
 
 /**
- * Aktualisiert die Ansichtsauswahl (Kältekreis vs. Störungsbilder).
+ * Aktualisiert die Ansichtsauswahl (Kältekreis vs. Störungsbilder vs. Nice to Know).
  */
 function renderViewSwitcher(): void {
   const isCircuit = state.view === "circuit";
+  const isFaults = state.view === "faults";
+  const isNice = state.view === "niceToKnow";
+
   btnViewCircuit.setAttribute("aria-selected", String(isCircuit));
-  btnViewFaults.setAttribute("aria-selected", String(!isCircuit));
+  btnViewFaults.setAttribute("aria-selected", String(isFaults));
+  btnViewNiceToKnow.setAttribute("aria-selected", String(isNice));
 
   viewCircuit.classList.toggle("hidden", !isCircuit);
-  viewFaults.classList.toggle("hidden", isCircuit);
+  viewFaults.classList.toggle("hidden", !isFaults);
+  viewNiceToKnow.classList.toggle("hidden", !isNice);
 }
 
 /**
@@ -176,6 +185,8 @@ function handleSetView(view: ViewType): void {
       handleSelectFault,
       handleJumpToComponent
     );
+  } else if (view === "niceToKnow") {
+    renderNiceToKnowView(niceGrid);
   }
 }
 
@@ -190,6 +201,7 @@ circuitElements.btnSplit.addEventListener("click", () => handleSetSystem("split"
 // Ansichts-Tabs
 btnViewCircuit.addEventListener("click", () => handleSetView("circuit"));
 btnViewFaults.addEventListener("click", () => handleSetView("faults"));
+btnViewNiceToKnow.addEventListener("click", () => handleSetView("niceToKnow"));
 
 // 3-Stufen-Theme-Umschalter mit .t-icon-swap
 btnThemeToggle.addEventListener("click", () => {
@@ -222,3 +234,4 @@ renderFaultsView(
   handleSelectFault,
   handleJumpToComponent
 );
+renderNiceToKnowView(niceGrid);

@@ -9,6 +9,7 @@
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { COMPONENTS } from "../src/data/components";
 import { FAULTS } from "../src/data/faults";
+import { NICE_TO_KNOW } from "../src/data/niceToKnow";
 import { SYSTEMS } from "../src/data/systems";
 import {
   cycleThemeMode,
@@ -187,11 +188,19 @@ describe("Bauteildaten-Integrität (components.ts)", () => {
 });
 
 describe("Störungsbilder-Integrität (faults.ts)", () => {
-  it("definiert exakt 4 praxisrelevante Störungsfälle", () => {
-    expect(FAULTS).toHaveLength(4);
+  it("definiert exakt 7 praxisrelevante Störungsfälle", () => {
+    expect(FAULTS).toHaveLength(7);
 
     const faultIds = FAULTS.map((f) => f.id);
-    expect(faultIds).toEqual(["hd", "nd", "hotgas", "ice"]);
+    expect(faultIds).toEqual([
+      "hd",
+      "nd",
+      "hotgas",
+      "ice",
+      "cycling",
+      "heater",
+      "flow"
+    ]);
   });
 
   it("stellt sicher, dass alle verknüpften Komponenten existieren", () => {
@@ -208,6 +217,40 @@ describe("Störungsbilder-Integrität (faults.ts)", () => {
       for (const componentId of fault.relatedComponents) {
         expect(validComponentIds.has(componentId)).toBe(true);
       }
+    }
+  });
+});
+
+describe("Wissenskarten-Integrität (niceToKnow.ts)", () => {
+  it("definiert exakt 7 fachlich präzise Wissenskarten", () => {
+    expect(NICE_TO_KNOW).toHaveLength(7);
+
+    const ids = NICE_TO_KNOW.map((item) => item.id);
+    const uniqueIds = new Set(ids);
+    expect(uniqueIds.size).toBe(7);
+    expect(ids).toEqual([
+      "cop-jaz",
+      "heating-curve",
+      "bivalence",
+      "defrost",
+      "refrigerants",
+      "acoustics",
+      "hot-water"
+    ]);
+  });
+
+  it("enthält vollständige, aussagekräftige Daten ohne Platzhalter", () => {
+    for (const item of NICE_TO_KNOW) {
+      expect(item.id).toBeTruthy();
+      expect(item.category).toBeTruthy();
+      expect(item.title).toBeTruthy();
+      expect(item.badge).toBeTruthy();
+      expect(item.summary.length).toBeGreaterThan(20);
+      expect(item.keyFacts.length).toBeGreaterThanOrEqual(3);
+      for (const fact of item.keyFacts) {
+        expect(fact.length).toBeGreaterThan(15);
+      }
+      expect(item.proTip.length).toBeGreaterThan(20);
     }
   });
 });

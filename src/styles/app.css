@@ -847,6 +847,147 @@ svg#circuitSvg {
   color: #ffffff;
 }
 
+/* ==========================================================================
+   Wissensbereich: Nice to Know
+   ========================================================================== */
+.nice-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.nice-header-banner {
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: var(--radius-card);
+}
+
+.nice-header-copy {
+  min-width: 0;
+}
+
+.nice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 14px;
+  min-width: 0;
+}
+
+.nice-card {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  border-radius: var(--radius-card);
+  transition: transform var(--dur-fast) ease, border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+}
+
+.nice-card:hover {
+  border-color: var(--brand-accent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.nice-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.nice-category {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-accent-text);
+}
+
+.nice-badge {
+  font-size: 0.70rem;
+  font-weight: 650;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--tile);
+  color: var(--brand-accent-text);
+  border: 1px solid var(--border-subtle);
+}
+
+.nice-title {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 650;
+  color: var(--ink);
+  line-height: 1.32;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.nice-summary {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.45;
+  overflow-wrap: break-word;
+}
+
+.nice-facts-ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 0.83rem;
+  line-height: 1.42;
+}
+
+.nice-fact-item {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.nice-tip {
+  margin-top: auto;
+  background: var(--tile);
+  border-left: 3px solid var(--brand-accent);
+  border-radius: var(--radius-sub);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nice-tip-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  color: var(--brand-accent-text);
+}
+
+.nice-tip-icon {
+  font-size: 0.90rem;
+  line-height: 1;
+}
+
+.nice-tip-label {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.nice-tip-text {
+  margin: 0;
+  font-size: 0.80rem;
+  color: var(--ink);
+  line-height: 1.38;
+  overflow-wrap: break-word;
+}
+
 .hidden {
   display: none !important;
 }

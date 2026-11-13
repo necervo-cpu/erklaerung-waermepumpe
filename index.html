@@ -84,6 +84,16 @@
           >
             Fehleranalyse
           </button>
+          <button
+            type="button"
+            class="segmented-btn press-btn"
+            data-view="niceToKnow"
+            role="tab"
+            aria-selected="false"
+            id="btnViewNiceToKnow"
+          >
+            Nice to Know
+          </button>
         </div>
 
         <!-- 3-Stufen-Theme-Button (Auto / Hell / Dunkel) mit .t-icon-swap -->
@@ -440,6 +450,21 @@
 
         <div id="faultActions" class="fault-actions"></div>
       </article>
+    </section>
+
+    <!-- ANSICHT 3: NICE TO KNOW -->
+    <section id="viewNiceToKnow" class="nice-layout hidden" aria-label="Wissenswertes rund um die Wärmepumpe">
+      <div class="nice-header-banner liquid-glass-card">
+        <div class="nice-header-copy">
+          <p class="detail-kicker" style="color:var(--brand-accent);">Fachwissen &amp; Praxis-Tipps</p>
+          <h2 class="detail-title">Wissenswertes rund um Kältekreis &amp; Wärmepumpe</h2>
+          <p class="section-text" style="margin-top:4px;">
+            Thermodynamische Zusammenhänge, effiziente Betriebsführung, Hydraulik-Regeln und Akustik-Hinweise praxisnah aufbereitet.
+          </p>
+        </div>
+      </div>
+
+      <div id="niceGrid" class="nice-grid"></div>
     </section>
   </div>
 

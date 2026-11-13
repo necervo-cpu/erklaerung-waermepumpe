@@ -8,7 +8,7 @@
 
 export type SystemType = "monoblock" | "split";
 
-export type ViewType = "circuit" | "faults";
+export type ViewType = "circuit" | "faults" | "niceToKnow";
 
 /**
  * Thermodynamische Zustandsgrößen an Ein- und Austritt einer Kältekreiskomponente.
@@ -71,6 +71,19 @@ export interface FaultData {
   readonly causes: readonly string[];
   readonly checks: readonly string[];
   readonly relatedComponents: readonly number[];
+}
+
+/**
+ * Fachdaten einer Wissenskarte für den Bereich „Nice to Know“.
+ */
+export interface NiceToKnowItem {
+  readonly id: string;
+  readonly category: string;
+  readonly title: string;
+  readonly badge: string;
+  readonly summary: string;
+  readonly keyFacts: readonly string[];
+  readonly proTip: string;
 }
 
 /**
