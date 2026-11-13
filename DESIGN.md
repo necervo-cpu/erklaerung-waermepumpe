@@ -29,10 +29,10 @@
 - **Sekundärtext (`--muted`):** `#515154`
 
 ### Oberflächen & Glas-Schichten (Dunkel-Modus)
-- **Basis-Hintergrund (`--bg`):** `#0D0D0F`
-- **Glas-Karte (`--glass`):** `rgba(28, 28, 32, 0.68)`
-- **Hero- / Dock-Glas (`--glass-hero`):** `rgba(18, 18, 22, 0.82)`
-- **Eingabefeld / Sub-Well (`--input-bg`):** `rgba(18, 18, 22, 0.65)`
+- **Basis-Hintergrund (`--bg`):** `#000000` (reines OLED-Schwarz)
+- **Glas-Karte (`--glass`):** `rgba(28, 28, 30, 0.90)`
+- **Hero- / Dock-Glas (`--glass-hero`):** `rgba(20, 20, 22, 0.94)`
+- **Eingabefeld / Sub-Well (`--input-bg`):** `rgba(44, 44, 46, 0.72)`
 - **Primärtext (`--ink`):** `#F5F5F7`
 - **Sekundärtext (`--muted`):** `#A1A1A6`
 

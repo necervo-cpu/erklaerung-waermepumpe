@@ -21,15 +21,15 @@ export function isValidThemeMode(value: unknown): value is ThemeMode {
 
 /**
  * Liest den gespeicherten Darstellungsmodus aus localStorage.
- * Fällt bei deaktiviertem Storage (z. B. iOS Privatmodus) oder ungültigem Wert sicher auf 'auto' zurück.
+ * Fällt bei deaktiviertem Storage (z. B. iOS Privatmodus) oder Erstaufruf sicher auf 'dark' (#000000) zurück.
  */
 export function getStoredThemeMode(): ThemeMode {
   try {
     const raw = window.localStorage.getItem(THEME_STORAGE_KEY);
-    return isValidThemeMode(raw) ? raw : "auto";
+    return isValidThemeMode(raw) ? raw : "dark";
   } catch {
     // Im iOS Safari Privatmodus oder bei restriktiver CSP auf Fallback zurückfallen
-    return "auto";
+    return "dark";
   }
 }
 

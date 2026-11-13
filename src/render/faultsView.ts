@@ -124,6 +124,21 @@ function createAccordionPanel(
   return panel;
 }
 
+interface FaultVisualStyle {
+  readonly icon: string;
+  readonly bg: string;
+}
+
+const FAULT_VISUAL_MAP: Record<string, FaultVisualStyle> = {
+  hd_alarm: { icon: "!", bg: "linear-gradient(135deg, #FF6961, #FF3B30)" },
+  nd_alarm: { icon: "❄", bg: "linear-gradient(135deg, #5AC8FA, #007AFF)" },
+  superheat_high: { icon: "♨", bg: "linear-gradient(135deg, #FF7CA2, #FF2D55)" },
+  icing_evaporator: { icon: "❄", bg: "linear-gradient(135deg, #64D2FF, #32ADE6)" },
+  liquid_slugging: { icon: "⚙", bg: "linear-gradient(135deg, #FFB340, #FF9500)" },
+  subcooling_low: { icon: "⚡", bg: "linear-gradient(135deg, #FFD426, #E09F00)" },
+  water_flow_low: { icon: "≈", bg: "linear-gradient(135deg, #4CD964, #28CD41)" }
+};
+
 /**
  * Rendert alle Störungsbilder als aufklappbare Liquid-Glass-Accordion-Karten.
  */
@@ -135,9 +150,13 @@ export function renderFaultsView(
 ): void {
   const cards: HTMLDivElement[] = FAULTS.map((fault) => {
     const isOpen = fault.id === state.faultId;
+    const visual = FAULT_VISUAL_MAP[fault.id] ?? {
+      icon: "!",
+      bg: "linear-gradient(135deg, #FF6961, #FF3B30)"
+    };
 
     const card = document.createElement("div");
-    card.className = `liquid-glass-card fault-accordion-card${isOpen ? " is-open" : ""}`;
+    card.className = `fault-accordion-card${isOpen ? " is-open" : ""}`;
 
     const trigger = document.createElement("button");
     trigger.type = "button";
@@ -145,13 +164,35 @@ export function renderFaultsView(
     trigger.setAttribute("aria-expanded", String(isOpen));
     trigger.setAttribute("aria-controls", `fault-panel-${fault.id}`);
 
-    // Kopfzeile mit Titel, Fehlercode und Aufklapp-Pfeil
+    // Kopfzeile mit rundem iOS-Icon-Badge, Titel, Fehlercode und Aufklapp-Pfeil
     const topRow = document.createElement("div");
     topRow.className = "fault-card-top";
+
+    const leftGroup = document.createElement("div");
+    leftGroup.className = "fault-card-lead";
+
+    const iconBadge = document.createElement("span");
+    iconBadge.className = "fault-icon-badge";
+    iconBadge.style.background = visual.bg;
+    iconBadge.setAttribute("aria-hidden", "true");
+    iconBadge.textContent = visual.icon;
+
+    const textCol = document.createElement("div");
+    textCol.className = "fault-card-textcol";
 
     const titleEl = document.createElement("h3");
     titleEl.className = "fault-card-title";
     titleEl.textContent = fault.title;
+
+    const previewEl = document.createElement("p");
+    previewEl.className = "fault-card-preview";
+    previewEl.textContent = fault.preview;
+
+    textCol.appendChild(titleEl);
+    textCol.appendChild(previewEl);
+
+    leftGroup.appendChild(iconBadge);
+    leftGroup.appendChild(textCol);
 
     const rightGroup = document.createElement("div");
     rightGroup.className = "fault-card-meta";
@@ -168,15 +209,10 @@ export function renderFaultsView(
     rightGroup.appendChild(codeBadge);
     rightGroup.appendChild(chevron);
 
-    topRow.appendChild(titleEl);
+    topRow.appendChild(leftGroup);
     topRow.appendChild(rightGroup);
 
-    const previewEl = document.createElement("p");
-    previewEl.className = "fault-card-preview";
-    previewEl.textContent = fault.preview;
-
     trigger.appendChild(topRow);
-    trigger.appendChild(previewEl);
     trigger.addEventListener("click", () => onSelectFault(fault.id));
 
     card.appendChild(trigger);

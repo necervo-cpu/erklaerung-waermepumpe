@@ -65,13 +65,19 @@ function hexToRgba(hex: string, alpha: number): string {
 }
 
 /**
- * Weist einem Zustands-Chip Farbe, Hintergrund und Rahmen zu.
+ * Weist einem Zustands-Chip und seiner umschließenden Thermo-Kachel Farbe und sanften iOS-Gradient zu.
  */
 function applyChipStyle(chipEl: HTMLElement, text: string, hexColor: string): void {
   chipEl.textContent = text;
   chipEl.style.color = hexColor;
-  chipEl.style.background = hexToRgba(hexColor, 0.16);
-  chipEl.style.border = `1px solid ${hexToRgba(hexColor, 0.36)}`;
+  chipEl.style.background = hexToRgba(hexColor, 0.18);
+  chipEl.style.border = `1px solid ${hexToRgba(hexColor, 0.38)}`;
+
+  const boxEl = chipEl.closest<HTMLElement>(".thermo-box");
+  if (boxEl) {
+    boxEl.style.background = `linear-gradient(135deg, ${hexToRgba(hexColor, 0.2)}, ${hexToRgba(hexColor, 0.05)})`;
+    boxEl.style.borderColor = hexToRgba(hexColor, 0.32);
+  }
 }
 
 /**

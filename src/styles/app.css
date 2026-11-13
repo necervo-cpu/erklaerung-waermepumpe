@@ -717,7 +717,7 @@ svg#circuitSvg {
   width: 22px;
   height: 22px;
   font-size: 0.95rem;
-  color: var(--muted);
+  color: var(--brand-accent);
   flex-shrink: 0;
   transition: transform var(--dur-normal) var(--ease-spring), color var(--dur-fast) ease;
 }
@@ -914,19 +914,65 @@ svg#circuitSvg {
 .fault-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
   min-width: 0;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--ios-shadow);
+  overflow: hidden;
 }
 
 .fault-accordion-card {
-  border-radius: var(--radius-card);
+  position: relative;
   overflow: hidden;
-  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+  transition: background var(--dur-fast) ease;
+}
+
+.fault-accordion-card + .fault-accordion-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 66px;
+  right: 18px;
+  height: 1px;
+  background: var(--border-subtle);
+  pointer-events: none;
 }
 
 .fault-accordion-card.is-open {
-  border-color: rgba(255, 59, 48, 0.55);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 59, 48, 0.05);
+}
+
+.fault-card-lead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.fault-icon-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.fault-card-textcol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
 }
 
 .fault-card-btn {
@@ -1126,6 +1172,27 @@ svg#circuitSvg {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+}
+
+.nice-cat-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.nice-icon-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
 }
 
 .nice-category {

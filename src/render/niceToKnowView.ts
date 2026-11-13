@@ -8,27 +8,50 @@
 import { NICE_TO_KNOW } from "../data/niceToKnow";
 import type { NiceToKnowItem } from "../types/circuit";
 
+const NICE_CATEGORY_PALETTE: ReadonlyArray<{ icon: string; bg: string; tint: string }> = [
+  { icon: "★", bg: "linear-gradient(135deg, #60B5FF, #007AFF)", tint: "rgba(0, 122, 255, 0.14)" },
+  { icon: "⚡", bg: "linear-gradient(135deg, #FFB340, #FF9500)", tint: "rgba(255, 149, 0, 0.14)" },
+  { icon: "✓", bg: "linear-gradient(135deg, #4CD964, #28CD41)", tint: "rgba(52, 199, 89, 0.14)" },
+  { icon: "♨", bg: "linear-gradient(135deg, #F58E89, #FF3B30)", tint: "rgba(255, 59, 48, 0.14)" },
+  { icon: "❄", bg: "linear-gradient(135deg, #64D2FF, #32ADE6)", tint: "rgba(50, 173, 230, 0.14)" },
+  { icon: "⚙", bg: "linear-gradient(135deg, #BF5AF2, #8944AB)", tint: "rgba(175, 82, 222, 0.14)" }
+];
+
 /**
  * Erzeugt eine einzelne semantische Wissenskarte für das Grid.
  */
-function createNiceCard(item: NiceToKnowItem): HTMLElement {
+function createNiceCard(item: NiceToKnowItem, index: number): HTMLElement {
+  const palette = NICE_CATEGORY_PALETTE[index % NICE_CATEGORY_PALETTE.length]!;
   const card = document.createElement("article");
   card.className = "liquid-glass-card nice-card";
+  card.style.backgroundImage = `linear-gradient(135deg, ${palette.tint}, transparent 58%)`;
   card.setAttribute("aria-labelledby", `nice-title-${item.id}`);
 
-  // Obere Leiste mit Fachkategorie und Badge
+  // Obere Leiste mit rundem iOS-Icon-Badge, Fachkategorie und Badge
   const topRow = document.createElement("div");
   topRow.className = "nice-card-top";
+
+  const catWrap = document.createElement("div");
+  catWrap.className = "nice-cat-wrap";
+
+  const iconDot = document.createElement("span");
+  iconDot.className = "nice-icon-badge";
+  iconDot.style.background = palette.bg;
+  iconDot.setAttribute("aria-hidden", "true");
+  iconDot.textContent = palette.icon;
 
   const categoryEl = document.createElement("span");
   categoryEl.className = "nice-category";
   categoryEl.textContent = item.category;
 
+  catWrap.appendChild(iconDot);
+  catWrap.appendChild(categoryEl);
+
   const badgeEl = document.createElement("span");
   badgeEl.className = "nice-badge tabular";
   badgeEl.textContent = item.badge;
 
-  topRow.appendChild(categoryEl);
+  topRow.appendChild(catWrap);
   topRow.appendChild(badgeEl);
   card.appendChild(topRow);
 
@@ -91,6 +114,6 @@ function createNiceCard(item: NiceToKnowItem): HTMLElement {
  * Rendert das gesamte Wissens-Grid vollständig ohne innerHTML.
  */
 export function renderNiceToKnowView(container: HTMLElement): void {
-  const cards = NICE_TO_KNOW.map((item) => createNiceCard(item));
+  const cards = NICE_TO_KNOW.map((item, idx) => createNiceCard(item, idx));
   container.replaceChildren(...cards);
 }
