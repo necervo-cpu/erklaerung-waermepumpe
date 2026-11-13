@@ -106,6 +106,8 @@ html {
   overscroll-behavior-y: none;
   background: var(--bg);
   height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -124,6 +126,7 @@ body {
   background: transparent;
   color: var(--ink);
   line-height: 1.4;
+  max-width: 100%;
   overflow-x: hidden;
 }
 
@@ -133,12 +136,19 @@ body {
 }
 
 .app-shell {
+  width: 100%;
   max-width: 1440px;
+  min-width: 0;
   margin: 0 auto;
   padding: 16px 20px 28px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.app-shell > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* ==========================================================================
@@ -225,6 +235,8 @@ body {
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .segmented {
@@ -237,6 +249,8 @@ body {
   background: var(--input-bg);
   border: 1px solid var(--border-subtle);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .segmented-btn {
@@ -729,9 +743,10 @@ svg#circuitSvg {
    ========================================================================== */
 .faults-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.45fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.45fr);
   gap: 16px;
   align-items: start;
+  min-width: 0;
 }
 
 .fault-list {
@@ -1007,25 +1022,57 @@ svg#circuitSvg {
 @media (max-width: 680px) {
   .app-shell {
     padding: 10px 12px 24px;
+    gap: 12px;
   }
   .topbar {
     position: static;
     padding: 12px;
+    gap: 10px;
   }
   .controls-row {
     width: 100%;
+    gap: 8px;
   }
   .segmented {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
+    gap: 4px;
   }
   .segmented-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
     font-size: 0.78rem;
-    padding: 6px 8px;
+    padding: 8px 10px;
+  }
+  .theme-toggle-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .schema-card,
+  .detail-card,
+  .fault-detail-card,
+  .nice-card,
+  .nice-header-banner {
+    padding: 14px;
+  }
+  .detail-header,
+  .refrigerant-banner,
+  .nice-header-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .svg-stage {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  svg#circuitSvg {
+    min-width: 560px;
   }
   .thermo-grid {
     grid-template-columns: 1fr;
-  }
-  .refrigerant-banner {
-    flex-direction: column;
   }
 }
