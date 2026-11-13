@@ -43,6 +43,10 @@ export interface CircuitDomElements {
   readonly pipesDefrost: SVGGElement;
   readonly valvePathsHeating: SVGGElement;
   readonly valvePathsDefrost: SVGGElement;
+  readonly comp1Title: SVGTextElement;
+  readonly comp1Sub: SVGTextElement;
+  readonly comp3Title: SVGTextElement;
+  readonly comp3Sub: SVGTextElement;
   readonly svgElement: SVGSVGElement;
 }
 
@@ -75,12 +79,19 @@ export function renderQuickNav(
   state: AppState,
   onSelectComponent: (id: number) => void
 ): void {
+  const isDefrost = state.mode === "defrost";
   const buttons: HTMLButtonElement[] = COMPONENTS.map((comp) => {
+    const labelName =
+      isDefrost && comp.id === 1
+        ? "Verflüssiger (Abtau)"
+        : isDefrost && comp.id === 3
+          ? "Verdampfer (Abtau)"
+          : comp.shortName;
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = `quick-pill press-btn${comp.id === state.componentId ? " is-active" : ""}`;
-    btn.textContent = `${comp.id}. ${comp.shortName}`;
-    btn.setAttribute("aria-label", `Bauteil ${comp.id}: ${comp.shortName}`);
+    btn.textContent = `${comp.id}. ${labelName}`;
+    btn.setAttribute("aria-label", `Bauteil ${comp.id}: ${labelName}`);
     btn.setAttribute("aria-pressed", String(comp.id === state.componentId));
     btn.addEventListener("click", () => onSelectComponent(comp.id));
     return btn;
@@ -117,8 +128,14 @@ export function renderComponentDetail(
   renderQuickNav(elements, state, onSelectComponent);
 
   // Detailtexte befüllen
-  elements.detailKicker.textContent = `Komponente ${comp.id} von 9 · ${sysConfig.refrigerant}`;
-  elements.detailTitle.textContent = comp.name;
+  const isDefrost = state.mode === "defrost";
+  elements.detailKicker.textContent = `Komponente ${comp.id} von 9 · ${sysConfig.refrigerant}${isDefrost ? " · Abtauphase" : ""}`;
+  elements.detailTitle.textContent =
+    isDefrost && comp.id === 1
+      ? "Verflüssiger – Außenluft-WT (Abtauphase)"
+      : isDefrost && comp.id === 3
+        ? "Verdampfer – Platten-WT (Abtauphase)"
+        : comp.name;
   elements.detailLocation.textContent = `Einbauort: ${comp.location[sysKey]}`;
   elements.detailTask.textContent = comp.task;
 
@@ -132,7 +149,6 @@ export function renderComponentDetail(
   elements.outSub.textContent = thermo.outSub;
 
   // Abtauphasen-Hinweis je nach aktivem Betriebsmodus ein-/ausblenden
-  const isDefrost = state.mode === "defrost";
   elements.defrostNoteBox.classList.toggle("hidden", !isDefrost);
   elements.defrostNoteText.textContent = comp.defrostNote;
 
@@ -156,6 +172,17 @@ export function renderOperationMode(
   elements.pipesDefrost.classList.toggle("hidden", !isDefrost);
   elements.valvePathsHeating.classList.toggle("hidden", isDefrost);
   elements.valvePathsDefrost.classList.toggle("hidden", !isDefrost);
+
+  // Im Abtaubetrieb tauschen Außen-Wärmetauscher und Plattenwärmetauscher ihre Rollen
+  elements.comp1Title.textContent = isDefrost ? "Verflüssiger" : "Verdampfer";
+  elements.comp1Sub.textContent = isDefrost
+    ? "Außenluft-WT (taut ab)"
+    : "Außenluft-Wärmetauscher";
+  elements.comp3Title.textContent = isDefrost ? "Verdampfer" : "Verflüssiger";
+  elements.comp3Sub.textContent = isDefrost
+    ? "Platten-WT (Wärmeentzug)"
+    : "Plattenwärmetauscher";
+
   renderComponentDetail(elements, state, onSelectComponent);
 }
 
