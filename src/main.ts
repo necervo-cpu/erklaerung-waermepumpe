@@ -98,6 +98,7 @@ const btnViewNiceToKnow = requireElement<HTMLButtonElement>("#btnViewNiceToKnow"
 const niceGrid = requireElement<HTMLElement>("#niceGrid");
 const btnThemeToggle = requireElement<HTMLButtonElement>("#btnThemeToggle");
 const themeIconLabel = requireElement<HTMLElement>("#themeIconLabel");
+const themeToggleIcon = requireElement<HTMLElement>("#themeToggleIcon");
 const svgStageWrap = requireElement<HTMLElement>("#svgStageWrap");
 const svgStage = requireElement<HTMLElement>("#svgStage");
 
@@ -137,6 +138,7 @@ function renderViewSwitcher(): void {
 function updateThemeButton(mode: ThemeMode): void {
   const label = getThemeModeLabel(mode);
   themeIconLabel.textContent = label;
+  themeToggleIcon.textContent = mode === "auto" ? "◐" : mode === "light" ? "☼" : "☾";
   btnThemeToggle.setAttribute(
     "aria-label",
     `Darstellungsmodus umschalten (aktuell: ${label})`

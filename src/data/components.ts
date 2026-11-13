@@ -21,21 +21,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "Nassdampf",
-        inColor: "#32ADE6",
+        inColor: "aqua",
         inMetric: "ca. 3,1 bar ü · −5 °C",
         inSub: "Siedendes Flüssigkeits-Gas-Gemisch (R290)",
         outState: "Sauggas",
-        outColor: "#007AFF",
+        outColor: "sky",
         outMetric: "ca. 3,0 bar ü · +1 °C",
         outSub: "Gasförmig, ca. 6 K überhitzt"
       },
       split: {
         inState: "Nassdampf",
-        inColor: "#32ADE6",
+        inColor: "aqua",
         inMetric: "ca. 5,8 bar ü · −5 °C",
         inSub: "Siedendes Flüssigkeits-Gas-Gemisch (R32)",
         outState: "Sauggas",
-        outColor: "#007AFF",
+        outColor: "sky",
         outMetric: "ca. 5,7 bar ü · +1 °C",
         outSub: "Gasförmig, ca. 6 K überhitzt"
       }
@@ -59,21 +59,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "Sauggas",
-        inColor: "#007AFF",
+        inColor: "sky",
         inMetric: "ca. 3,0 bar ü · +1 °C",
         inSub: "Niederdruck, rein gasförmig (R290)",
         outState: "Heißgas",
-        outColor: "#FF3B30",
+        outColor: "rose",
         outMetric: "ca. 13,5 bar ü · +68 °C",
         outSub: "Hochdruck, heißes Druckgas"
       },
       split: {
         inState: "Sauggas",
-        inColor: "#007AFF",
+        inColor: "sky",
         inMetric: "ca. 5,7 bar ü · +1 °C",
         inSub: "Niederdruck, rein gasförmig (R32)",
         outState: "Heißgas",
-        outColor: "#FF3B30",
+        outColor: "rose",
         outMetric: "ca. 23,8 bar ü · +78 °C",
         outSub: "Hochdruck, heißes Druckgas (R32 höher)"
       }
@@ -97,21 +97,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "Heißgas",
-        inColor: "#FF3B30",
+        inColor: "rose",
         inMetric: "ca. 13,4 bar ü · +66 °C",
         inSub: "Heißes Druckgas (R290)",
         outState: "Flüssig",
-        outColor: "#FF9500",
+        outColor: "peach",
         outMetric: "ca. 13,3 bar ü · +36 °C",
         outSub: "Flüssig, ca. 4 K unterkühlt (W35)"
       },
       split: {
         inState: "Heißgas",
-        inColor: "#FF3B30",
+        inColor: "rose",
         inMetric: "ca. 23,6 bar ü · +74 °C",
         inSub: "Heißes Druckgas über Split-Leitung (R32)",
         outState: "Flüssig",
-        outColor: "#FF9500",
+        outColor: "peach",
         outMetric: "ca. 23,5 bar ü · +36 °C",
         outSub: "Flüssig, ca. 4 K unterkühlt (W35)"
       }
@@ -135,21 +135,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "Flüssig",
-        inColor: "#FF9500",
+        inColor: "peach",
         inMetric: "ca. 13,2 bar ü · +35 °C",
         inSub: "Hochdruck, blasenfrei flüssig",
         outState: "Nassdampf",
-        outColor: "#32ADE6",
+        outColor: "aqua",
         outMetric: "ca. 3,1 bar ü · −5 °C",
         outSub: "Flashgas + kalte Flüssigkeit"
       },
       split: {
         inState: "Flüssig",
-        inColor: "#FF9500",
+        inColor: "peach",
         inMetric: "ca. 23,4 bar ü · +35 °C",
         inSub: "Hochdruck, blasenfrei flüssig",
         outState: "Nassdampf",
-        outColor: "#32ADE6",
+        outColor: "aqua",
         outMetric: "ca. 5,8 bar ü · −5 °C",
         outSub: "Flashgas + kalte Flüssigkeit"
       }
@@ -173,21 +173,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "HD + ND",
-        inColor: "#FF3B30",
+        inColor: "rose",
         inMetric: "HD ~13,5 bar · ND ~3,0 bar",
         inSub: "Heizbetrieb: Druckgas -> Verflüssiger",
         outState: "Umkehr",
-        outColor: "#007AFF",
+        outColor: "sky",
         outMetric: "Abtauung: 45–120 s",
         outSub: "Heißgas kurzzeitig -> Verdampfer"
       },
       split: {
         inState: "HD + ND",
-        inColor: "#FF3B30",
+        inColor: "rose",
         inMetric: "HD ~23,8 bar · ND ~5,7 bar",
         inSub: "Heizbetrieb: Druckgas -> Inneneinheit",
         outState: "Umkehr",
-        outColor: "#007AFF",
+        outColor: "sky",
         outMetric: "Abtauung: 45–120 s",
         outSub: "Heißgas kurzzeitig -> Verdampfer"
       }
@@ -211,21 +211,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "Flüssig",
-        inColor: "#FF9500",
+        inColor: "peach",
         inMetric: "ca. 13,3 bar ü · +36 °C",
         inSub: "Aus Verflüssiger kommend",
         outState: "Flüssig",
-        outColor: "#FF9500",
+        outColor: "peach",
         outMetric: "ca. 13,3 bar ü · +35,5 °C",
         outSub: "Puffervorrat blasenfrei"
       },
       split: {
         inState: "Flüssig",
-        inColor: "#FF9500",
+        inColor: "peach",
         inMetric: "ca. 23,5 bar ü · +36 °C",
         inSub: "Aus Inneneinheit zurückkommend",
         outState: "Flüssig",
-        outColor: "#FF9500",
+        outColor: "peach",
         outMetric: "ca. 23,4 bar ü · +35 °C",
         outSub: "Puffervorrat für Zusatzfüllmenge"
       }
@@ -249,21 +249,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "Flüssig",
-        inColor: "#FF9500",
+        inColor: "peach",
         inMetric: "ca. 13,2 bar ü · +35,5 °C",
         inSub: "Hochdruck, flüssig",
         outState: "Flüssig",
-        outColor: "#FF9500",
+        outColor: "peach",
         outMetric: "ca. 13,2 bar ü · +35,5 °C",
         outSub: "Kein spürbarer Temperaturabfall"
       },
       split: {
         inState: "Flüssig",
-        inColor: "#FF9500",
+        inColor: "peach",
         inMetric: "ca. 23,4 bar ü · +35 °C",
         inSub: "Hochdruck, flüssig",
         outState: "Flüssig",
-        outColor: "#FF9500",
+        outColor: "peach",
         outMetric: "ca. 23,4 bar ü · +35 °C",
         outSub: "Kein spürbarer Temperaturabfall"
       }
@@ -287,21 +287,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "Flüssig",
-        inColor: "#FF9500",
+        inColor: "peach",
         inMetric: "ca. 13,2 bar ü · +35 °C",
         inSub: "Klar, blasenfrei im Normalbetrieb",
         outState: "Indikator",
-        outColor: "#30D158",
+        outColor: "lime",
         outMetric: "Grün = Trocken",
         outSub: "Gelb/Hell = Feuchtigkeit im Kreis"
       },
       split: {
         inState: "Flüssig",
-        inColor: "#FF9500",
+        inColor: "peach",
         inMetric: "ca. 23,4 bar ü · +35 °C",
         inSub: "Klar, blasenfrei im Normalbetrieb",
         outState: "Indikator",
-        outColor: "#30D158",
+        outColor: "lime",
         outMetric: "Grün = Trocken",
         outSub: "Gelb/Hell = Feuchtigkeit (Evakuierfehler)"
       }
@@ -325,21 +325,21 @@ export const COMPONENTS: readonly ComponentData[] = [
     thermo: {
       monoblock: {
         inState: "ND-Sensor",
-        inColor: "#32ADE6",
+        inColor: "aqua",
         inMetric: "Saug: ca. 3,0 bar ü",
         inSub: "Abschaltung ca. < 0,8 – 1,2 bar ü",
         outState: "HD-Sensor",
-        outColor: "#FF3B30",
+        outColor: "rose",
         outMetric: "Druck: ca. 13,5 bar ü",
         outSub: "HD-Schutzschalter ca. 28 – 30 bar ü"
       },
       split: {
         inState: "ND-Sensor",
-        inColor: "#32ADE6",
+        inColor: "aqua",
         inMetric: "Saug: ca. 5,7 bar ü",
         inSub: "Abschaltung ca. < 2,0 – 2,5 bar ü",
         outState: "HD-Sensor",
-        outColor: "#FF3B30",
+        outColor: "rose",
         outMetric: "Druck: ca. 23,8 bar ü",
         outSub: "HD-Schutzschalter ca. 41 – 43 bar ü"
       }

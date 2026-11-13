@@ -131,13 +131,23 @@ interface FaultVisualStyle {
 }
 
 const FAULT_VISUAL_MAP: Record<string, FaultVisualStyle> = {
-  hd_alarm: { icon: "!", bg: "linear-gradient(135deg, #FF6961, #FF3B30)" },
-  nd_alarm: { icon: "❄", bg: "linear-gradient(135deg, #5AC8FA, #007AFF)" },
-  superheat_high: { icon: "♨", bg: "linear-gradient(135deg, #FF7CA2, #FF2D55)" },
-  icing_evaporator: { icon: "❄", bg: "linear-gradient(135deg, #64D2FF, #32ADE6)" },
-  liquid_slugging: { icon: "⚙", bg: "linear-gradient(135deg, #FFB340, #FF9500)" },
-  subcooling_low: { icon: "⚡", bg: "linear-gradient(135deg, #FFD426, #E09F00)" },
-  water_flow_low: { icon: "≈", bg: "linear-gradient(135deg, #4CD964, #28CD41)" }
+  // Primäre IDs aus data/faults.ts
+  hd: { icon: "!", bg: "var(--gradient-blossom)" },
+  nd: { icon: "❄", bg: "var(--gradient-ocean)" },
+  hotgas: { icon: "♨", bg: "var(--gradient-sorbet)" },
+  ice: { icon: "❄", bg: "var(--gradient-lagoon)" },
+  cycling: { icon: "⚙", bg: "var(--gradient-honey)" },
+  heater: { icon: "⚡", bg: "var(--gradient-spring)" },
+  flow: { icon: "≈", bg: "var(--gradient-meadow)" },
+
+  // Abwärtskompatible Deskriptor-Aliases
+  hd_alarm: { icon: "!", bg: "var(--gradient-blossom)" },
+  nd_alarm: { icon: "❄", bg: "var(--gradient-ocean)" },
+  superheat_high: { icon: "♨", bg: "var(--gradient-sorbet)" },
+  icing_evaporator: { icon: "❄", bg: "var(--gradient-lagoon)" },
+  liquid_slugging: { icon: "⚙", bg: "var(--gradient-honey)" },
+  subcooling_low: { icon: "⚡", bg: "var(--gradient-spring)" },
+  water_flow_low: { icon: "≈", bg: "var(--gradient-meadow)" }
 };
 
 /**
@@ -153,7 +163,7 @@ export function renderFaultsView(
     const isOpen = fault.id === state.faultId;
     const visual = FAULT_VISUAL_MAP[fault.id] ?? {
       icon: "!",
-      bg: "linear-gradient(135deg, #FF6961, #FF3B30)"
+      bg: "var(--gradient-blossom)"
     };
 
     const card = document.createElement("div");

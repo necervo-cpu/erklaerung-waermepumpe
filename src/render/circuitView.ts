@@ -7,7 +7,7 @@
 
 import { COMPONENTS } from "../data/components";
 import { SYSTEMS } from "../data/systems";
-import type { AppState } from "../types/circuit";
+import type { AppState, PaletteColorKey } from "../types/circuit";
 import { createChevronSvg } from "./uiIcons";
 
 export interface CircuitDomElements {
@@ -39,43 +39,30 @@ export interface CircuitDomElements {
   readonly svgElement: SVGSVGElement;
 }
 
-/**
- * Konvertiert einen Hex-Farbcode in einen transparenten RGBA-Farbwert.
- */
-function hexToRgba(hex: string, alpha: number): string {
-  const clean = hex.replace("#", "");
-  const r = parseInt(clean.substring(0, 2), 16) || 0;
-  const g = parseInt(clean.substring(2, 4), 16) || 0;
-  const b = parseInt(clean.substring(4, 6), 16) || 0;
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
 const COMPONENT_BADGE_COLORS: Readonly<Record<number, string>> = {
-  1: "linear-gradient(135deg, #64D2FF, #32ADE6)",
-  2: "linear-gradient(135deg, #FF6961, #FF3B30)",
-  3: "linear-gradient(135deg, #FF8A65, #FF6B35)",
-  4: "linear-gradient(135deg, #FFB340, #FF9500)",
-  5: "linear-gradient(135deg, #BF5AF2, #8944AB)",
-  6: "linear-gradient(135deg, #4CD9C0, #2AC7B8)",
-  7: "linear-gradient(135deg, #4CD964, #28CD41)",
-  8: "linear-gradient(135deg, #60B5FF, #007AFF)",
-  9: "linear-gradient(135deg, #FF7CA2, #FF2D55)"
+  1: "var(--gradient-ocean)",
+  2: "var(--gradient-blossom)",
+  3: "var(--gradient-honey)",
+  4: "var(--gradient-sunrise)",
+  5: "var(--gradient-iris)",
+  6: "var(--gradient-spring)",
+  7: "var(--gradient-meadow)",
+  8: "var(--gradient-lagoon)",
+  9: "var(--gradient-dusk)"
 };
 
 /**
- * Erzeugt eine Thermo-Box (Eintritt oder Austritt) mit iOS-Gradient-Schimmer.
+ * Erzeugt eine Thermo-Box (Eintritt oder Austritt) mit semantischem Pastell-Styling nach FARBPALETTE.md.
  */
 function createThermoBox(
   direction: string,
   stateLabel: string,
-  hexColor: string,
+  color: PaletteColorKey,
   metric: string,
   subText: string
 ): HTMLDivElement {
   const box = document.createElement("div");
-  box.className = "thermo-box";
-  box.style.background = `linear-gradient(135deg, ${hexToRgba(hexColor, 0.2)}, ${hexToRgba(hexColor, 0.05)})`;
-  box.style.borderColor = hexToRgba(hexColor, 0.32);
+  box.className = `thermo-box is-${color}`;
 
   const head = document.createElement("div");
   head.className = "thermo-head";
@@ -85,11 +72,8 @@ function createThermoBox(
   dirEl.textContent = direction;
 
   const chipEl = document.createElement("span");
-  chipEl.className = "state-chip";
+  chipEl.className = `state-chip is-${color}`;
   chipEl.textContent = stateLabel;
-  chipEl.style.color = hexColor;
-  chipEl.style.background = hexToRgba(hexColor, 0.18);
-  chipEl.style.border = `1px solid ${hexToRgba(hexColor, 0.38)}`;
 
   head.appendChild(dirEl);
   head.appendChild(chipEl);
@@ -169,7 +153,7 @@ export function renderComponentDetail(
     const badgeColorId =
       isDefrost && comp.id === 1 ? 3 : isDefrost && comp.id === 3 ? 1 : comp.id;
     const badgeBg =
-      COMPONENT_BADGE_COLORS[badgeColorId] ?? "linear-gradient(135deg, #60B5FF, #007AFF)";
+      COMPONENT_BADGE_COLORS[badgeColorId] ?? "var(--gradient-dusk)";
 
     const card = document.createElement("div");
     card.id = `comp-card-${comp.id}`;

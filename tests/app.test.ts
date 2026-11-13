@@ -6,6 +6,9 @@
  * oder XSS-anfälligen Werte in das DOM-Rendering gelangen können.
  */
 
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { COMPONENTS } from "../src/data/components";
 import { FAULTS } from "../src/data/faults";
@@ -151,6 +154,19 @@ describe("Bauteildaten-Integrität (components.ts)", () => {
   });
 
   it("definiert vollständige thermodynamische Daten für R290 und R32", () => {
+    const validPaletteColors = new Set([
+      "rose",
+      "peach",
+      "butter",
+      "lime",
+      "mint",
+      "aqua",
+      "sky",
+      "periwinkle",
+      "lavender",
+      "orchid"
+    ]);
+
     for (const comp of COMPONENTS) {
       expect(comp.name).toBeTruthy();
       expect(comp.shortName).toBeTruthy();
@@ -161,22 +177,22 @@ describe("Bauteildaten-Integrität (components.ts)", () => {
       // R290 / Monoblock
       const mono = comp.thermo.monoblock;
       expect(mono.inState).toBeTruthy();
-      expect(mono.inColor).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      expect(validPaletteColors.has(mono.inColor)).toBe(true);
       expect(mono.inMetric).toBeTruthy();
       expect(mono.inSub).toBeTruthy();
       expect(mono.outState).toBeTruthy();
-      expect(mono.outColor).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      expect(validPaletteColors.has(mono.outColor)).toBe(true);
       expect(mono.outMetric).toBeTruthy();
       expect(mono.outSub).toBeTruthy();
 
       // R32 / Split
       const split = comp.thermo.split;
       expect(split.inState).toBeTruthy();
-      expect(split.inColor).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      expect(validPaletteColors.has(split.inColor)).toBe(true);
       expect(split.inMetric).toBeTruthy();
       expect(split.inSub).toBeTruthy();
       expect(split.outState).toBeTruthy();
-      expect(split.outColor).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      expect(validPaletteColors.has(split.outColor)).toBe(true);
       expect(split.outMetric).toBeTruthy();
       expect(split.outSub).toBeTruthy();
 
@@ -252,6 +268,91 @@ describe("Wissenskarten-Integrität (niceToKnow.ts)", () => {
         expect(fact.length).toBeGreaterThan(15);
       }
       expect(item.proTip.length).toBeGreaterThan(20);
+    }
+  });
+});
+
+describe("DOM-Integrität (index.html)", () => {
+  it("enthält alle von src/main.ts benötigten kritischen DOM-IDs", () => {
+    const currentDir = fileURLToPath(new URL(".", import.meta.url));
+    const htmlPath = resolve(currentDir, "../index.html");
+    const html = readFileSync(htmlPath, "utf-8");
+
+    // Alle von src/main.ts per requireElement geforderten DOM-IDs
+    const requiredMainIds = [
+      "circuitSvg",
+      "headerSystemText",
+      "btnMonoblock",
+      "btnSplit",
+      "refrigerantBanner",
+      "bannerTitle",
+      "bannerDesc",
+      "bannerBadge",
+      "buildingBoundary",
+      "zoneOutdoor",
+      "zoneIndoor",
+      "labelOutdoor",
+      "labelIndoor",
+      "componentAccordionList",
+      "btnModeHeating",
+      "btnModeDefrost",
+      "pipesHeating",
+      "pipesDefrost",
+      "valvePathsHeating",
+      "valvePathsDefrost",
+      "eevConesHeating",
+      "eevConesDefrost",
+      "comp1Title",
+      "comp1Sub",
+      "comp3Title",
+      "comp3Sub",
+      "faultList",
+      "viewCircuit",
+      "viewFaults",
+      "viewNiceToKnow",
+      "btnViewCircuit",
+      "btnViewFaults",
+      "btnViewNiceToKnow",
+      "niceGrid",
+      "btnThemeToggle",
+      "themeIconLabel",
+      "themeToggleIcon",
+      "svgStageWrap",
+      "svgStage",
+      "detailScrollTarget"
+    ];
+
+    for (const id of requiredMainIds) {
+      expect(html, `DOM-ID #${id} fehlt in index.html`).toContain(`id="${id}"`);
+    }
+
+    // Abgleich der im Review-Report referenzierten Rollen-IDs auf die realen DOM-IDs
+    const reviewIdMapping: Record<string, string> = {
+      circuitSvg: "circuitSvg",
+      btnHeizen: "btnModeHeating",
+      btnAbtauen: "btnModeDefrost",
+      btnR290: "btnMonoblock",
+      btnR32: "btnSplit",
+      themeToggleBtn: "btnThemeToggle",
+      themeIconLabel: "themeIconLabel",
+      themeToggleIcon: "themeToggleIcon",
+      tabCircuit: "btnViewCircuit",
+      tabFaults: "btnViewFaults",
+      tabNice: "btnViewNiceToKnow",
+      panelCircuit: "viewCircuit",
+      panelFaults: "viewFaults",
+      panelNice: "viewNiceToKnow",
+      componentAccordionList: "componentAccordionList",
+      faultList: "faultList",
+      niceGrid: "niceGrid",
+      detailScrollTarget: "detailScrollTarget"
+    };
+
+    for (const [role, actualId] of Object.entries(reviewIdMapping)) {
+      expect(
+        html,
+        `Rolle ${role} (gemappt auf #${actualId}) fehlt in index.html`
+      ).toContain(`id="${actualId}"`);
     }
   });
 });

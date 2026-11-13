@@ -8,13 +8,18 @@
 import { NICE_TO_KNOW } from "../data/niceToKnow";
 import type { NiceToKnowItem } from "../types/circuit";
 
-const NICE_CATEGORY_PALETTE: ReadonlyArray<{ icon: string; bg: string; tint: string }> = [
-  { icon: "★", bg: "linear-gradient(135deg, #60B5FF, #007AFF)", tint: "rgba(0, 122, 255, 0.14)" },
-  { icon: "⚡", bg: "linear-gradient(135deg, #FFB340, #FF9500)", tint: "rgba(255, 149, 0, 0.14)" },
-  { icon: "✓", bg: "linear-gradient(135deg, #4CD964, #28CD41)", tint: "rgba(52, 199, 89, 0.14)" },
-  { icon: "♨", bg: "linear-gradient(135deg, #F58E89, #FF3B30)", tint: "rgba(255, 59, 48, 0.14)" },
-  { icon: "❄", bg: "linear-gradient(135deg, #64D2FF, #32ADE6)", tint: "rgba(50, 173, 230, 0.14)" },
-  { icon: "⚙", bg: "linear-gradient(135deg, #BF5AF2, #8944AB)", tint: "rgba(175, 82, 222, 0.14)" }
+interface NiceCategoryStyle {
+  readonly icon: string;
+  readonly bg: string;
+}
+
+const NICE_CATEGORY_PALETTE: readonly NiceCategoryStyle[] = [
+  { icon: "★", bg: "var(--gradient-ocean)" },
+  { icon: "⚡", bg: "var(--gradient-honey)" },
+  { icon: "✓", bg: "var(--gradient-meadow)" },
+  { icon: "♨", bg: "var(--gradient-blossom)" },
+  { icon: "❄", bg: "var(--gradient-lagoon)" },
+  { icon: "⚙", bg: "var(--gradient-iris)" }
 ];
 
 /**
@@ -24,7 +29,6 @@ function createNiceCard(item: NiceToKnowItem, index: number): HTMLElement {
   const palette = NICE_CATEGORY_PALETTE[index % NICE_CATEGORY_PALETTE.length]!;
   const card = document.createElement("article");
   card.className = "liquid-glass-card nice-card";
-  card.style.backgroundImage = `linear-gradient(135deg, ${palette.tint}, transparent 58%)`;
   card.setAttribute("aria-labelledby", `nice-title-${item.id}`);
 
   // Obere Leiste mit rundem iOS-Icon-Badge, Fachkategorie und Badge

@@ -13,15 +13,30 @@ export type OperationMode = "heating" | "defrost";
 export type ViewType = "circuit" | "faults" | "niceToKnow";
 
 /**
+ * Erlaubte semantische Pastell-Farbkeys gemäß FARBPALETTE.md.
+ */
+export type PaletteColorKey =
+  | "rose"
+  | "peach"
+  | "butter"
+  | "lime"
+  | "mint"
+  | "aqua"
+  | "sky"
+  | "periwinkle"
+  | "lavender"
+  | "orchid";
+
+/**
  * Thermodynamische Zustandsgrößen an Ein- und Austritt einer Kältekreiskomponente.
  */
 export interface ThermodynamicState {
   readonly inState: string;
-  readonly inColor: string;
+  readonly inColor: PaletteColorKey;
   readonly inMetric: string;
   readonly inSub: string;
   readonly outState: string;
-  readonly outColor: string;
+  readonly outColor: PaletteColorKey;
   readonly outMetric: string;
   readonly outSub: string;
 }

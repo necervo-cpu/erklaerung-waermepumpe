@@ -1,54 +1,94 @@
 /**
  * Modul: Apple Liquid Glass Design- & Motion-Tokens (liquid-glass-tokens.css)
- * Zweck: Zentrale CSS-Custom-Properties und Utility-Klassen nach Apple HIG & Liquid Glass.
- * Verantwortlichkeit: Definiert das 3-Stufen-Farbsystem (Auto / Hell / Dunkel), transluzente
- *   Glas-Schichten mit Specular Rim Light, konzentrische Radien, physikalische Motion-Tokens,
- *   größenabhängige Press-Scale-Interaktionen sowie WCAG-AA-Barrierefreiheits-Fallbacks.
- * Sicherheits- & A11y-Relevanz: Respektiert prefers-reduced-transparency, prefers-contrast
- *   und prefers-reduced-motion ohne externe Font-/Tracker-Abhängigkeiten (DSGVO-konform).
+ * Zweck: Zentrale CSS-Custom-Properties und Utility-Klassen nach Apple HIG, Liquid Glass und FARBPALETTE.md.
+ * Verantwortlichkeit: Definiert das 3-Stufen-Farbsystem (Dunkel als Standard, Hell via data-theme="light", Auto via prefers-color-scheme),
+ *   konzentrische Radien, physikalische Motion-Tokens sowie barrierefreie Farbkontraste (WCAG AA).
+ * Sicherheits- & A11y-Relevanz: Reines Schwarz im Standard-Dunkelmodus (#000000), mindestens 4,9:1 Kontrast im Hell-Modus,
+ *   Respektiert prefers-reduced-transparency, prefers-contrast und prefers-reduced-motion ohne externe Tracker.
  */
 
 :root,
-:root[data-theme="light"] {
-  color-scheme: light;
+:root[data-theme="dark"] {
+  color-scheme: dark;
 
-  /* Marken- & Akzentfarben (gemäß DESIGN.md) */
-  --brand-accent: #0071e3;
-  --brand-accent-hover: #0077ed;
-  --brand-accent-text: #0051a8;
-  --tile: rgba(0, 113, 227, 0.1);
+  /* --- 10 Pastellfarben (FARBPALETTE.md §2) --- */
+  --pastel-rose: #f7b8c4;
+  --pastel-peach: #f9c6a5;
+  --pastel-butter: #f6e3a1;
+  --pastel-lime: #d3eba4;
+  --pastel-mint: #a8e6c3;
+  --pastel-aqua: #a0e3e0;
+  --pastel-sky: #a9d4f5;
+  --pastel-periwinkle: #b3bdf7;
+  --pastel-lavender: #cdb5f5;
+  --pastel-orchid: #edb4e6;
 
-  /* Hintergrund- & Glas-Schichten (Hell-Modus) */
-  --bg: #f5f5f7;
-  --ios-bg:
-    radial-gradient(circle at 15% 10%, rgba(0, 113, 227, 0.08), transparent 45%),
-    radial-gradient(circle at 85% 85%, rgba(88, 86, 214, 0.06), transparent 50%),
-    #f5f5f7;
-  --glass: rgba(255, 255, 255, 0.72);
-  --glass-hero: rgba(255, 255, 255, 0.84);
-  --input-bg: rgba(255, 255, 255, 0.56);
+  /* --- 10 Verläufe (FARBPALETTE.md §3: 135deg Fläche, 90deg Balken) --- */
+  --gradient-sunrise: linear-gradient(135deg, #f7b8c4, #f9c6a5);
+  --gradient-honey: linear-gradient(135deg, #f9c6a5, #f6e3a1);
+  --gradient-spring: linear-gradient(135deg, #f6e3a1, #d3eba4);
+  --gradient-meadow: linear-gradient(135deg, #d3eba4, #a8e6c3);
+  --gradient-lagoon: linear-gradient(135deg, #a8e6c3, #a0e3e0, #a9d4f5);
+  --gradient-ocean: linear-gradient(135deg, #a0e3e0, #b3bdf7);
+  --gradient-dusk: linear-gradient(135deg, #a9d4f5, #cdb5f5);
+  --gradient-iris: linear-gradient(135deg, #b3bdf7, #edb4e6);
+  --gradient-blossom: linear-gradient(135deg, #cdb5f5, #f7b8c4);
+  --gradient-sorbet: linear-gradient(135deg, #f6e3a1, #f7b8c4, #cdb5f5);
 
-  /* Specular Rim Light & Tiefenschatten */
-  --edge: rgba(255, 255, 255, 0.85);
-  --edge-low: rgba(15, 23, 42, 0.06);
-  --border-subtle: rgba(15, 23, 42, 0.08);
-  --ios-shadow:
-    0 12px 32px -8px rgba(15, 23, 42, 0.08),
-    0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  /* --- Neutrale Flächen & Grenzen (Dunkel-Standard: FARBPALETTE.md §4) --- */
+  --bg: #000000;
+  --surface-card: #1c1c1e;
+  --surface-field: #2c2c2e;
+  --surface-hover: #3a3a3c;
+  --surface-active: #48484a;
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow-card: none;
 
-  /* Typografie & Textkontraste (WCAG AA) */
-  --ink: #1d1d1f;
-  --muted: #515154;
+  /* --- Typografie & Kontraste (Dunkel-Standard) --- */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(235, 235, 245, 0.6);
+  --text-tertiary: rgba(235, 235, 245, 0.3);
+  --text-on-accent: #1c1c1e;
+
+  /* --- Akzent als Textfarbe (Dunkel-Modus: FARBPALETTE.md §5) --- */
+  --accent-text-rose: #f7b8c4;
+  --accent-text-peach: #f9c6a5;
+  --accent-text-butter: #f6e3a1;
+  --accent-text-lime: #d3eba4;
+  --accent-text-mint: #a8e6c3;
+  --accent-text-aqua: #a0e3e0;
+  --accent-text-sky: #a9d4f5;
+  --accent-text-periwinkle: #b3bdf7;
+  --accent-text-lavender: #cdb5f5;
+  --accent-text-orchid: #edb4e6;
+
+  /* --- Apple HIG & Liquid Glass Aliase (gemappt auf Palette) --- */
+  --ios-bg: var(--bg);
+  --glass: var(--surface-card);
+  --glass-hero: var(--surface-card);
+  --input-bg: var(--surface-field);
+  --border-subtle: var(--border);
+  --ios-shadow: var(--shadow-card);
+  --edge: var(--border);
+  --edge-low: transparent;
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --brand-accent: var(--accent-text-sky);
+  --brand-accent-hover: var(--pastel-sky);
+  --brand-accent-text: var(--accent-text-sky);
+  --tile: color-mix(in srgb, var(--pastel-sky) 16%, transparent);
+
+  /* --- Typografie-Stacks --- */
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Plus Jakarta Sans", "Segoe UI", sans-serif;
   --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Konzentrische Radien-Hierarchie (Apple Geometry) */
+  /* --- Konzentrische Radien-Hierarchie (Apple Geometry) --- */
   --radius-hero: 28px;
   --radius-card: 24px;
   --radius-well: 14px;
   --radius-control: 10px;
 
-  /* 5-Dimensionen Motion-Tokens & Taktile Skalierung */
+  /* --- 5-Dimensionen Motion-Tokens & Taktile Skalierung --- */
   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --dur-fast: 160ms;
@@ -59,57 +99,97 @@
   --scale-small: 0.95;
 }
 
-/* Dunkel-Modus: Manuell erzwungen über data-theme="dark" */
-:root[data-theme="dark"] {
-  color-scheme: dark;
+/* Hell-Modus: Manuell aktiviert über data-theme="light" */
+:root[data-theme="light"] {
+  color-scheme: light;
 
-  --brand-accent: #2997ff;
-  --brand-accent-hover: #40a2ff;
-  --brand-accent-text: #64b5f6;
-  --tile: rgba(41, 151, 255, 0.16);
+  /* Neutrale Flächen & Grenzen (Hell) */
+  --bg: #f2f2f7;
+  --surface-card: #ffffff;
+  --surface-field: #f2f2f7;
+  --surface-hover: #e5e5ea;
+  --surface-active: #d1d1d6;
+  --border: rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
 
-  --bg: #000000;
-  --ios-bg: #000000;
-  --glass: rgba(28, 28, 30, 0.9);
-  --glass-hero: rgba(20, 20, 22, 0.94);
-  --input-bg: rgba(44, 44, 46, 0.72);
+  /* Textfarben (Hell) */
+  --text-primary: #000000;
+  --text-secondary: rgba(60, 60, 67, 0.7);
+  --text-tertiary: rgba(60, 60, 67, 0.3);
+  --text-on-accent: #1c1c1e;
 
-  --edge: rgba(255, 255, 255, 0.12);
-  --edge-low: rgba(0, 0, 0, 0.55);
-  --border-subtle: rgba(255, 255, 255, 0.09);
-  --ios-shadow:
-    0 16px 36px -8px rgba(0, 0, 0, 0.45),
-    0 4px 10px -2px rgba(0, 0, 0, 0.3);
+  /* Akzent als Textfarbe (Hell: nachgedunkelt für WCAG AA >= 4,9:1) */
+  --accent-text-rose: #b8405a;
+  --accent-text-peach: #a35320;
+  --accent-text-butter: #7d620a;
+  --accent-text-lime: #527018;
+  --accent-text-mint: #1f7a4d;
+  --accent-text-aqua: #177a76;
+  --accent-text-sky: #1f6aa8;
+  --accent-text-periwinkle: #4553c4;
+  --accent-text-lavender: #7046c2;
+  --accent-text-orchid: #a53a98;
 
-  --ink: #f5f5f7;
-  --muted: #a1a1a6;
+  /* Aliase mappen dynamisch mit */
+  --ios-bg: var(--bg);
+  --glass: var(--surface-card);
+  --glass-hero: var(--surface-card);
+  --input-bg: var(--surface-field);
+  --border-subtle: var(--border);
+  --ios-shadow: var(--shadow-card);
+  --edge: var(--border);
+  --edge-low: transparent;
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --brand-accent: var(--accent-text-sky);
+  --brand-accent-hover: var(--pastel-sky);
+  --brand-accent-text: var(--accent-text-sky);
+  --tile: color-mix(in srgb, var(--pastel-sky) 20%, transparent);
 }
 
-/* Auto-Modus: Folgt der Systemeinstellung, solange kein data-theme Attribut gesetzt ist */
-@media (prefers-color-scheme: dark) {
+/* Auto-Modus: Wenn kein data-theme gesetzt ist und prefers-color-scheme light aktiv ist */
+@media (prefers-color-scheme: light) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    color-scheme: dark;
+    color-scheme: light;
 
-    --brand-accent: #2997ff;
-    --brand-accent-hover: #40a2ff;
-    --brand-accent-text: #64b5f6;
-    --tile: rgba(41, 151, 255, 0.16);
+    --bg: #f2f2f7;
+    --surface-card: #ffffff;
+    --surface-field: #f2f2f7;
+    --surface-hover: #e5e5ea;
+    --surface-active: #d1d1d6;
+    --border: rgba(0, 0, 0, 0.06);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
 
-    --bg: #000000;
-    --ios-bg: #000000;
-    --glass: rgba(28, 28, 30, 0.9);
-    --glass-hero: rgba(20, 20, 22, 0.94);
-    --input-bg: rgba(44, 44, 46, 0.72);
+    --text-primary: #000000;
+    --text-secondary: rgba(60, 60, 67, 0.7);
+    --text-tertiary: rgba(60, 60, 67, 0.3);
+    --text-on-accent: #1c1c1e;
 
-    --edge: rgba(255, 255, 255, 0.12);
-    --edge-low: rgba(0, 0, 0, 0.55);
-    --border-subtle: rgba(255, 255, 255, 0.09);
-    --ios-shadow:
-      0 16px 36px -8px rgba(0, 0, 0, 0.45),
-      0 4px 10px -2px rgba(0, 0, 0, 0.3);
+    --accent-text-rose: #b8405a;
+    --accent-text-peach: #a35320;
+    --accent-text-butter: #7d620a;
+    --accent-text-lime: #527018;
+    --accent-text-mint: #1f7a4d;
+    --accent-text-aqua: #177a76;
+    --accent-text-sky: #1f6aa8;
+    --accent-text-periwinkle: #4553c4;
+    --accent-text-lavender: #7046c2;
+    --accent-text-orchid: #a53a98;
 
-    --ink: #f5f5f7;
-    --muted: #a1a1a6;
+    --ios-bg: var(--bg);
+    --glass: var(--surface-card);
+    --glass-hero: var(--surface-card);
+    --input-bg: var(--surface-field);
+    --border-subtle: var(--border);
+    --ios-shadow: var(--shadow-card);
+    --edge: var(--border);
+    --edge-low: transparent;
+    --ink: var(--text-primary);
+    --muted: var(--text-secondary);
+    --brand-accent: var(--accent-text-sky);
+    --brand-accent-hover: var(--pastel-sky);
+    --brand-accent-text: var(--accent-text-sky);
+    --tile: color-mix(in srgb, var(--pastel-sky) 20%, transparent);
   }
 }
 
@@ -137,37 +217,30 @@ body {
 }
 
 .liquid-glass-hero {
-  background: var(--glass-hero);
+  background: var(--surface-card);
   backdrop-filter: blur(28px) saturate(200%);
   -webkit-backdrop-filter: blur(28px) saturate(200%);
   border-radius: var(--radius-hero);
-  border: 1px solid var(--border-subtle);
-  box-shadow:
-    inset 0 1px 1px 0 var(--edge),
-    inset 0 -1px 0 0 var(--edge-low),
-    var(--ios-shadow);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
 }
 
 .liquid-glass-card {
-  background: var(--glass);
+  background: var(--surface-card);
   backdrop-filter: blur(20px) saturate(190%);
   -webkit-backdrop-filter: blur(20px) saturate(190%);
   border-radius: var(--radius-card);
-  border: 1px solid var(--border-subtle);
-  box-shadow:
-    inset 0 1px 1px 0 var(--edge),
-    inset 0 -1px 0 0 var(--edge-low),
-    var(--ios-shadow);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
 }
 
 .liquid-glass-well,
 .liquid-glass-input {
-  background: var(--input-bg);
+  background: var(--surface-field);
   border-radius: var(--radius-well);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border);
   min-height: 44px; /* Mindest-Tippfläche & Schutz vor vertikalem Text-Abschneiden */
   font-size: 16px; /* Verhindert iOS Safari Auto-Zoom beim Fokussieren */
-  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.04);
 }
 
 .tabular-nums {
@@ -222,7 +295,7 @@ body {
   .liquid-glass-card {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background: var(--bg);
+    background: var(--surface-card);
     border-width: 1.5px;
   }
 }
