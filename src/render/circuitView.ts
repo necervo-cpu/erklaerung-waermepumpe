@@ -23,6 +23,7 @@ export interface CircuitDomElements {
   readonly labelOutdoor: SVGElement;
   readonly labelIndoor: SVGElement;
   readonly quickNav: HTMLElement;
+  readonly quickNavSummary: HTMLElement;
   readonly detailKicker: HTMLElement;
   readonly detailTitle: HTMLElement;
   readonly detailLocation: HTMLElement;
@@ -82,13 +83,15 @@ export function renderQuickNav(
   onSelectComponent: (id: number) => void
 ): void {
   const isDefrost = state.mode === "defrost";
+  const getLabelName = (compId: number, fallback: string): string =>
+    isDefrost && compId === 1
+      ? "Verflüssiger (Abtau)"
+      : isDefrost && compId === 3
+        ? "Verdampfer (Abtau)"
+        : fallback;
+
   const buttons: HTMLButtonElement[] = COMPONENTS.map((comp) => {
-    const labelName =
-      isDefrost && comp.id === 1
-        ? "Verflüssiger (Abtau)"
-        : isDefrost && comp.id === 3
-          ? "Verdampfer (Abtau)"
-          : comp.shortName;
+    const labelName = getLabelName(comp.id, comp.shortName);
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = `quick-pill press-btn${comp.id === state.componentId ? " is-active" : ""}`;
@@ -98,6 +101,12 @@ export function renderQuickNav(
     btn.addEventListener("click", () => onSelectComponent(comp.id));
     return btn;
   });
+
+  const activeComp =
+    COMPONENTS.find((comp) => comp.id === state.componentId) ?? COMPONENTS[0];
+  if (activeComp) {
+    elements.quickNavSummary.textContent = `${activeComp.id}. ${getLabelName(activeComp.id, activeComp.shortName)}`;
+  }
 
   elements.quickNav.replaceChildren(...buttons);
 }

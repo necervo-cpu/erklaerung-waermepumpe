@@ -68,6 +68,7 @@ const circuitElements: CircuitDomElements = {
   labelOutdoor: requireElement<SVGElement>("#labelOutdoor"),
   labelIndoor: requireElement<SVGElement>("#labelIndoor"),
   quickNav: requireElement<HTMLElement>("#quickNav"),
+  quickNavSummary: requireElement<HTMLElement>("#quickNavSummary"),
   detailKicker: requireElement<HTMLElement>("#detailKicker"),
   detailTitle: requireElement<HTMLElement>("#detailTitle"),
   detailLocation: requireElement<HTMLElement>("#detailLocation"),
@@ -114,6 +115,9 @@ const btnThemeToggle = requireElement<HTMLButtonElement>("#btnThemeToggle");
 const themeIconLabel = requireElement<HTMLElement>("#themeIconLabel");
 const svgStageWrap = requireElement<HTMLElement>("#svgStageWrap");
 const svgStage = requireElement<HTMLElement>("#svgStage");
+const quickNavCard = requireElement<HTMLElement>("#quickNavCard");
+const btnQuickNavToggle = requireElement<HTMLButtonElement>("#btnQuickNavToggle");
+const quickNavPanel = requireElement<HTMLElement>("#quickNavPanel");
 
 /**
  * Aktualisiert die visuellen Wisch-Schatten links/rechts am mobilen SVG-Container.
@@ -244,6 +248,14 @@ btnViewNiceToKnow.addEventListener("click", () => handleSetView("niceToKnow"));
 btnThemeToggle.addEventListener("click", () => {
   currentTheme = cycleThemeMode(currentTheme);
   updateThemeButton(currentTheme);
+});
+
+// Aufklappbare Bauteil-Schnellwahl (1–9)
+btnQuickNavToggle.addEventListener("click", () => {
+  const isOpen = quickNavCard.classList.toggle("is-open");
+  quickNavPanel.classList.toggle("is-open", isOpen);
+  quickNavPanel.setAttribute("data-open", String(isOpen));
+  btnQuickNavToggle.setAttribute("aria-expanded", String(isOpen));
 });
 
 // Wisch-Indikator beim horizontalen Scrollen des SVG-Schemas aktualisieren

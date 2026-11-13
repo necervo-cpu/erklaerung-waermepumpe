@@ -462,9 +462,25 @@
 
       <!-- Rechte Spalte: Komponenten-Detailpanel -->
       <aside class="liquid-glass-card detail-card" aria-label="Komponenten-Details">
-        <div>
-          <p class="section-label" style="margin-bottom:8px;">Bauteil-Schnellwahl (1–9)</p>
-          <div id="quickNav" class="quick-nav"></div>
+        <div id="quickNavCard" class="quick-acc-card">
+          <button
+            id="btnQuickNavToggle"
+            type="button"
+            class="quick-acc-btn press-btn"
+            aria-expanded="false"
+            aria-controls="quickNavPanel"
+          >
+            <span class="section-label">Bauteil-Schnellwahl (1–9)</span>
+            <span class="quick-acc-meta">
+              <span id="quickNavSummary" class="quick-acc-summary">1. Verdampfer</span>
+              <span class="quick-acc-chevron" aria-hidden="true">▾</span>
+            </span>
+          </button>
+          <div id="quickNavPanel" class="t-acc-panel" data-open="false">
+            <div class="t-acc-panel-inner">
+              <div id="quickNav" class="quick-nav quick-acc-body"></div>
+            </div>
+          </div>
         </div>
 
         <div class="detail-header">

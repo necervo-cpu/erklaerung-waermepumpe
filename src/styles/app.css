@@ -655,10 +655,87 @@ svg#circuitSvg {
   min-width: 0;
 }
 
+.quick-acc-card {
+  border-radius: 14px;
+  border: 1px solid var(--border-subtle);
+  background: var(--input-bg);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) ease;
+}
+
+.quick-acc-card.is-open {
+  border-color: var(--brand-accent);
+}
+
+.quick-acc-btn {
+  appearance: none;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  transition: background var(--dur-fast) ease;
+}
+
+.quick-acc-btn:hover {
+  background: var(--glass);
+}
+
+.quick-acc-btn .section-label {
+  margin: 0;
+  min-width: 0;
+}
+
+.quick-acc-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.quick-acc-summary {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--brand-accent-text);
+  overflow-wrap: break-word;
+  text-align: right;
+}
+
+.quick-acc-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 0.95rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: transform var(--dur-normal) var(--ease-spring), color var(--dur-fast) ease;
+}
+
+.quick-acc-card.is-open .quick-acc-chevron {
+  transform: rotate(180deg);
+  color: var(--ink);
+}
+
 .quick-nav {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.quick-acc-body {
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .quick-pill {
