@@ -460,78 +460,9 @@
         </div>
       </section>
 
-      <!-- Rechte Spalte: Komponenten-Detailpanel -->
-      <aside class="liquid-glass-card detail-card" aria-label="Komponenten-Details">
-        <div id="quickNavCard" class="quick-acc-card">
-          <button
-            id="btnQuickNavToggle"
-            type="button"
-            class="quick-acc-btn press-btn"
-            aria-expanded="false"
-            aria-controls="quickNavPanel"
-          >
-            <span class="section-label">Bauteil-Schnellwahl (1–9)</span>
-            <span class="quick-acc-meta">
-              <span id="quickNavSummary" class="quick-acc-summary">1. Verdampfer</span>
-              <span class="quick-acc-chevron" aria-hidden="true">▾</span>
-            </span>
-          </button>
-          <div id="quickNavPanel" class="t-acc-panel" data-open="false">
-            <div class="t-acc-panel-inner">
-              <div id="quickNav" class="quick-nav quick-acc-body"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="detail-header">
-          <div style="min-width:0;">
-            <p id="detailKicker" class="detail-kicker">Komponente 1 von 9</p>
-            <h2 id="detailTitle" class="detail-title">Verdampfer</h2>
-            <div id="detailLocation" class="location-pill">Außeneinheit</div>
-          </div>
-        </div>
-
-        <div class="detail-section">
-          <p class="section-label">Hauptaufgabe im Kältekreis</p>
-          <p id="detailTask" class="section-text"></p>
-        </div>
-
-        <div class="detail-section">
-          <p class="section-label" style="margin-bottom:10px;">Thermodynamischer Zustand (Heizbetrieb A2/W35)</p>
-          <div class="thermo-grid">
-            <div class="thermo-box">
-              <div class="thermo-head">
-                <span class="thermo-dir">Eintritt</span>
-                <span id="inStateChip" class="state-chip"></span>
-              </div>
-              <div class="thermo-values">
-                <span id="inMetric" class="thermo-metric tabular"></span>
-                <span id="inSub" style="font-size:0.77rem;color:var(--muted);"></span>
-              </div>
-            </div>
-            <div class="thermo-box">
-              <div class="thermo-head">
-                <span class="thermo-dir">Austritt</span>
-                <span id="outStateChip" class="state-chip"></span>
-              </div>
-              <div class="thermo-values">
-                <span id="outMetric" class="thermo-metric tabular"></span>
-                <span id="outSub" style="font-size:0.77rem;color:var(--muted);"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="defrostNoteBox" class="detail-section defrost-note-box hidden">
-          <p class="section-label">Rolle in der Abtauphase (Kreislaufumkehr)</p>
-          <p id="defrostNoteText" class="section-text"></p>
-        </div>
-
-        <div class="detail-section service-highlight">
-          <p class="section-label">Wichtige Messgröße für den Service</p>
-          <p id="detailService" class="section-text"></p>
-          <span id="detailServiceBadge" class="service-metric tabular"></span>
-        </div>
+      <!-- Rechte Spalte: Aufklappbare Bauteil-Karten (1–9) -->
+      <aside class="detail-card" aria-label="Bauteile des Kältekreises">
+        <div id="componentAccordionList" class="comp-list"></div>
       </aside>
     </main>
 

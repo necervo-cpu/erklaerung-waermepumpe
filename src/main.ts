@@ -47,7 +47,7 @@ const state: AppState = {
   system: "monoblock",
   mode: "heating",
   view: "circuit",
-  componentId: 1,
+  componentId: 0,
   faultId: "hd"
 };
 
@@ -67,22 +67,7 @@ const circuitElements: CircuitDomElements = {
   zoneIndoor: requireElement<SVGElement>("#zoneIndoor"),
   labelOutdoor: requireElement<SVGElement>("#labelOutdoor"),
   labelIndoor: requireElement<SVGElement>("#labelIndoor"),
-  quickNav: requireElement<HTMLElement>("#quickNav"),
-  quickNavSummary: requireElement<HTMLElement>("#quickNavSummary"),
-  detailKicker: requireElement<HTMLElement>("#detailKicker"),
-  detailTitle: requireElement<HTMLElement>("#detailTitle"),
-  detailLocation: requireElement<HTMLElement>("#detailLocation"),
-  detailTask: requireElement<HTMLElement>("#detailTask"),
-  inStateChip: requireElement<HTMLElement>("#inStateChip"),
-  inMetric: requireElement<HTMLElement>("#inMetric"),
-  inSub: requireElement<HTMLElement>("#inSub"),
-  outStateChip: requireElement<HTMLElement>("#outStateChip"),
-  outMetric: requireElement<HTMLElement>("#outMetric"),
-  outSub: requireElement<HTMLElement>("#outSub"),
-  detailService: requireElement<HTMLElement>("#detailService"),
-  detailServiceBadge: requireElement<HTMLElement>("#detailServiceBadge"),
-  defrostNoteBox: requireElement<HTMLElement>("#defrostNoteBox"),
-  defrostNoteText: requireElement<HTMLElement>("#defrostNoteText"),
+  componentList: requireElement<HTMLElement>("#componentAccordionList"),
   btnModeHeating: requireElement<HTMLButtonElement>("#btnModeHeating"),
   btnModeDefrost: requireElement<HTMLButtonElement>("#btnModeDefrost"),
   pipesHeating: requireElement<SVGGElement>("#pipesHeating"),
@@ -115,9 +100,6 @@ const btnThemeToggle = requireElement<HTMLButtonElement>("#btnThemeToggle");
 const themeIconLabel = requireElement<HTMLElement>("#themeIconLabel");
 const svgStageWrap = requireElement<HTMLElement>("#svgStageWrap");
 const svgStage = requireElement<HTMLElement>("#svgStage");
-const quickNavCard = requireElement<HTMLElement>("#quickNavCard");
-const btnQuickNavToggle = requireElement<HTMLButtonElement>("#btnQuickNavToggle");
-const quickNavPanel = requireElement<HTMLElement>("#quickNavPanel");
 
 /**
  * Aktualisiert die visuellen Wisch-Schatten links/rechts am mobilen SVG-Container.
@@ -163,11 +145,23 @@ function updateThemeButton(mode: ThemeMode): void {
 }
 
 /**
- * Wählt eine Kältekreiskomponente aus und aktualisiert das Detailpanel.
+ * Klappt eine Bauteil-Karte auf oder zu (Accordion-Toggle).
  */
 function handleSelectComponent(id: number): void {
+  state.componentId = state.componentId === id ? 0 : id;
+  renderComponentDetail(circuitElements, state, handleSelectComponent);
+}
+
+/**
+ * Öffnet gezielt eine Bauteil-Karte (z. B. nach Klick im SVG-Schema) und scrollt sie in den Blick.
+ */
+function handleOpenComponent(id: number): void {
   state.componentId = id;
   renderComponentDetail(circuitElements, state, handleSelectComponent);
+  document.getElementById(`comp-card-${id}`)?.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
 }
 
 /**
@@ -250,14 +244,6 @@ btnThemeToggle.addEventListener("click", () => {
   updateThemeButton(currentTheme);
 });
 
-// Aufklappbare Bauteil-Schnellwahl (1–9)
-btnQuickNavToggle.addEventListener("click", () => {
-  const isOpen = quickNavCard.classList.toggle("is-open");
-  quickNavPanel.classList.toggle("is-open", isOpen);
-  quickNavPanel.setAttribute("data-open", String(isOpen));
-  btnQuickNavToggle.setAttribute("aria-expanded", String(isOpen));
-});
-
 // Wisch-Indikator beim horizontalen Scrollen des SVG-Schemas aktualisieren
 svgStage.addEventListener("scroll", updateSvgScrollIndicators, { passive: true });
 window.addEventListener("resize", updateSvgScrollIndicators, { passive: true });
@@ -266,11 +252,11 @@ window.addEventListener("resize", updateSvgScrollIndicators, { passive: true });
 const compNodes = circuitElements.svgElement.querySelectorAll<SVGGElement>(".svg-comp");
 compNodes.forEach((node) => {
   const id = Number(node.getAttribute("data-comp"));
-  node.addEventListener("click", () => handleSelectComponent(id));
+  node.addEventListener("click", () => handleOpenComponent(id));
   node.addEventListener("keydown", (evt: KeyboardEvent) => {
     if (evt.key === "Enter" || evt.key === " ") {
       evt.preventDefault();
-      handleSelectComponent(id);
+      handleOpenComponent(id);
     }
   });
 });
