@@ -443,6 +443,60 @@ svg#circuitSvg {
   stroke: var(--svg-zone-indoor-stroke);
 }
 
+.svg-swipe-hint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--tile);
+  border: 1px solid var(--border-subtle);
+  color: var(--brand-accent-text);
+  font-size: 0.74rem;
+  font-weight: 650;
+  align-self: center;
+}
+
+.svg-stage-wrap {
+  position: relative;
+  border-radius: var(--radius-well);
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.svg-stage-wrap::before,
+.svg-stage-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease;
+}
+
+.svg-stage-wrap::before {
+  left: 0;
+  background: linear-gradient(to right, var(--svg-stage-bg), transparent);
+}
+
+.svg-stage-wrap::after {
+  right: 0;
+  background: linear-gradient(to left, var(--svg-stage-bg), transparent);
+}
+
+.svg-stage-wrap.has-scroll-left::before {
+  opacity: 1;
+}
+
+.svg-stage-wrap.has-scroll-right::after {
+  opacity: 1;
+}
+
 #labelOutdoor {
   fill: var(--svg-text-secondary);
 }
@@ -739,20 +793,31 @@ svg#circuitSvg {
 }
 
 /* ==========================================================================
-   Ansicht 2: Störungsbilder & Fehleranalyse
+   Ansicht 2: Störungsbilder & Fehleranalyse (Aufklappbare Accordions)
    ========================================================================== */
 .faults-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.45fr);
-  gap: 16px;
-  align-items: start;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
   min-width: 0;
 }
 
 .fault-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  min-width: 0;
+}
+
+.fault-accordion-card {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+}
+
+.fault-accordion-card.is-open {
+  border-color: rgba(255, 59, 48, 0.55);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
 .fault-card-btn {
@@ -760,28 +825,25 @@ svg#circuitSvg {
   width: 100%;
   text-align: left;
   font-family: inherit;
-  padding: 14px 16px;
-  border-radius: var(--radius-card);
-  background: var(--glass);
-  border: 1px solid var(--border-subtle);
+  padding: 15px 18px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
   color: var(--ink);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-height: 44px;
-  transition: transform var(--dur-fast) ease, border-color var(--dur-fast) ease, background var(--dur-fast) ease;
+  transition: background var(--dur-fast) ease;
 }
 
 .fault-card-btn:hover {
   background: var(--input-bg);
-  border-color: var(--border-subtle);
 }
 
 .fault-card-btn.is-active {
-  border-color: var(--c-heissgas);
-  background: linear-gradient(135deg, rgba(255, 59, 48, 0.12), var(--glass));
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.11), transparent);
 }
 
 .fault-card-top {
@@ -789,6 +851,44 @@ svg#circuitSvg {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+}
+
+.fault-card-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.fault-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 0.95rem;
+  color: var(--muted);
+  transition: transform var(--dur-normal) var(--ease-spring), color var(--dur-fast) ease;
+}
+
+.fault-accordion-card.is-open .fault-chevron {
+  transform: rotate(180deg);
+  color: var(--ink);
+}
+
+.fault-acc-body {
+  padding: 0 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 14px;
+}
+
+.fault-severity-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .fault-code {
@@ -1065,12 +1165,21 @@ svg#circuitSvg {
     flex-direction: column;
     align-items: flex-start;
   }
+  .svg-swipe-hint {
+    display: inline-flex;
+  }
   .svg-stage {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
   svg#circuitSvg {
     min-width: 560px;
+  }
+  .fault-card-btn {
+    padding: 14px;
+  }
+  .fault-acc-body {
+    padding: 12px 14px 14px;
   }
   .thermo-grid {
     grid-template-columns: 1fr;

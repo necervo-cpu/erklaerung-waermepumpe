@@ -131,7 +131,13 @@
         </div>
 
         <!-- SVG Flussdiagramm -->
-        <div class="svg-stage">
+        <div class="svg-swipe-hint" aria-hidden="true">
+          <span>←</span>
+          <span>Schema seitlich wischen</span>
+          <span>→</span>
+        </div>
+        <div id="svgStageWrap" class="svg-stage-wrap has-scroll-right">
+          <div id="svgStage" class="svg-stage">
           <svg id="circuitSvg" viewBox="0 0 920 530" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktives Schema des Kältekreislaufs">
             <defs>
               <!-- Schraffur für Gebäudewand / Systemgrenze -->
@@ -353,6 +359,7 @@
               <text class="svg-sub-text" x="357" y="105" text-anchor="middle" font-size="9">Pressostate &amp; Sensoren</text>
             </g>
           </svg>
+          </div>
         </div>
 
         <!-- Farblegende -->
@@ -422,34 +429,7 @@
 
     <!-- ANSICHT 2: FEHLERANALYSE & STÖRUNGSBILDER -->
     <section id="viewFaults" class="faults-layout hidden" aria-label="Fehleranalyse und Störungsbilder">
-      <div id="faultList" class="fault-list" role="tablist" aria-label="Störungsbilder"></div>
-
-      <article class="liquid-glass-card fault-detail-card" aria-live="polite">
-        <div class="detail-header">
-          <div style="min-width:0;">
-            <p id="faultKicker" class="detail-kicker" style="color:var(--c-heissgas);">Störungsdiagnose</p>
-            <h2 id="faultTitle" class="detail-title">Hochdruckstörung (HD-Störung)</h2>
-          </div>
-          <span id="faultSeverity" class="fault-code">Störabschaltung</span>
-        </div>
-
-        <div class="detail-section">
-          <p class="section-label">Typische Symptome</p>
-          <p id="faultSymptoms" class="section-text"></p>
-        </div>
-
-        <div class="detail-section">
-          <p class="section-label">Mögliche Ursachen (Praxis-Checkliste)</p>
-          <ul id="faultCauses" class="fault-list-ul"></ul>
-        </div>
-
-        <div class="detail-section service-highlight">
-          <p class="section-label">Messbild &amp; Prüfschritte</p>
-          <ul id="faultChecks" class="fault-list-ul"></ul>
-        </div>
-
-        <div id="faultActions" class="fault-actions"></div>
-      </article>
+      <div id="faultList" class="fault-list" aria-label="Störungsbilder"></div>
     </section>
 
     <!-- ANSICHT 3: NICE TO KNOW -->

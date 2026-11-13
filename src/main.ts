@@ -83,13 +83,7 @@ const circuitElements: CircuitDomElements = {
 
 // DOM-Elemente für die Fehleranalyse
 const faultsElements: FaultsDomElements = {
-  faultList: requireElement<HTMLElement>("#faultList"),
-  faultTitle: requireElement<HTMLElement>("#faultTitle"),
-  faultSeverity: requireElement<HTMLElement>("#faultSeverity"),
-  faultSymptoms: requireElement<HTMLElement>("#faultSymptoms"),
-  faultCauses: requireElement<HTMLUListElement>("#faultCauses"),
-  faultChecks: requireElement<HTMLUListElement>("#faultChecks"),
-  faultActions: requireElement<HTMLElement>("#faultActions")
+  faultList: requireElement<HTMLElement>("#faultList")
 };
 
 // Globale Layout-Elemente
@@ -102,6 +96,21 @@ const btnViewNiceToKnow = requireElement<HTMLButtonElement>("#btnViewNiceToKnow"
 const niceGrid = requireElement<HTMLElement>("#niceGrid");
 const btnThemeToggle = requireElement<HTMLButtonElement>("#btnThemeToggle");
 const themeIconLabel = requireElement<HTMLElement>("#themeIconLabel");
+const svgStageWrap = requireElement<HTMLElement>("#svgStageWrap");
+const svgStage = requireElement<HTMLElement>("#svgStage");
+
+/**
+ * Aktualisiert die visuellen Wisch-Schatten links/rechts am mobilen SVG-Container.
+ */
+function updateSvgScrollIndicators(): void {
+  const maxScroll = svgStage.scrollWidth - svgStage.clientWidth;
+  if (maxScroll <= 4) {
+    svgStageWrap.classList.remove("has-scroll-left", "has-scroll-right");
+    return;
+  }
+  svgStageWrap.classList.toggle("has-scroll-left", svgStage.scrollLeft > 4);
+  svgStageWrap.classList.toggle("has-scroll-right", svgStage.scrollLeft < maxScroll - 4);
+}
 
 /**
  * Aktualisiert die Ansichtsauswahl (Kältekreis vs. Störungsbilder vs. Nice to Know).
@@ -142,10 +151,10 @@ function handleSelectComponent(id: number): void {
 }
 
 /**
- * Wählt ein Störungsbild aus und aktualisiert die Fehlerdetails.
+ * Klappt ein Störungsbild auf oder zu (Accordion-Toggle).
  */
 function handleSelectFault(faultId: string): void {
-  state.faultId = faultId;
+  state.faultId = state.faultId === faultId ? "" : faultId;
   renderFaultsView(
     faultsElements,
     state,
@@ -209,6 +218,10 @@ btnThemeToggle.addEventListener("click", () => {
   updateThemeButton(currentTheme);
 });
 
+// Wisch-Indikator beim horizontalen Scrollen des SVG-Schemas aktualisieren
+svgStage.addEventListener("scroll", updateSvgScrollIndicators, { passive: true });
+window.addEventListener("resize", updateSvgScrollIndicators, { passive: true });
+
 // SVG-Komponenten: Klick- und barrierefreie Tastaturbedienung (Enter / Leertaste)
 const compNodes = circuitElements.svgElement.querySelectorAll<SVGGElement>(".svg-comp");
 compNodes.forEach((node) => {
@@ -228,6 +241,7 @@ compNodes.forEach((node) => {
 updateThemeButton(currentTheme);
 renderSystemView(circuitElements, state, handleSelectComponent);
 renderViewSwitcher();
+updateSvgScrollIndicators();
 renderFaultsView(
   faultsElements,
   state,
