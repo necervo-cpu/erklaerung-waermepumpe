@@ -8,6 +8,7 @@
 import { COMPONENTS } from "../data/components";
 import { FAULTS } from "../data/faults";
 import type { AppState, FaultData } from "../types/circuit";
+import { createChevronSvg } from "./uiIcons";
 
 export interface FaultsDomElements {
   readonly faultList: HTMLElement;
@@ -204,7 +205,7 @@ export function renderFaultsView(
     const chevron = document.createElement("span");
     chevron.className = "fault-chevron";
     chevron.setAttribute("aria-hidden", "true");
-    chevron.textContent = "▾";
+    chevron.appendChild(createChevronSvg());
 
     rightGroup.appendChild(codeBadge);
     rightGroup.appendChild(chevron);

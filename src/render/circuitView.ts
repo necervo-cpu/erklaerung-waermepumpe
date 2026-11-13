@@ -8,6 +8,7 @@
 import { COMPONENTS } from "../data/components";
 import { SYSTEMS } from "../data/systems";
 import type { AppState } from "../types/circuit";
+import { createChevronSvg } from "./uiIcons";
 
 export interface CircuitDomElements {
   readonly headerSystemText: HTMLElement;
@@ -211,7 +212,7 @@ export function renderComponentDetail(
     const chevron = document.createElement("span");
     chevron.className = "comp-chevron";
     chevron.setAttribute("aria-hidden", "true");
-    chevron.textContent = "▾";
+    chevron.appendChild(createChevronSvg());
 
     topRow.appendChild(lead);
     topRow.appendChild(chevron);

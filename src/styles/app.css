@@ -768,17 +768,35 @@ svg#circuitSvg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  font-size: 0.95rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 0 var(--edge);
   color: var(--brand-accent);
   flex-shrink: 0;
-  transition: transform var(--dur-normal) var(--ease-spring), color var(--dur-fast) ease;
+  transition:
+    transform var(--dur-normal) var(--ease-spring),
+    background var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+
+.comp-card-btn:hover .comp-chevron {
+  background: var(--tile);
+  border-color: var(--brand-accent);
 }
 
 .comp-accordion-card.is-open .comp-chevron {
   transform: rotate(180deg);
-  color: var(--ink);
+  background: var(--tile);
+  border-color: var(--brand-accent);
+  color: var(--brand-accent-text);
+}
+
+.acc-chevron-svg {
+  display: block;
 }
 
 .comp-acc-body {
@@ -1054,16 +1072,31 @@ svg#circuitSvg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  font-size: 0.95rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 0 var(--edge);
   color: var(--muted);
-  transition: transform var(--dur-normal) var(--ease-spring), color var(--dur-fast) ease;
+  flex-shrink: 0;
+  transition:
+    transform var(--dur-normal) var(--ease-spring),
+    background var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+
+.fault-card-btn:hover .fault-chevron {
+  color: var(--ink);
+  border-color: rgba(255, 59, 48, 0.4);
 }
 
 .fault-accordion-card.is-open .fault-chevron {
   transform: rotate(180deg);
-  color: var(--ink);
+  background: rgba(255, 59, 48, 0.16);
+  border-color: rgba(255, 59, 48, 0.45);
+  color: #ff453a;
 }
 
 .t-acc-panel.is-open,
