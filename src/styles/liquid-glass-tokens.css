@@ -97,6 +97,12 @@
   --scale-tiny: 0.99;
   --scale-medium: 0.97;
   --scale-small: 0.95;
+
+  /* --- Icon-Tokens (Google Material Symbols Rounded, ICONS.md) --- */
+  --icon-color-inactive: #9499ad;
+  --icon-color-hover: #f4f5f8;
+  --icon-color-active: #c8b6ff;
+  --icon-grad: -25; /* Dark Mode optischer Ausgleich */
 }
 
 /* Hell-Modus: Manuell aktiviert über data-theme="light" */
@@ -145,6 +151,12 @@
   --brand-accent-hover: var(--pastel-sky);
   --brand-accent-text: var(--accent-text-sky);
   --tile: color-mix(in srgb, var(--pastel-sky) 20%, transparent);
+
+  /* Icon-Tokens (Light Mode Standard) */
+  --icon-color-inactive: #5e6375;
+  --icon-color-hover: #121318;
+  --icon-color-active: #c8b6ff;
+  --icon-grad: 0;
 }
 
 /* Auto-Modus: Wenn kein data-theme gesetzt ist und prefers-color-scheme light aktiv ist */
@@ -190,6 +202,12 @@
     --brand-accent-hover: var(--pastel-sky);
     --brand-accent-text: var(--accent-text-sky);
     --tile: color-mix(in srgb, var(--pastel-sky) 20%, transparent);
+
+    /* Icon-Tokens (Auto Light Mode) */
+    --icon-color-inactive: #5e6375;
+    --icon-color-hover: #121318;
+    --icon-color-active: #c8b6ff;
+    --icon-grad: 0;
   }
 }
 
@@ -293,6 +311,54 @@ button,
 }
 .t-acc-panel-inner {
   overflow: hidden;
+}
+
+/* --- Antigravity Icon Guideline (Google Material Symbols Rounded) --- */
+.light-mode {
+  --icon-color-inactive: #5e6375;
+  --icon-color-hover: #121318;
+  --icon-color-active: #c8b6ff;
+  --icon-grad: 0;
+}
+
+.ag-icon {
+  font-family: "Material Symbols Rounded";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  color: var(--icon-color-inactive);
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" var(--icon-grad), "opsz" 24;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.ag-icon--xs {
+  font-size: 16px;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" var(--icon-grad), "opsz" 20;
+}
+.ag-icon--sm {
+  font-size: 20px;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" var(--icon-grad), "opsz" 20;
+}
+.ag-icon--lg {
+  font-size: 32px;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" var(--icon-grad), "opsz" 40;
+}
+
+.ag-icon:hover {
+  color: var(--icon-color-hover);
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" var(--icon-grad), "opsz" 24;
+}
+
+.ag-icon--active {
+  color: var(--icon-color-active);
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+  filter: drop-shadow(0 0 8px rgba(200, 182, 255, 0.65))
+    drop-shadow(0 0 16px rgba(200, 182, 255, 0.35));
 }
 
 /* Barrierefreiheit: Reduzierte Transparenz & Erhöhter Kontrast */

@@ -92,3 +92,12 @@ WCAG-AA-konform (mindestens 4,9:1 auf `#F2F2F7` und 5,1:1 auf `#FFFFFF` im Hell-
 - **UI- & Fließtext (`--font-sans`):** `-apple-system, BlinkMacSystemFont, "SF Pro Text", "Plus Jakarta Sans", "Segoe UI", sans-serif`
 - **Zahlen, Messwerte & Code (`--font-mono`):** `"SF Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace`
 - **Zahlen-Formatierung:** Alle Druck-, Temperatur- und Differenzwerte nutzen `font-variant-numeric: tabular-nums`.
+
+---
+
+## 3. Icons (Antigravity Icon Guideline)
+
+- **Symbol-Set:** Ausschließlich **Google Material Symbols Rounded** über den Google-Fonts-Import in `index.html` und Text-Ligatur `<span class="ag-icon">...</span>`. Keine fremden Icon-Bibliotheken, Emojis oder handgezeichneten Inline-`<svg>`-Icons (technische Fachdiagramme wie `#circuitSvg` ausgenommen).
+- **4 feste Größen:** `.ag-icon--xs` (`16px`, `opsz 20`), `.ag-icon--sm` (`20px`, `opsz 20`), `.ag-icon` Standard (`24px`, `opsz 24`), `.ag-icon--lg` (`32px`, `opsz 40`).
+- **4 Google-Achsen:** `wght` `300` (Standard) / `400` (Hover & Active), `FILL` `0` (Inaktiv) / `1` (Aktiv), `GRAD` `-25` (Dark Mode) / `0` (Light Mode), `opsz` passend zur Größenstufe.
+- **Glow:** Ausschließlich `filter: drop-shadow(...)` auf aktiven Icons (`.ag-icon--active`), niemals `box-shadow`. Basis-CSS liegt in [liquid-glass-tokens.css](file:///Users/necervo/Desktop/Erkl%C3%A4rung%20K%C3%A4ltekreis/src/styles/liquid-glass-tokens.css).
