@@ -45,6 +45,8 @@ export interface CircuitDomElements {
   readonly valvePathsDefrost: SVGGElement;
   readonly eevConesHeating: SVGGElement;
   readonly eevConesDefrost: SVGGElement;
+  readonly sensorLinesHeating: SVGGElement;
+  readonly sensorLinesDefrost: SVGGElement;
   readonly comp1Title: SVGTextElement;
   readonly comp1Sub: SVGTextElement;
   readonly comp3Title: SVGTextElement;
@@ -176,6 +178,8 @@ export function renderOperationMode(
   elements.valvePathsDefrost.classList.toggle("hidden", !isDefrost);
   elements.eevConesHeating.classList.toggle("hidden", isDefrost);
   elements.eevConesDefrost.classList.toggle("hidden", !isDefrost);
+  elements.sensorLinesHeating.classList.toggle("hidden", isDefrost);
+  elements.sensorLinesDefrost.classList.toggle("hidden", !isDefrost);
 
   // Im Abtaubetrieb tauschen Außen-Wärmetauscher und Plattenwärmetauscher ihre Rollen
   elements.comp1Title.textContent = isDefrost ? "Verflüssiger" : "Verdampfer";
