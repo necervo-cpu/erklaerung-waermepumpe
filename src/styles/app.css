@@ -1140,6 +1140,12 @@ svg#circuitSvg {
   overflow-wrap: break-word;
 }
 
+.svg-layer-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .hidden {
   display: none !important;
 }

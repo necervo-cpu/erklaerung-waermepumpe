@@ -170,12 +170,12 @@ export function renderOperationMode(
   const isDefrost = state.mode === "defrost";
   elements.btnModeHeating.setAttribute("aria-selected", String(!isDefrost));
   elements.btnModeDefrost.setAttribute("aria-selected", String(isDefrost));
-  elements.pipesHeating.classList.toggle("hidden", isDefrost);
-  elements.pipesDefrost.classList.toggle("hidden", !isDefrost);
-  elements.valvePathsHeating.classList.toggle("hidden", isDefrost);
-  elements.valvePathsDefrost.classList.toggle("hidden", !isDefrost);
-  elements.eevConesHeating.classList.toggle("hidden", isDefrost);
-  elements.eevConesDefrost.classList.toggle("hidden", !isDefrost);
+  elements.pipesHeating.classList.toggle("svg-layer-hidden", isDefrost);
+  elements.pipesDefrost.classList.toggle("svg-layer-hidden", !isDefrost);
+  elements.valvePathsHeating.classList.toggle("svg-layer-hidden", isDefrost);
+  elements.valvePathsDefrost.classList.toggle("svg-layer-hidden", !isDefrost);
+  elements.eevConesHeating.classList.toggle("svg-layer-hidden", isDefrost);
+  elements.eevConesDefrost.classList.toggle("svg-layer-hidden", !isDefrost);
 
   // Im Abtaubetrieb tauschen Außen-Wärmetauscher und Plattenwärmetauscher ihre Rollen
   elements.comp1Title.textContent = isDefrost ? "Verflüssiger" : "Verdampfer";
