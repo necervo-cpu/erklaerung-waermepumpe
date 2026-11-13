@@ -16,9 +16,10 @@ import {
   getThemeModeLabel,
   type ThemeMode
 } from "./theme-init";
-import type { AppState, SystemType, ViewType } from "./types/circuit";
+import type { AppState, OperationMode, SystemType, ViewType } from "./types/circuit";
 import {
   renderComponentDetail,
+  renderOperationMode,
   renderSystemView,
   type CircuitDomElements
 } from "./render/circuitView";
@@ -44,6 +45,7 @@ function requireElement<T extends Element>(selector: string): T {
  */
 const state: AppState = {
   system: "monoblock",
+  mode: "heating",
   view: "circuit",
   componentId: 1,
   faultId: "hd"
@@ -78,6 +80,12 @@ const circuitElements: CircuitDomElements = {
   outSub: requireElement<HTMLElement>("#outSub"),
   detailService: requireElement<HTMLElement>("#detailService"),
   detailServiceBadge: requireElement<HTMLElement>("#detailServiceBadge"),
+  defrostNoteBox: requireElement<HTMLElement>("#defrostNoteBox"),
+  defrostNoteText: requireElement<HTMLElement>("#defrostNoteText"),
+  btnModeHeating: requireElement<HTMLButtonElement>("#btnModeHeating"),
+  btnModeDefrost: requireElement<HTMLButtonElement>("#btnModeDefrost"),
+  pipesHeating: requireElement<SVGGElement>("#pipesHeating"),
+  pipesDefrost: requireElement<SVGGElement>("#pipesDefrost"),
   svgElement: requireElement<SVGSVGElement>("#circuitSvg")
 };
 
@@ -182,6 +190,14 @@ function handleSetSystem(system: SystemType): void {
 }
 
 /**
+ * Schaltet den Betriebsmodus um (Heizbetrieb vs. Abtauphase).
+ */
+function handleSetMode(mode: OperationMode): void {
+  state.mode = mode;
+  renderOperationMode(circuitElements, state, handleSelectComponent);
+}
+
+/**
  * Schaltet die aktive Ansicht um.
  */
 function handleSetView(view: ViewType): void {
@@ -206,6 +222,10 @@ function handleSetView(view: ViewType): void {
 // System-Tabs
 circuitElements.btnMonoblock.addEventListener("click", () => handleSetSystem("monoblock"));
 circuitElements.btnSplit.addEventListener("click", () => handleSetSystem("split"));
+
+// Betriebsmodus-Tabs (Heizbetrieb vs. Abtauphase)
+circuitElements.btnModeHeating.addEventListener("click", () => handleSetMode("heating"));
+circuitElements.btnModeDefrost.addEventListener("click", () => handleSetMode("defrost"));
 
 // Ansichts-Tabs
 btnViewCircuit.addEventListener("click", () => handleSetView("circuit"));
@@ -240,6 +260,7 @@ compNodes.forEach((node) => {
 // -----------------------------------------------------------------------------
 updateThemeButton(currentTheme);
 renderSystemView(circuitElements, state, handleSelectComponent);
+renderOperationMode(circuitElements, state, handleSelectComponent);
 renderViewSwitcher();
 updateSvgScrollIndicators();
 renderFaultsView(

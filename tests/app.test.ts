@@ -180,9 +180,10 @@ describe("Bauteildaten-Integrität (components.ts)", () => {
       expect(split.outMetric).toBeTruthy();
       expect(split.outSub).toBeTruthy();
 
-      // Service-Angaben
+      // Service-Angaben & Abtau-Hinweis
       expect(comp.service).toBeTruthy();
       expect(comp.serviceMetric).toBeTruthy();
+      expect(comp.defrostNote).toBeTruthy();
     }
   });
 });

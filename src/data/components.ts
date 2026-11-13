@@ -42,7 +42,9 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Überhitzung (Sauggastemperatur minus Verdampfungstemperatur) sowie gleichmäßige Bereifung über die gesamte Lamellenfläche prüfen.",
-    serviceMetric: "Soll-Überhitzung: 5 – 8 K · ΔT Luft: ca. 3 – 5 K"
+    serviceMetric: "Soll-Überhitzung: 5 – 8 K · ΔT Luft: ca. 3 – 5 K",
+    defrostNote:
+      "Arbeitet in der Abtauphase kurzzeitig als Verflüssiger: Heißes Druckgas schmilzt den Eisansatz von innen ab, der Außenlüfter bleibt ausgeschaltet."
   },
   {
     id: 2,
@@ -78,7 +80,9 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Druckverhältnis (p_HD / p_ND), Stromaufnahme des Inverters und Heißgas-Endtemperatur überwachen. Bei R32 liegt das Heißgas typischerweise heißer als bei R290.",
-    serviceMetric: "Max. Heißgas-Schutz: ~105–115 °C (modellabhängig)"
+    serviceMetric: "Max. Heißgas-Schutz: ~105–115 °C (modellabhängig)",
+    defrostNote:
+      "Läuft mit angepasster Drehzahl weiter und pumpt die aus dem Heizungswasser aufgenommene Energie als Heißgas direkt in den vereisten Verdampfer."
   },
   {
     id: 3,
@@ -114,7 +118,9 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Unterkühlung (Verflüssigungstemperatur minus Flüssigkeitsaustritt) und wasserseitige Spreizung (Vorlauf minus Rücklauf) messen.",
-    serviceMetric: "Unterkühlung: 3 – 6 K · Spreizung Wasser: 4 – 7 K"
+    serviceMetric: "Unterkühlung: 3 – 6 K · Spreizung Wasser: 4 – 7 K",
+    defrostNote:
+      "Kehrt seine Funktion um und arbeitet als Verdampfer: Entzieht dem Heizungswasser für ca. 45–120 s Wärme (Umwälzpumpe muss sicher weiterlaufen)."
   },
   {
     id: 4,
@@ -150,7 +156,9 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Schrittmotor-Öffnungsgrad (Steps / %) in der Regelung und Reaktion der Sauggasüberhitzung bei Lastwechsel prüfen.",
-    serviceMetric: "Regelziel: Überhitzung 5 – 8 K · Spule: ca. 40–50 Ω"
+    serviceMetric: "Regelziel: Überhitzung 5 – 8 K · Spule: ca. 40–50 Ω",
+    defrostNote:
+      "Öffnet während der Abtauung weit (oder nutzt einen Abtau-Bypass), um das flüssige Kondensat aus dem Außen-Wärmetauscher zügig in Richtung Plattenwärmetauscher zu entspannen."
   },
   {
     id: 5,
@@ -186,7 +194,9 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Magnetspule (230 V / 24 V) auf Ansteuerung prüfen und alle 4 Rohranschlüsse per IR-Thermometer/Handauflegen auf saubere Trennung (kein innerer Bypass) testen.",
-    serviceMetric: "Druckdifferenz für Umschaltung: min. 3 – 4 bar"
+    serviceMetric: "Druckdifferenz für Umschaltung: min. 3 – 4 bar",
+    defrostNote:
+      "Schaltet aktiv um und leitet Heißgas vom Verdichter zum Außen-Wärmetauscher sowie kaltes Sauggas vom Plattenwärmetauscher zurück zum Verdichter."
   },
   {
     id: 6,
@@ -222,7 +232,9 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Bei Split-Anlagen mit langen Rohrleitungen auf korrekte Zusatzfüllmenge (g/m) laut Hersteller achten, damit der Sammler weder leerläuft noch überfüllt wird.",
-    serviceMetric: "Druckverlust: < 0,1 bar · Füllstand: Lastabhängig"
+    serviceMetric: "Druckverlust: < 0,1 bar · Füllstand: Lastabhängig",
+    defrostNote:
+      "Gleicht die in der Abtauphase stark veränderten Flüssigkeitsvolumina zwischen Außen- und Innenwärmetauscher aus."
   },
   {
     id: 7,
@@ -258,7 +270,9 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Temperatur vor und nach dem Filtertrockner messen. Ein spürbarer Temperaturabfall (oder gar Vereisung dahinter) deutet auf eine Verstopfung und Vorentspannung hin.",
-    serviceMetric: "Zulässiges ΔT Ein/Aus: < 1,5 K (sonst verstopft!)"
+    serviceMetric: "Zulässiges ΔT Ein/Aus: < 1,5 K (sonst verstopft!)",
+    defrostNote:
+      "Wird beim Rückströmen des Kondensats in umgekehrter Richtung durchflossen (bei bi-flow Filtertrocknern für Wärmepumpen zugelassen)."
   },
   {
     id: 8,
@@ -294,7 +308,9 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Dampfblasen im stationären Betrieb weisen meist auf Kältemittelmangel oder zu geringe Unterkühlung hin. Indikatorfarbe immer erst nach einigen Stunden Laufzeit beurteilen.",
-    serviceMetric: "Soll-Zustand: 100 % blasenfrei · Indikator Grün"
+    serviceMetric: "Soll-Zustand: 100 % blasenfrei · Indikator Grün",
+    defrostNote:
+      "Während der kurzen Abtauumkehr sind vorübergehend Dampfblasen im Schauglas normal – eine Füllstandsbewertung erfolgt erst wieder im stationären Heizbetrieb."
   },
   {
     id: 9,
@@ -330,6 +346,8 @@ export const COMPONENTS: readonly ComponentData[] = [
     },
     service:
       "Sensordrücke in der Steuerung mit einer Monteurhilfe (Manometer) plausibilisieren. Bei HD-Abschaltung zuerst die Wärmesenke (Heizungswasserdurchfluss) prüfen!",
-    serviceMetric: "Plausibilität Manometer vs. Steuerung: ±0,3 bar"
+    serviceMetric: "Plausibilität Manometer vs. Steuerung: ±0,3 bar",
+    defrostNote:
+      "Überwachen auch die Druckspitzen beim Umschalten des 4-Wege-Ventils und lösen bei Frostgefahr im Plattenwärmetauscher einen ND-Schutzstopp aus."
   }
 ];

@@ -130,6 +130,33 @@
           <span id="bannerBadge" class="badge-tag r290">R290 · A3 · Hermetisch</span>
         </div>
 
+        <!-- Betriebsmodus-Umschalter: Heizbetrieb vs. Abtauphase -->
+        <div class="mode-switch-bar">
+          <span class="mode-switch-label">Betriebsmodus:</span>
+          <div class="segmented" role="tablist" aria-label="Betriebsmodus wählen">
+            <button
+              type="button"
+              class="segmented-btn press-btn"
+              data-mode="heating"
+              role="tab"
+              aria-selected="true"
+              id="btnModeHeating"
+            >
+              Heizbetrieb (A2/W35)
+            </button>
+            <button
+              type="button"
+              class="segmented-btn is-defrost-btn press-btn"
+              data-mode="defrost"
+              role="tab"
+              aria-selected="false"
+              id="btnModeDefrost"
+            >
+              Abtauphase (Kreislaufumkehr)
+            </button>
+          </div>
+        </div>
+
         <!-- SVG Flussdiagramm -->
         <div class="svg-swipe-hint" aria-hidden="true">
           <span>←</span>
@@ -180,8 +207,9 @@
             </g>
 
             <!-- ============================================================
-                 LEITUNGEN (ANIMIERT IN FLIESSRICHTUNG)
+                 LEITUNGEN HEIZBETRIEB (ANIMIERT IN FLIESSRICHTUNG)
                  ============================================================ -->
+            <g id="pipesHeating">
             <!-- 1. Heißgas: Verdichter -> 4-Wege-Ventil -> Verflüssiger -->
             <path class="pipe-base" stroke="#FF3B30" d="M 380 275 L 380 219" />
             <path class="pipe-flow" stroke="#FF3B30" marker-end="url(#arrowHeissgas)" d="M 380 275 L 380 225" />
@@ -217,6 +245,48 @@
 
             <path class="pipe-base" stroke="#007AFF" d="M 334 219 L 334 275" />
             <path class="pipe-flow" stroke="#007AFF" marker-end="url(#arrowSaug)" d="M 334 219 L 334 269" />
+            </g>
+
+            <!-- ============================================================
+                 LEITUNGEN ABTAUPHASE (KREISLAUFUMKEHR ÜBER 4-WEGE-VENTIL)
+                 ============================================================ -->
+            <g id="pipesDefrost" class="hidden">
+            <!-- 1. Heißgas: Verdichter -> 4-Wege-Ventil -> Außen-Wärmetauscher (Verdampfer taut ab) -->
+            <path class="pipe-base" stroke="#FF3B30" d="M 380 275 L 380 219" />
+            <path class="pipe-flow" stroke="#FF3B30" marker-end="url(#arrowHeissgas)" d="M 380 275 L 380 225" />
+
+            <path class="pipe-base" stroke="#FF3B30" d="M 305 172 L 171 172" />
+            <path class="pipe-flow" stroke="#FF3B30" marker-end="url(#arrowHeissgas)" d="M 305 172 L 178 172" />
+            <text x="234" y="160" text-anchor="middle" fill="#FF3B30" font-size="10.5" font-weight="650">Heißgas (Abtauen)</text>
+
+            <!-- 2. Flüssig (Kondensat): Außen-Wärmetauscher -> EEV -->
+            <path class="pipe-base" stroke="#FF9500" d="M 108 325 L 108 415 L 118 415" />
+            <path class="pipe-flow slow" stroke="#FF9500" marker-end="url(#arrowFluessig)" d="M 108 325 L 108 415 L 115 415" />
+            <text x="88" y="366" text-anchor="end" fill="#FF9500" font-size="10.5" font-weight="650">Flüssig</text>
+            <text x="88" y="379" text-anchor="end" fill="#FF9500" font-size="10">(HD)</text>
+
+            <!-- 3. Nassdampf (entspannt): EEV -> Schauglas -> Trockner -> Sammler -> Plattenwärmetauscher -->
+            <path class="pipe-base" stroke="#32ADE6" d="M 194 415 L 222 415" />
+            <path class="pipe-flow" stroke="#32ADE6" d="M 194 415 L 222 415" />
+
+            <path class="pipe-base" stroke="#32ADE6" d="M 290 415 L 318 415" />
+            <path class="pipe-flow" stroke="#32ADE6" d="M 290 415 L 318 415" />
+
+            <path class="pipe-base" stroke="#32ADE6" d="M 400 415 L 428 415" />
+            <path class="pipe-flow" stroke="#32ADE6" d="M 400 415 L 428 415" />
+
+            <path class="pipe-base" stroke="#32ADE6" d="M 516 415 L 643 415 L 643 250" />
+            <path class="pipe-flow" stroke="#32ADE6" marker-end="url(#arrowNass)" d="M 516 415 L 643 415 L 643 257" />
+            <text x="596" y="403" text-anchor="middle" fill="#32ADE6" font-size="10.5" font-weight="650">Nassdampf (ND)</text>
+
+            <!-- 4. Sauggas: Plattenwärmetauscher -> 4-Wege-Ventil -> Verdichter -->
+            <path class="pipe-base" stroke="#007AFF" d="M 585 172 L 409 172" />
+            <path class="pipe-flow" stroke="#007AFF" marker-end="url(#arrowSaug)" d="M 585 172 L 415 172" />
+            <text x="488" y="160" text-anchor="middle" fill="#007AFF" font-size="10.5" font-weight="650">Sauggas (ND)</text>
+
+            <path class="pipe-base" stroke="#007AFF" d="M 334 219 L 334 275" />
+            <path class="pipe-flow" stroke="#007AFF" marker-end="url(#arrowSaug)" d="M 334 219 L 334 269" />
+            </g>
 
             <!-- 5. Sekundärkreis Heizungswasser (Verflüssiger <-> Hydraulikmodul) -->
             <path class="pipe-base" stroke="#FF6B35" d="M 701 142 L 778 142" />
@@ -417,6 +487,11 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div id="defrostNoteBox" class="detail-section defrost-note-box hidden">
+          <p class="section-label">Rolle in der Abtauphase (Kreislaufumkehr)</p>
+          <p id="defrostNoteText" class="section-text"></p>
         </div>
 
         <div class="detail-section service-highlight">

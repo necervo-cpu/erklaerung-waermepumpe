@@ -35,6 +35,12 @@ export interface CircuitDomElements {
   readonly outSub: HTMLElement;
   readonly detailService: HTMLElement;
   readonly detailServiceBadge: HTMLElement;
+  readonly defrostNoteBox: HTMLElement;
+  readonly defrostNoteText: HTMLElement;
+  readonly btnModeHeating: HTMLButtonElement;
+  readonly btnModeDefrost: HTMLButtonElement;
+  readonly pipesHeating: SVGGElement;
+  readonly pipesDefrost: SVGGElement;
   readonly svgElement: SVGSVGElement;
 }
 
@@ -123,9 +129,30 @@ export function renderComponentDetail(
   elements.outMetric.textContent = thermo.outMetric;
   elements.outSub.textContent = thermo.outSub;
 
+  // Abtauphasen-Hinweis je nach aktivem Betriebsmodus ein-/ausblenden
+  const isDefrost = state.mode === "defrost";
+  elements.defrostNoteBox.classList.toggle("hidden", !isDefrost);
+  elements.defrostNoteText.textContent = comp.defrostNote;
+
   // Service-Hinweise
   elements.detailService.textContent = comp.service;
   elements.detailServiceBadge.textContent = comp.serviceMetric;
+}
+
+/**
+ * Schaltet die animierten Kältekreis-Leitungen zwischen Heizbetrieb und Abtauphase (Kreislaufumkehr).
+ */
+export function renderOperationMode(
+  elements: CircuitDomElements,
+  state: AppState,
+  onSelectComponent: (id: number) => void
+): void {
+  const isDefrost = state.mode === "defrost";
+  elements.btnModeHeating.setAttribute("aria-selected", String(!isDefrost));
+  elements.btnModeDefrost.setAttribute("aria-selected", String(isDefrost));
+  elements.pipesHeating.classList.toggle("hidden", isDefrost);
+  elements.pipesDefrost.classList.toggle("hidden", !isDefrost);
+  renderComponentDetail(elements, state, onSelectComponent);
 }
 
 /**

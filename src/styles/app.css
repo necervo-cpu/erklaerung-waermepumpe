@@ -443,6 +443,38 @@ svg#circuitSvg {
   stroke: var(--svg-zone-indoor-stroke);
 }
 
+.mode-switch-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.mode-switch-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.segmented-btn.is-defrost-btn[aria-selected="true"] {
+  background: rgba(50, 173, 230, 0.2);
+  color: #32ade6;
+  border: 1px solid rgba(50, 173, 230, 0.42);
+}
+
+.defrost-note-box {
+  border-color: rgba(50, 173, 230, 0.42);
+  background: linear-gradient(135deg, rgba(50, 173, 230, 0.14), var(--input-bg));
+}
+
+.defrost-note-box .section-label {
+  color: #32ade6;
+}
+
 .svg-swipe-hint {
   display: none;
   align-items: center;
@@ -1165,7 +1197,39 @@ svg#circuitSvg {
     flex-direction: column;
     align-items: flex-start;
   }
-  .svg-swipe-hint {
+  .mode-switch-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.mode-switch-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.segmented-btn.is-defrost-btn[aria-selected="true"] {
+  background: rgba(50, 173, 230, 0.2);
+  color: #32ade6;
+  border: 1px solid rgba(50, 173, 230, 0.42);
+}
+
+.defrost-note-box {
+  border-color: rgba(50, 173, 230, 0.42);
+  background: linear-gradient(135deg, rgba(50, 173, 230, 0.14), var(--input-bg));
+}
+
+.defrost-note-box .section-label {
+  color: #32ade6;
+}
+
+.svg-swipe-hint {
     display: inline-flex;
   }
   .svg-stage {

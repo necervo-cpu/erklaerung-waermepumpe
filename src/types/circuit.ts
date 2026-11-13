@@ -8,6 +8,8 @@
 
 export type SystemType = "monoblock" | "split";
 
+export type OperationMode = "heating" | "defrost";
+
 export type ViewType = "circuit" | "faults" | "niceToKnow";
 
 /**
@@ -36,6 +38,7 @@ export interface ComponentData {
   readonly thermo: Record<SystemType, ThermodynamicState>;
   readonly service: string;
   readonly serviceMetric: string;
+  readonly defrostNote: string;
 }
 
 /**
@@ -91,6 +94,7 @@ export interface NiceToKnowItem {
  */
 export interface AppState {
   system: SystemType;
+  mode: OperationMode;
   view: ViewType;
   componentId: number;
   faultId: string;
