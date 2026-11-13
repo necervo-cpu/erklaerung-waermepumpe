@@ -548,6 +548,7 @@ svg#circuitSvg {
   stroke-width: 2.5;
 }
 
+.comp-box,
 .svg-comp .comp-box {
   fill: var(--svg-comp-bg);
   stroke: var(--svg-comp-stroke);
