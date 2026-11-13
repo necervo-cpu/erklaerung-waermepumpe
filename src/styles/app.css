@@ -1,0 +1,890 @@
+/**
+ * Modul: Anwendungs-Styles der Kältekreis-Fachdokumentation (app.css)
+ * Zweck: Layout, Liquid-Glass-Oberflächen, SVG-Farbsteuerung und A11y nach Apple HIG.
+ * Verantwortlichkeit: Konsistente Hell- und Dunkelmodus-Darstellung für UI und SVG-Schaltschema.
+ * Sicherheits- & A11y-Relevanz: Mindest-Tippfläche 44px, kein Text-Abschneiden, reduziertes Motion.
+ */
+
+/* ==========================================================================
+   CSS-Variablen für Kältekreis und SVG-Darstellung
+   ========================================================================== */
+:root,
+:root[data-theme="light"] {
+  --svg-stage-bg: #f0f0f3;
+  --svg-comp-bg: rgba(255, 255, 255, 0.94);
+  --svg-comp-hover: rgba(255, 255, 255, 1);
+  --svg-comp-stroke: rgba(15, 23, 42, 0.16);
+  --svg-comp-active-bg: rgba(0, 113, 227, 0.12);
+  --comp-num-bg: rgba(0, 113, 227, 0.14);
+  --comp-num-txt: #0051a8;
+  --svg-text-primary: #1d1d1f;
+  --svg-text-secondary: #515154;
+  --svg-zone-outdoor-fill: rgba(0, 0, 0, 0.02);
+  --svg-zone-outdoor-stroke: rgba(0, 0, 0, 0.08);
+  --svg-zone-indoor-fill: rgba(0, 113, 227, 0.04);
+  --svg-zone-indoor-stroke: rgba(0, 113, 227, 0.16);
+
+  /* Kältekreis-Zustandsfarben gemäß DESIGN.md */
+  --c-heissgas: #ff3b30;
+  --c-fluessig: #ff9500;
+  --c-nassdampf: #32ade6;
+  --c-sauggas: #007aff;
+  --c-vorlauf: #ff6b35;
+  --c-ruecklauf: #2ac7b8;
+  --c-warn: #ffd60a;
+  --c-ok: #30d158;
+
+  --badge-r290-bg: rgba(48, 209, 88, 0.16);
+  --badge-r290-ink: #1b8a3b;
+  --badge-r290-border: rgba(48, 209, 88, 0.4);
+
+  --badge-r32-bg: rgba(0, 113, 227, 0.14);
+  --badge-r32-ink: #0051a8;
+  --badge-r32-border: rgba(0, 113, 227, 0.35);
+}
+
+:root[data-theme="dark"] {
+  --svg-stage-bg: #151518;
+  --svg-comp-bg: #222226;
+  --svg-comp-hover: rgba(48, 48, 54, 0.96);
+  --svg-comp-stroke: rgba(255, 255, 255, 0.22);
+  --svg-comp-active-bg: rgba(24, 46, 74, 0.94);
+  --comp-num-bg: rgba(255, 255, 255, 0.14);
+  --comp-num-txt: #f5f5f7;
+  --svg-text-primary: #f5f5f7;
+  --svg-text-secondary: #a1a1a6;
+  --svg-zone-outdoor-fill: rgba(255, 255, 255, 0.022);
+  --svg-zone-outdoor-stroke: rgba(255, 255, 255, 0.07);
+  --svg-zone-indoor-fill: rgba(0, 122, 255, 0.035);
+  --svg-zone-indoor-stroke: rgba(0, 122, 255, 0.14);
+
+  --badge-r290-bg: rgba(48, 209, 88, 0.16);
+  --badge-r290-ink: #63e683;
+  --badge-r290-border: rgba(48, 209, 88, 0.35);
+
+  --badge-r32-bg: rgba(0, 122, 255, 0.18);
+  --badge-r32-ink: #66b2ff;
+  --badge-r32-border: rgba(0, 122, 255, 0.38);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --svg-stage-bg: #151518;
+    --svg-comp-bg: #222226;
+    --svg-comp-hover: rgba(48, 48, 54, 0.96);
+    --svg-comp-stroke: rgba(255, 255, 255, 0.22);
+    --svg-comp-active-bg: rgba(24, 46, 74, 0.94);
+    --comp-num-bg: rgba(255, 255, 255, 0.14);
+    --comp-num-txt: #f5f5f7;
+    --svg-text-primary: #f5f5f7;
+    --svg-text-secondary: #a1a1a6;
+    --svg-zone-outdoor-fill: rgba(255, 255, 255, 0.022);
+    --svg-zone-outdoor-stroke: rgba(255, 255, 255, 0.07);
+    --svg-zone-indoor-fill: rgba(0, 122, 255, 0.035);
+    --svg-zone-indoor-stroke: rgba(0, 122, 255, 0.14);
+
+    --badge-r290-bg: rgba(48, 209, 88, 0.16);
+    --badge-r290-ink: #63e683;
+    --badge-r290-border: rgba(48, 209, 88, 0.35);
+
+    --badge-r32-bg: rgba(0, 122, 255, 0.18);
+    --badge-r32-ink: #66b2ff;
+    --badge-r32-border: rgba(0, 122, 255, 0.38);
+  }
+}
+
+/* ==========================================================================
+   iOS Safari Basis-CSS & Shell
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+  background: var(--bg);
+  height: 100%;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--ios-bg);
+  pointer-events: none;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  min-height: 100dvh;
+  background: transparent;
+  color: var(--ink);
+  line-height: 1.4;
+  overflow-x: hidden;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+.app-shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ==========================================================================
+   Top Navigation & Segmented Controls
+   ========================================================================== */
+.topbar {
+  position: sticky;
+  top: 10px;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 18px;
+  border-radius: var(--radius-hero);
+  background: var(--glass-hero);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--border-subtle);
+  box-shadow:
+    inset 0 1px 1px 0 var(--edge),
+    inset 0 -1px 0 0 var(--edge-low),
+    var(--ios-shadow);
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: var(--tile);
+  border: 1px solid var(--border-subtle);
+  color: var(--brand-accent);
+}
+
+.brand-text {
+  min-width: 0;
+}
+
+.brand-title {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
+.brand-sub {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ref-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  color: var(--muted);
+}
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.segmented {
+  position: relative;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding: 4px;
+  border-radius: var(--radius-well);
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.segmented-btn {
+  position: relative;
+  z-index: 2;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  min-height: 44px; /* Apple HIG Mindest-Tippfläche */
+  padding: 8px 14px;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--dur-fast) ease, background var(--dur-fast) ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.segmented-btn:hover {
+  color: var(--ink);
+}
+
+.segmented-btn[aria-selected="true"] {
+  color: var(--ink);
+  background: var(--glass);
+  box-shadow:
+    inset 0 1px 0 var(--edge),
+    0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.segmented-btn.is-system[aria-selected="true"][data-system="monoblock"] {
+  background: var(--badge-r290-bg);
+  border: 1px solid var(--badge-r290-border);
+  color: var(--badge-r290-ink);
+}
+
+.segmented-btn.is-system[aria-selected="true"][data-system="split"] {
+  background: var(--badge-r32-bg);
+  border: 1px solid var(--badge-r32-border);
+  color: var(--badge-r32-ink);
+}
+
+.dot-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* 3-Stufen-Theme-Button */
+.theme-toggle-btn {
+  appearance: none;
+  border: 1px solid var(--border-subtle);
+  background: var(--input-bg);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: inset 0 1px 1px var(--edge);
+}
+
+.theme-toggle-btn:hover {
+  background: var(--glass);
+}
+
+/* ==========================================================================
+   Ansicht 1: Kältekreis-Dashboard
+   ========================================================================== */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.48fr) minmax(330px, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.schema-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.refrigerant-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-well);
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+}
+
+.refrigerant-banner.is-r290 {
+  border-color: var(--badge-r290-border);
+  background: linear-gradient(90deg, var(--badge-r290-bg), var(--input-bg));
+}
+
+.refrigerant-banner.is-r32 {
+  border-color: var(--badge-r32-border);
+  background: linear-gradient(90deg, var(--badge-r32-bg), var(--input-bg));
+}
+
+.badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-tag.r290 {
+  background: var(--badge-r290-bg);
+  color: var(--badge-r290-ink);
+  border: 1px solid var(--badge-r290-border);
+}
+
+.badge-tag.r32 {
+  background: var(--badge-r32-bg);
+  color: var(--badge-r32-ink);
+  border: 1px solid var(--badge-r32-border);
+}
+
+.banner-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.banner-title {
+  font-size: 0.88rem;
+  font-weight: 650;
+  color: var(--ink);
+  margin: 0 0 2px;
+}
+
+.banner-desc {
+  margin: 0;
+  font-size: 0.79rem;
+  color: var(--muted);
+  overflow-wrap: break-word;
+}
+
+/* ==========================================================================
+   SVG Bühne & Kältekreis-Grafik
+   ========================================================================== */
+.svg-stage {
+  position: relative;
+  border-radius: var(--radius-well);
+  background: var(--svg-stage-bg);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  padding: 6px;
+  transition: background var(--dur-normal) var(--ease-spring);
+}
+
+svg#circuitSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+
+/* Zonen-Hintergründe im SVG */
+#zoneOutdoor {
+  fill: var(--svg-zone-outdoor-fill);
+  stroke: var(--svg-zone-outdoor-stroke);
+}
+
+#zoneIndoor {
+  fill: var(--svg-zone-indoor-fill);
+  stroke: var(--svg-zone-indoor-stroke);
+}
+
+#labelOutdoor {
+  fill: var(--svg-text-secondary);
+}
+
+#labelIndoor {
+  fill: var(--brand-accent);
+}
+
+/* SVG Text- und Boxfarben */
+.svg-comp {
+  cursor: pointer;
+  outline: none;
+}
+
+.svg-comp:focus-visible .comp-box {
+  stroke: var(--brand-accent);
+  stroke-width: 2.5;
+}
+
+.svg-comp .comp-box {
+  fill: var(--svg-comp-bg);
+  stroke: var(--svg-comp-stroke);
+  transition: stroke var(--dur-fast) ease, fill var(--dur-fast) ease, stroke-width var(--dur-fast) ease;
+}
+
+.svg-comp:hover .comp-box {
+  stroke: var(--brand-accent);
+  fill: var(--svg-comp-hover);
+}
+
+.svg-comp.is-active .comp-box {
+  stroke: var(--brand-accent);
+  stroke-width: 2.2;
+  fill: var(--svg-comp-active-bg);
+}
+
+.svg-comp .comp-num-bg {
+  fill: var(--comp-num-bg);
+  transition: fill var(--dur-fast) ease;
+}
+
+.svg-comp .comp-num-txt {
+  fill: var(--comp-num-txt);
+}
+
+.svg-comp.is-active .comp-num-bg {
+  fill: var(--brand-accent);
+}
+
+.svg-comp.is-active .comp-num-txt {
+  fill: #ffffff;
+}
+
+.svg-title-text {
+  fill: var(--svg-text-primary);
+}
+
+.svg-sub-text {
+  fill: var(--svg-text-secondary);
+}
+
+/* Animierte Kältekreis-Rohrleitungen */
+@keyframes flowForward {
+  from { stroke-dashoffset: 36; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.pipe-base {
+  fill: none;
+  stroke-width: 5.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.28;
+}
+
+.pipe-flow {
+  fill: none;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 10 8;
+  animation: flowForward 1.05s linear infinite;
+}
+
+.pipe-flow.slow {
+  animation-duration: 1.45s;
+}
+
+/* Farblegende */
+.legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius-well);
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.77rem;
+  color: var(--muted);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.legend-swatch {
+  width: 16px;
+  height: 4px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Rechtes Detailpanel
+   ========================================================================== */
+.detail-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.quick-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.quick-pill {
+  appearance: none;
+  border: 1px solid var(--border-subtle);
+  background: var(--input-bg);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  min-height: 44px; /* Apple HIG Touch-Target */
+  padding: 6px 12px;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.quick-pill:hover {
+  background: var(--glass);
+  color: var(--ink);
+}
+
+.quick-pill.is-active {
+  background: var(--tile);
+  border-color: var(--brand-accent);
+  color: var(--brand-accent-text);
+  font-weight: 700;
+}
+
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.detail-kicker {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--brand-accent);
+  margin: 0 0 4px;
+}
+
+.detail-title {
+  margin: 0;
+  font-size: 1.22rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
+.location-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 5px 10px;
+  border-radius: var(--radius-control);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  color: var(--ink);
+}
+
+.detail-section {
+  padding: 12px 14px;
+  border-radius: var(--radius-well);
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+}
+
+.section-label {
+  margin: 0 0 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.section-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
+.thermo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.thermo-box {
+  padding: 10px 12px;
+  border-radius: var(--radius-control);
+  background: var(--glass);
+  border: 1px solid var(--border-subtle);
+  min-width: 0;
+}
+
+.thermo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.thermo-dir {
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.state-chip {
+  font-size: 0.70rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.thermo-values {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.84rem;
+  color: var(--ink);
+}
+
+.thermo-metric {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.service-highlight {
+  border-color: var(--brand-accent);
+  background: linear-gradient(135deg, var(--tile), var(--input-bg));
+}
+
+.service-metric {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 9px;
+  border-radius: var(--radius-control);
+  background: var(--tile);
+  border: 1px solid var(--brand-accent);
+  color: var(--brand-accent-text);
+  font-size: 0.80rem;
+  font-weight: 650;
+}
+
+/* ==========================================================================
+   Ansicht 2: Störungsbilder & Fehleranalyse
+   ========================================================================== */
+.faults-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.45fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.fault-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fault-card-btn {
+  appearance: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  padding: 14px 16px;
+  border-radius: var(--radius-card);
+  background: var(--glass);
+  border: 1px solid var(--border-subtle);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 44px;
+  transition: transform var(--dur-fast) ease, border-color var(--dur-fast) ease, background var(--dur-fast) ease;
+}
+
+.fault-card-btn:hover {
+  background: var(--input-bg);
+  border-color: var(--border-subtle);
+}
+
+.fault-card-btn.is-active {
+  border-color: var(--c-heissgas);
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.12), var(--glass));
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.fault-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fault-code {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 59, 48, 0.16);
+  color: #ff3b30;
+  border: 1px solid rgba(255, 59, 48, 0.35);
+}
+
+.fault-card-title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.fault-card-preview {
+  margin: 0;
+  font-size: 0.80rem;
+  color: var(--muted);
+}
+
+.fault-detail-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.fault-list-ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 0.88rem;
+}
+
+.fault-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.action-btn {
+  appearance: none;
+  border: 1px solid var(--brand-accent);
+  background: var(--tile);
+  color: var(--brand-accent-text);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  min-height: 44px; /* Apple HIG Touch-Target */
+  padding: 8px 14px;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.action-btn:hover {
+  background: var(--brand-accent);
+  color: #ffffff;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Responsive & A11y
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+  .faults-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .app-shell {
+    padding: 10px 12px 24px;
+  }
+  .topbar {
+    position: static;
+    padding: 12px;
+  }
+  .controls-row {
+    width: 100%;
+  }
+  .segmented {
+    width: 100%;
+  }
+  .segmented-btn {
+    font-size: 0.78rem;
+    padding: 6px 8px;
+  }
+  .thermo-grid {
+    grid-template-columns: 1fr;
+  }
+  .refrigerant-banner {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f5f7" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d0f" />
+  <title>Kältekreislauf Wärmepumpe – Interaktives Fachschema &amp; Fehleranalyse</title>
+
+  <!-- Synchrones iOS-Safari Reflow-Skript zur Vermeidung des Chin-Gaps -->
+  <script>
+    document.documentElement.style.transform = "translateZ(0)";
+    void document.documentElement.offsetHeight;
+    window.scrollTo(0, 0);
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="topbar liquid-glass-hero">
+      <div class="brand-group">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93 4.93 19.07"/>
+            <circle cx="12" cy="12" r="3" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">Kältekreislauf Wärmepumpe</h1>
+          <div class="brand-sub">
+            <span id="headerSystemText">Monoblock-Bauart · R290 (Propan)</span>
+            <span class="ref-pill tabular">Referenz: Heizbetrieb A2 / W35</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <!-- System-Umschalter -->
+        <div class="segmented" role="tablist" aria-label="Wärmepumpen-Bauart">
+          <button
+            type="button"
+            class="segmented-btn is-system press-btn"
+            data-system="monoblock"
+            role="tab"
+            aria-selected="true"
+            id="btnMonoblock"
+          >
+            <span class="dot-indicator" style="background:#30d158;"></span>
+            Monoblock (R290)
+          </button>
+          <button
+            type="button"
+            class="segmented-btn is-system press-btn"
+            data-system="split"
+            role="tab"
+            aria-selected="false"
+            id="btnSplit"
+          >
+            <span class="dot-indicator" style="background:#0071e3;"></span>
+            Split (R32 / R410A)
+          </button>
+        </div>
+
+        <!-- Ansichts-Umschalter -->
+        <div class="segmented" role="tablist" aria-label="Ansicht wählen">
+          <button
+            type="button"
+            class="segmented-btn press-btn"
+            data-view="circuit"
+            role="tab"
+            aria-selected="true"
+            id="btnViewCircuit"
+          >
+            Kältekreis-Interaktiv
+          </button>
+          <button
+            type="button"
+            class="segmented-btn press-btn"
+            data-view="faults"
+            role="tab"
+            aria-selected="false"
+            id="btnViewFaults"
+          >
+            Fehleranalyse
+          </button>
+        </div>
+
+        <!-- 3-Stufen-Theme-Button (Auto / Hell / Dunkel) mit .t-icon-swap -->
+        <button
+          type="button"
+          id="btnThemeToggle"
+          class="theme-toggle-btn press-btn"
+          aria-label="Darstellungsmodus umschalten (aktuell: Auto)"
+          data-theme-state="auto"
+        >
+          <span class="t-icon-swap" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            </svg>
+          </span>
+          <span id="themeIconLabel">Auto</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ANSICHT 1: INTERAKTIVER KÄLTEKREIS -->
+    <main id="viewCircuit" class="workspace-grid">
+      <!-- Linke Spalte: SVG-Flussdiagramm -->
+      <section class="liquid-glass-card schema-card" aria-label="Interaktives Kältekreis-Schema">
+        <!-- Kältemittel- & Bauart-Info-Badge -->
+        <div id="refrigerantBanner" class="refrigerant-banner is-r290">
+          <div class="banner-copy">
+            <p id="bannerTitle" class="banner-title">Monoblock-Wärmepumpe · Kältekreis komplett in der Außeneinheit</p>
+            <p id="bannerDesc" class="banner-desc">
+              R290 (Propan, Sicherheitsgruppe A3): Hermetisch geschlossener Kältekreis ab Werk. Schutzzone / Sicherheitsabstände im Außenbereich einhalten. Kein Kältemitteleingriff bei der Montage – nur Heizungswasser (Vorlauf/Rücklauf) führt durch die Gebäudehülle.
+            </p>
+          </div>
+          <span id="bannerBadge" class="badge-tag r290">R290 · A3 · Hermetisch</span>
+        </div>
+
+        <!-- SVG Flussdiagramm -->
+        <div class="svg-stage">
+          <svg id="circuitSvg" viewBox="0 0 920 530" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktives Schema des Kältekreislaufs">
+            <defs>
+              <!-- Schraffur für Gebäudewand / Systemgrenze -->
+              <pattern id="wallHatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,255,255,0.22)" stroke-width="2" />
+              </pattern>
+              <!-- Pfeilspitzen für Kältemittel- und Wasserströmung -->
+              <marker id="arrowHeissgas" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF3B30" />
+              </marker>
+              <marker id="arrowFluessig" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF9500" />
+              </marker>
+              <marker id="arrowNass" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#32ADE6" />
+              </marker>
+              <marker id="arrowSaug" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#007AFF" />
+              </marker>
+              <marker id="arrowVorlauf" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF6B35" />
+              </marker>
+              <marker id="arrowRuecklauf" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2AC7B8" />
+              </marker>
+            </defs>
+
+            <!-- Zonen-Hintergründe (dynamisch über TS angepasst) -->
+            <rect id="zoneOutdoor" x="16" y="18" width="714" height="492" rx="16" />
+            <rect id="zoneIndoor" x="752" y="18" width="152" height="492" rx="16" />
+
+            <text id="labelOutdoor" x="34" y="42" font-size="12" font-weight="700" letter-spacing="0.06em">AUSSENEINHEIT (AUSSENBEREICH)</text>
+            <text id="labelIndoor" x="766" y="42" font-size="12" font-weight="700" letter-spacing="0.06em">GEBÄUDE / INNEN</text>
+
+            <!-- Gebäudehülle / Systemgrenze -->
+            <g id="buildingBoundary" transform="translate(735, 16)">
+              <rect x="0" y="0" width="12" height="496" rx="4" fill="url(#wallHatch)" stroke="rgba(255,255,255,0.3)" stroke-width="1" />
+              <rect x="-56" y="462" width="124" height="24" rx="8" class="comp-box" />
+              <text x="6" y="478" text-anchor="middle" class="svg-title-text" font-size="10.5" font-weight="700">Systemgrenze / Wand</text>
+            </g>
+
+            <!-- ============================================================
+                 LEITUNGEN (ANIMIERT IN FLIESSRICHTUNG)
+                 ============================================================ -->
+            <!-- 1. Heißgas: Verdichter -> 4-Wege-Ventil -> Verflüssiger -->
+            <path class="pipe-base" stroke="#FF3B30" d="M 380 275 L 380 219" />
+            <path class="pipe-flow" stroke="#FF3B30" marker-end="url(#arrowHeissgas)" d="M 380 275 L 380 225" />
+
+            <path class="pipe-base" stroke="#FF3B30" d="M 409 172 L 585 172" />
+            <path class="pipe-flow" stroke="#FF3B30" marker-end="url(#arrowHeissgas)" d="M 409 172 L 578 172" />
+            <text id="lblHeissgas" x="488" y="160" text-anchor="middle" fill="#FF3B30" font-size="10.5" font-weight="650">Heißgas (HD)</text>
+
+            <!-- 2. Flüssigkeitsleitung: Verflüssiger -> Sammler -> Trockner -> Schauglas -> EEV -->
+            <path class="pipe-base" stroke="#FF9500" d="M 643 250 L 643 415 L 516 415" />
+            <path class="pipe-flow slow" stroke="#FF9500" marker-end="url(#arrowFluessig)" d="M 643 250 L 643 415 L 522 415" />
+            <text id="lblFluessig" x="596" y="403" text-anchor="middle" fill="#FF9500" font-size="10.5" font-weight="650">Flüssig (HD)</text>
+
+            <path class="pipe-base" stroke="#FF9500" d="M 428 415 L 400 415" />
+            <path class="pipe-flow slow" stroke="#FF9500" d="M 428 415 L 400 415" />
+
+            <path class="pipe-base" stroke="#FF9500" d="M 318 415 L 290 415" />
+            <path class="pipe-flow slow" stroke="#FF9500" d="M 318 415 L 290 415" />
+
+            <path class="pipe-base" stroke="#FF9500" d="M 222 415 L 194 415" />
+            <path class="pipe-flow slow" stroke="#FF9500" marker-end="url(#arrowFluessig)" d="M 222 415 L 199 415" />
+
+            <!-- 3. Nassdampf: EEV -> Verdampfer -->
+            <path class="pipe-base" stroke="#32ADE6" d="M 118 415 L 108 415 L 108 325" />
+            <path class="pipe-flow" stroke="#32ADE6" marker-end="url(#arrowNass)" d="M 118 415 L 108 415 L 108 331" />
+            <text x="88" y="366" text-anchor="end" fill="#32ADE6" font-size="10.5" font-weight="650">Nassdampf</text>
+            <text x="88" y="379" text-anchor="end" fill="#32ADE6" font-size="10">(ND)</text>
+
+            <!-- 4. Sauggas: Verdampfer -> 4-Wege-Ventil -> Verdichter -->
+            <path class="pipe-base" stroke="#007AFF" d="M 171 172 L 305 172" />
+            <path class="pipe-flow" stroke="#007AFF" marker-end="url(#arrowSaug)" d="M 171 172 L 299 172" />
+            <text x="234" y="160" text-anchor="middle" fill="#007AFF" font-size="10.5" font-weight="650">Sauggas (ND)</text>
+
+            <path class="pipe-base" stroke="#007AFF" d="M 334 219 L 334 275" />
+            <path class="pipe-flow" stroke="#007AFF" marker-end="url(#arrowSaug)" d="M 334 219 L 334 269" />
+
+            <!-- 5. Sekundärkreis Heizungswasser (Verflüssiger <-> Hydraulikmodul) -->
+            <path class="pipe-base" stroke="#FF6B35" d="M 701 142 L 778 142" />
+            <path class="pipe-flow" stroke="#FF6B35" marker-end="url(#arrowVorlauf)" d="M 701 142 L 772 142" />
+            <text x="740" y="131" text-anchor="middle" fill="#FF6B35" font-size="10" font-weight="700">Vorlauf</text>
+
+            <path class="pipe-base" stroke="#2AC7B8" d="M 778 214 L 701 214" />
+            <path class="pipe-flow" stroke="#2AC7B8" marker-end="url(#arrowRuecklauf)" d="M 778 214 L 707 214" />
+            <text x="740" y="230" text-anchor="middle" fill="#2AC7B8" font-size="10" font-weight="700">Rücklauf</text>
+
+            <!-- Hydraulikmodul / Heizkreis -->
+            <g transform="translate(778, 114)">
+              <rect x="0" y="0" width="114" height="128" rx="14" class="comp-box" stroke-dasharray="4 3" />
+              <text x="57" y="26" text-anchor="middle" class="svg-title-text" font-size="11" font-weight="700">Hydraulikmodul</text>
+              <text x="57" y="42" text-anchor="middle" class="svg-sub-text" font-size="9.5">Pufferspeicher /</text>
+              <text x="57" y="54" text-anchor="middle" class="svg-sub-text" font-size="9.5">Heizkreis (W35)</text>
+              <circle cx="57" cy="86" r="17" fill="rgba(42,199,184,0.12)" stroke="#2AC7B8" stroke-width="1.6" />
+              <polygon points="52,77 67,86 52,95" fill="#2AC7B8" />
+              <text x="57" y="116" text-anchor="middle" class="svg-sub-text" font-size="9.5">Heizungswasser</text>
+            </g>
+
+            <!-- ============================================================
+                 ALLE 9 ANKLICKBAREN KOMPONENTEN
+                 ============================================================ -->
+
+            <!-- 1. Verdampfer -->
+            <g class="svg-comp is-active" data-comp="1" tabindex="0" role="button" aria-label="Komponente 1: Verdampfer">
+              <rect class="comp-box" x="46" y="135" width="125" height="190" rx="14" stroke-width="1.5" />
+              <!-- Lamellen -->
+              <g stroke="rgba(100,210,255,0.4)" stroke-width="1.6">
+                <line x1="60" y1="168" x2="156" y2="168" />
+                <line x1="60" y1="180" x2="156" y2="180" />
+                <line x1="60" y1="192" x2="156" y2="192" />
+                <line x1="60" y1="204" x2="156" y2="204" />
+                <line x1="60" y1="286" x2="156" y2="286" />
+              </g>
+              <!-- Ventilator -->
+              <circle cx="108" cy="244" r="30" fill="rgba(50,173,230,0.12)" stroke="#32ADE6" stroke-width="1.6" />
+              <path d="M108 244 C100 226, 116 220, 114 240 M108 244 C126 236, 132 252, 112 250 M108 244 C116 262, 100 268, 102 248 M108 244 C90 252, 84 236, 104 238" fill="rgba(50,173,230,0.45)" />
+              <circle cx="108" cy="244" r="4.5" fill="currentColor" />
+              <!-- Nummer & Titel -->
+              <circle class="comp-num-bg" cx="62" cy="151" r="10" />
+              <text class="comp-num-txt" x="62" y="155" text-anchor="middle" font-size="11" font-weight="700">1</text>
+              <text class="svg-title-text" x="114" y="155" text-anchor="middle" font-size="12" font-weight="700">Verdampfer</text>
+              <text class="svg-sub-text" x="108" y="311" text-anchor="middle" font-size="9.5">Außenluft-Wärmetauscher</text>
+            </g>
+
+            <!-- 2. Verdichter / Kompressor -->
+            <g class="svg-comp" data-comp="2" tabindex="0" role="button" aria-label="Komponente 2: Verdichter">
+              <rect class="comp-box" x="302" y="275" width="110" height="76" rx="14" stroke-width="1.5" />
+              <circle cx="357" cy="316" r="18" fill="rgba(255,59,48,0.12)" stroke="#FF3B30" stroke-width="1.7" />
+              <line x1="343" y1="305" x2="371" y2="312" stroke="currentColor" stroke-width="1.5" />
+              <line x1="343" y1="327" x2="371" y2="320" stroke="currentColor" stroke-width="1.5" />
+              <circle class="comp-num-bg" cx="318" cy="291" r="10" />
+              <text class="comp-num-txt" x="318" y="295" text-anchor="middle" font-size="11" font-weight="700">2</text>
+              <text class="svg-title-text" x="366" y="295" text-anchor="middle" font-size="11.5" font-weight="700">Verdichter</text>
+              <text class="svg-sub-text" x="357" y="344" text-anchor="middle" font-size="9.2">Inverter-Kompressor</text>
+            </g>
+
+            <!-- 3. Verflüssiger / Kondensator -->
+            <g class="svg-comp" data-comp="3" tabindex="0" role="button" aria-label="Komponente 3: Verflüssiger">
+              <rect class="comp-box" x="585" y="105" width="116" height="145" rx="14" stroke-width="1.5" />
+              <g stroke="rgba(255,149,0,0.5)" stroke-width="1.6">
+                <line x1="605" y1="145" x2="605" y2="225" />
+                <line x1="617" y1="145" x2="617" y2="225" />
+                <line x1="629" y1="145" x2="629" y2="225" />
+                <line x1="641" y1="145" x2="641" y2="225" />
+                <line x1="653" y1="145" x2="653" y2="225" />
+                <line x1="665" y1="145" x2="665" y2="225" />
+                <line x1="677" y1="145" x2="677" y2="225" />
+              </g>
+              <circle class="comp-num-bg" cx="601" cy="121" r="10" />
+              <text class="comp-num-txt" x="601" y="125" text-anchor="middle" font-size="11" font-weight="700">3</text>
+              <text class="svg-title-text" x="649" y="125" text-anchor="middle" font-size="11.5" font-weight="700">Verflüssiger</text>
+              <text class="svg-sub-text" x="643" y="241" text-anchor="middle" font-size="9.2">Plattenwärmetauscher</text>
+            </g>
+
+            <!-- 4. Elektronisches Expansionsventil (EEV) -->
+            <g class="svg-comp" data-comp="4" tabindex="0" role="button" aria-label="Komponente 4: Elektronisches Expansionsventil">
+              <rect class="comp-box" x="118" y="386" width="76" height="58" rx="12" stroke-width="1.5" />
+              <polygon points="134,407 156,418 134,429" fill="rgba(50,173,230,0.45)" stroke="#32ADE6" stroke-width="1.3" />
+              <polygon points="178,407 156,418 178,429" fill="rgba(255,149,0,0.45)" stroke="#FF9500" stroke-width="1.3" />
+              <circle class="comp-num-bg" cx="133" cy="399" r="9" />
+              <text class="comp-num-txt" x="133" y="403" text-anchor="middle" font-size="10.5" font-weight="700">4</text>
+              <text class="svg-title-text" x="163" y="402" text-anchor="middle" font-size="11" font-weight="700">EEV</text>
+              <text class="svg-sub-text" x="156" y="438" text-anchor="middle" font-size="8.8">Expansionsventil</text>
+            </g>
+
+            <!-- 5. 4-Wege-Umschaltventil -->
+            <g class="svg-comp" data-comp="5" tabindex="0" role="button" aria-label="Komponente 5: 4-Wege-Umschaltventil">
+              <rect class="comp-box" x="305" y="145" width="104" height="74" rx="13" stroke-width="1.5" />
+              <path d="M318 176 Q335 176 335 204" fill="none" stroke="#007AFF" stroke-width="2" />
+              <path d="M378 204 Q378 176 396 176" fill="none" stroke="#FF3B30" stroke-width="2" />
+              <circle class="comp-num-bg" cx="321" cy="160" r="9.5" />
+              <text class="comp-num-txt" x="321" y="164" text-anchor="middle" font-size="10.5" font-weight="700">5</text>
+              <text class="svg-title-text" x="366" y="164" text-anchor="middle" font-size="10.5" font-weight="700">4-Wege</text>
+              <text class="svg-sub-text" x="357" y="212" text-anchor="middle" font-size="9">Umschaltventil</text>
+            </g>
+
+            <!-- 6. Kältemittelsammler -->
+            <g class="svg-comp" data-comp="6" tabindex="0" role="button" aria-label="Komponente 6: Kältemittelsammler">
+              <rect class="comp-box" x="428" y="382" width="88" height="66" rx="13" stroke-width="1.5" />
+              <rect x="442" y="409" width="60" height="22" rx="6" fill="rgba(255,149,0,0.22)" stroke="#FF9500" stroke-width="1.2" />
+              <circle class="comp-num-bg" cx="443" cy="396" r="9" />
+              <text class="comp-num-txt" x="443" y="400" text-anchor="middle" font-size="10.5" font-weight="700">6</text>
+              <text class="svg-title-text" x="481" y="400" text-anchor="middle" font-size="10.5" font-weight="700">Sammler</text>
+              <text class="svg-sub-text" x="472" y="442" text-anchor="middle" font-size="8.8">Flüssigpuffer</text>
+            </g>
+
+            <!-- 7. Filtertrockner -->
+            <g class="svg-comp" data-comp="7" tabindex="0" role="button" aria-label="Komponente 7: Filtertrockner">
+              <rect class="comp-box" x="318" y="391" width="82" height="48" rx="11" stroke-width="1.5" />
+              <line x1="336" y1="418" x2="386" y2="418" stroke="rgba(255,149,0,0.6)" stroke-width="2" stroke-dasharray="3 3" />
+              <circle class="comp-num-bg" cx="332" cy="404" r="8.5" />
+              <text class="comp-num-txt" x="332" y="408" text-anchor="middle" font-size="10" font-weight="700">7</text>
+              <text class="svg-title-text" x="367" y="408" text-anchor="middle" font-size="10" font-weight="700">Trockner</text>
+              <text class="svg-sub-text" x="359" y="433" text-anchor="middle" font-size="8.5">Filtertrockner</text>
+            </g>
+
+            <!-- 8. Schauglas mit Feuchtigkeitsindikator -->
+            <g class="svg-comp" data-comp="8" tabindex="0" role="button" aria-label="Komponente 8: Schauglas mit Feuchtigkeitsindikator">
+              <rect class="comp-box" x="222" y="391" width="68" height="48" rx="11" stroke-width="1.5" />
+              <circle cx="256" cy="422" r="9" fill="rgba(48,209,88,0.25)" stroke="#30D158" stroke-width="1.6" />
+              <circle cx="256" cy="422" r="3.5" fill="#30D158" />
+              <circle class="comp-num-bg" cx="235" cy="403" r="8.5" />
+              <text class="comp-num-txt" x="235" y="407" text-anchor="middle" font-size="10" font-weight="700">8</text>
+              <text class="svg-title-text" x="266" y="407" text-anchor="middle" font-size="9.5" font-weight="700">Schaugl.</text>
+            </g>
+
+            <!-- 9. Hochdruck- & Niederdruckpressostate (HD/ND-Sensoren) -->
+            <g class="svg-comp" data-comp="9" tabindex="0" role="button" aria-label="Komponente 9: Hochdruck- und Niederdruckpressostate">
+              <polyline points="235,172 235,91 296,91" fill="none" stroke="#32ADE6" stroke-width="1.5" stroke-dasharray="3 3" />
+              <polyline points="455,172 455,91 418,91" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-dasharray="3 3" />
+              <circle cx="235" cy="172" r="5" fill="var(--bg)" stroke="#32ADE6" stroke-width="2" />
+              <circle cx="455" cy="172" r="5" fill="var(--bg)" stroke="#FF3B30" stroke-width="2" />
+              <rect class="comp-box" x="296" y="66" width="122" height="50" rx="12" stroke-width="1.5" />
+              <circle class="comp-num-bg" cx="312" cy="82" r="9" />
+              <text class="comp-num-txt" x="312" y="86" text-anchor="middle" font-size="10" font-weight="700">9</text>
+              <text class="svg-title-text" x="366" y="86" text-anchor="middle" font-size="10.5" font-weight="700">HD / ND</text>
+              <text class="svg-sub-text" x="357" y="105" text-anchor="middle" font-size="9">Pressostate &amp; Sensoren</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Farblegende -->
+        <div class="legend-bar" aria-label="Farblegende der Leitungen">
+          <div class="legend-item"><span class="legend-swatch" style="background:#FF3B30;"></span>Heißgas (HD, gasförmig, heiß)</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:#FF9500;"></span>Flüssigkeitsleitung (HD, unterkühlt)</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:#32ADE6;"></span>Nassdampf (ND, Gemisch, kalt)</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:#007AFF;"></span>Sauggas (ND, überhitzt)</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:#FF6B35;"></span>Heizung Vorlauf</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:#2AC7B8;"></span>Heizung Rücklauf</div>
+        </div>
+      </section>
+
+      <!-- Rechte Spalte: Komponenten-Detailpanel -->
+      <aside class="liquid-glass-card detail-card" aria-label="Komponenten-Details">
+        <div>
+          <p class="section-label" style="margin-bottom:8px;">Bauteil-Schnellwahl (1–9)</p>
+          <div id="quickNav" class="quick-nav"></div>
+        </div>
+
+        <div class="detail-header">
+          <div style="min-width:0;">
+            <p id="detailKicker" class="detail-kicker">Komponente 1 von 9</p>
+            <h2 id="detailTitle" class="detail-title">Verdampfer</h2>
+            <div id="detailLocation" class="location-pill">Außeneinheit</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <p class="section-label">Hauptaufgabe im Kältekreis</p>
+          <p id="detailTask" class="section-text"></p>
+        </div>
+
+        <div class="detail-section">
+          <p class="section-label" style="margin-bottom:10px;">Thermodynamischer Zustand (Heizbetrieb A2/W35)</p>
+          <div class="thermo-grid">
+            <div class="thermo-box">
+              <div class="thermo-head">
+                <span class="thermo-dir">Eintritt</span>
+                <span id="inStateChip" class="state-chip"></span>
+              </div>
+              <div class="thermo-values">
+                <span id="inMetric" class="thermo-metric tabular"></span>
+                <span id="inSub" style="font-size:0.77rem;color:var(--muted);"></span>
+              </div>
+            </div>
+            <div class="thermo-box">
+              <div class="thermo-head">
+                <span class="thermo-dir">Austritt</span>
+                <span id="outStateChip" class="state-chip"></span>
+              </div>
+              <div class="thermo-values">
+                <span id="outMetric" class="thermo-metric tabular"></span>
+                <span id="outSub" style="font-size:0.77rem;color:var(--muted);"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section service-highlight">
+          <p class="section-label">Wichtige Messgröße für den Service</p>
+          <p id="detailService" class="section-text"></p>
+          <span id="detailServiceBadge" class="service-metric tabular"></span>
+        </div>
+      </aside>
+    </main>
+
+    <!-- ANSICHT 2: FEHLERANALYSE & STÖRUNGSBILDER -->
+    <section id="viewFaults" class="faults-layout hidden" aria-label="Fehleranalyse und Störungsbilder">
+      <div id="faultList" class="fault-list" role="tablist" aria-label="Störungsbilder"></div>
+
+      <article class="liquid-glass-card fault-detail-card" aria-live="polite">
+        <div class="detail-header">
+          <div style="min-width:0;">
+            <p id="faultKicker" class="detail-kicker" style="color:var(--c-heissgas);">Störungsdiagnose</p>
+            <h2 id="faultTitle" class="detail-title">Hochdruckstörung (HD-Störung)</h2>
+          </div>
+          <span id="faultSeverity" class="fault-code">Störabschaltung</span>
+        </div>
+
+        <div class="detail-section">
+          <p class="section-label">Typische Symptome</p>
+          <p id="faultSymptoms" class="section-text"></p>
+        </div>
+
+        <div class="detail-section">
+          <p class="section-label">Mögliche Ursachen (Praxis-Checkliste)</p>
+          <ul id="faultCauses" class="fault-list-ul"></ul>
+        </div>
+
+        <div class="detail-section service-highlight">
+          <p class="section-label">Messbild &amp; Prüfschritte</p>
+          <ul id="faultChecks" class="fault-list-ul"></ul>
+        </div>
+
+        <div id="faultActions" class="fault-actions"></div>
+      </article>
+    </section>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
