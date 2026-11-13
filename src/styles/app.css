@@ -660,6 +660,7 @@ svg#circuitSvg {
 .comp-accordion-card {
   position: relative;
   overflow: hidden;
+  contain: layout style;
   transition: background var(--dur-fast) ease;
 }
 
@@ -1039,6 +1040,7 @@ svg#circuitSvg {
 .fault-accordion-card {
   position: relative;
   overflow: hidden;
+  contain: layout style;
   transition: background var(--dur-fast) ease;
 }
 
@@ -1301,6 +1303,7 @@ svg#circuitSvg {
   flex-direction: column;
   gap: 11px;
   min-width: 0;
+  contain: layout style;
   border-radius: var(--radius-card);
   background: var(--surface-card);
   border: 1px solid var(--border);

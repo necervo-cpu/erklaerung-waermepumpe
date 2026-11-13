@@ -118,6 +118,10 @@ function createNiceCard(item: NiceToKnowItem, index: number): HTMLElement {
  * Rendert das gesamte Wissens-Grid vollständig ohne innerHTML.
  */
 export function renderNiceToKnowView(container: HTMLElement): void {
+  // Statische Wissens-Karten bei erneutem Tab-Wechsel nicht neu aufbauen
+  if (container.childElementCount === NICE_TO_KNOW.length) {
+    return;
+  }
   const cards = NICE_TO_KNOW.map((item, idx) => createNiceCard(item, idx));
   container.replaceChildren(...cards);
 }

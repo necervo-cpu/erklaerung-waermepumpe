@@ -138,6 +138,26 @@ export function renderComponentDetail(
     node.setAttribute("aria-pressed", String(active));
   });
 
+  // In-Place-Update bei reinem Accordion-Toggle: spart DOM-Neuaufbau und erhält 180ms-Transition
+  if (
+    elements.componentList.dataset.renderedSystem === sysKey &&
+    elements.componentList.dataset.renderedMode === state.mode &&
+    elements.componentList.childElementCount === COMPONENTS.length
+  ) {
+    COMPONENTS.forEach((comp) => {
+      const isOpen = comp.id === state.componentId;
+      const card = document.getElementById(`comp-card-${comp.id}`);
+      const trigger = card?.querySelector<HTMLButtonElement>(".comp-card-btn");
+      const panel = document.getElementById(`comp-panel-${comp.id}`);
+      card?.classList.toggle("is-open", isOpen);
+      trigger?.classList.toggle("is-active", isOpen);
+      trigger?.setAttribute("aria-expanded", String(isOpen));
+      panel?.classList.toggle("is-open", isOpen);
+      panel?.setAttribute("data-open", String(isOpen));
+    });
+    return;
+  }
+
   const cards: HTMLDivElement[] = COMPONENTS.map((comp) => {
     const isOpen = comp.id === state.componentId;
     const thermo = comp.thermo[sysKey];
@@ -292,6 +312,8 @@ export function renderComponentDetail(
   });
 
   elements.componentList.replaceChildren(...cards);
+  elements.componentList.dataset.renderedSystem = sysKey;
+  elements.componentList.dataset.renderedMode = state.mode;
 }
 
 /**

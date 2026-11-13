@@ -159,6 +159,25 @@ export function renderFaultsView(
   onSelectFault: (faultId: string) => void,
   onJumpToComponent: (componentId: number) => void
 ): void {
+  // In-Place-Update bei reinem Accordion-Toggle für < 200ms Reaktionszeit und flüssige Transition
+  if (
+    elements.faultList.dataset.rendered === "true" &&
+    elements.faultList.childElementCount === FAULTS.length
+  ) {
+    FAULTS.forEach((fault) => {
+      const isOpen = fault.id === state.faultId;
+      const card = document.getElementById(`fault-card-${fault.id}`);
+      const trigger = card?.querySelector<HTMLButtonElement>(".fault-card-btn");
+      const panel = document.getElementById(`fault-panel-${fault.id}`);
+      card?.classList.toggle("is-open", isOpen);
+      trigger?.classList.toggle("is-active", isOpen);
+      trigger?.setAttribute("aria-expanded", String(isOpen));
+      panel?.classList.toggle("is-open", isOpen);
+      panel?.setAttribute("data-open", String(isOpen));
+    });
+    return;
+  }
+
   const cards: HTMLDivElement[] = FAULTS.map((fault) => {
     const isOpen = fault.id === state.faultId;
     const visual = FAULT_VISUAL_MAP[fault.id] ?? {
@@ -167,6 +186,7 @@ export function renderFaultsView(
     };
 
     const card = document.createElement("div");
+    card.id = `fault-card-${fault.id}`;
     card.className = `fault-accordion-card${isOpen ? " is-open" : ""}`;
 
     const trigger = document.createElement("button");
@@ -232,4 +252,5 @@ export function renderFaultsView(
   });
 
   elements.faultList.replaceChildren(...cards);
+  elements.faultList.dataset.rendered = "true";
 }

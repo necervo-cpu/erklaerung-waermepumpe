@@ -88,12 +88,12 @@
   --radius-well: 14px;
   --radius-control: 10px;
 
-  /* --- 5-Dimensionen Motion-Tokens & Taktile Skalierung --- */
+  /* --- 5-Dimensionen Motion-Tokens & Taktile Skalierung (<= 200ms Reaktionsbudget) --- */
   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --dur-fast: 160ms;
-  --dur-normal: 260ms;
-  --dur-slow: 420ms;
+  --dur-fast: 100ms;
+  --dur-normal: 180ms;
+  --dur-slow: 200ms;
   --scale-tiny: 0.99;
   --scale-medium: 0.97;
   --scale-small: 0.95;
@@ -248,7 +248,13 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Größenabhängige Taktilität (Press-Scale) */
+/* Größenabhängige Taktilität (Press-Scale & kein 300ms-Tap-Delay) */
+button,
+[role="tab"],
+[role="button"] {
+  touch-action: manipulation;
+}
+
 .press-card,
 .press-btn,
 .press-icon {
