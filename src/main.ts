@@ -88,6 +88,8 @@ const circuitElements: CircuitDomElements = {
   pipesDefrost: requireElement<SVGGElement>("#pipesDefrost"),
   valvePathsHeating: requireElement<SVGGElement>("#valvePathsHeating"),
   valvePathsDefrost: requireElement<SVGGElement>("#valvePathsDefrost"),
+  eevConesHeating: requireElement<SVGGElement>("#eevConesHeating"),
+  eevConesDefrost: requireElement<SVGGElement>("#eevConesDefrost"),
   comp1Title: requireElement<SVGTextElement>("#comp1Title"),
   comp1Sub: requireElement<SVGTextElement>("#comp1Sub"),
   comp3Title: requireElement<SVGTextElement>("#comp3Title"),

@@ -261,13 +261,14 @@
 
             <!-- 2. Flüssig (Kondensat): Außen-Wärmetauscher -> EEV -->
             <path class="pipe-base" stroke="#FF9500" d="M 108 325 L 108 415 L 118 415" />
-            <path class="pipe-flow slow" stroke="#FF9500" marker-end="url(#arrowFluessig)" d="M 108 325 L 108 415 L 115 415" />
+            <path class="pipe-flow slow" stroke="#FF9500" marker-end="url(#arrowFluessig)" d="M 108 325 L 108 398" />
+            <path class="pipe-flow slow" stroke="#FF9500" d="M 108 398 L 108 415 L 118 415" />
             <text x="88" y="366" text-anchor="end" fill="#FF9500" font-size="10.5" font-weight="650">Flüssig</text>
             <text x="88" y="379" text-anchor="end" fill="#FF9500" font-size="10">(HD)</text>
 
             <!-- 3. Nassdampf (entspannt): EEV -> Schauglas -> Trockner -> Sammler -> Plattenwärmetauscher -->
             <path class="pipe-base" stroke="#32ADE6" d="M 194 415 L 222 415" />
-            <path class="pipe-flow" stroke="#32ADE6" d="M 194 415 L 222 415" />
+            <path class="pipe-flow" stroke="#32ADE6" marker-end="url(#arrowNass)" d="M 194 415 L 217 415" />
 
             <path class="pipe-base" stroke="#32ADE6" d="M 290 415 L 318 415" />
             <path class="pipe-flow" stroke="#32ADE6" d="M 290 415 L 318 415" />
@@ -367,8 +368,16 @@
             <!-- 4. Elektronisches Expansionsventil (EEV) -->
             <g class="svg-comp" data-comp="4" tabindex="0" role="button" aria-label="Komponente 4: Elektronisches Expansionsventil">
               <rect class="comp-box" x="118" y="386" width="76" height="58" rx="12" stroke-width="1.5" />
-              <polygon points="134,407 156,418 134,429" fill="rgba(50,173,230,0.45)" stroke="#32ADE6" stroke-width="1.3" />
-              <polygon points="178,407 156,418 178,429" fill="rgba(255,149,0,0.45)" stroke="#FF9500" stroke-width="1.3" />
+              <!-- Kegel-Farben Heizbetrieb (rechts Flüssig #FF9500 -> links Nassdampf #32ADE6) -->
+              <g id="eevConesHeating">
+                <polygon points="134,407 156,418 134,429" fill="rgba(50,173,230,0.45)" stroke="#32ADE6" stroke-width="1.3" />
+                <polygon points="178,407 156,418 178,429" fill="rgba(255,149,0,0.45)" stroke="#FF9500" stroke-width="1.3" />
+              </g>
+              <!-- Kegel-Farben Abtauphase (links Flüssig #FF9500 -> rechts Nassdampf #32ADE6) -->
+              <g id="eevConesDefrost" class="hidden">
+                <polygon points="134,407 156,418 134,429" fill="rgba(255,149,0,0.45)" stroke="#FF9500" stroke-width="1.3" />
+                <polygon points="178,407 156,418 178,429" fill="rgba(50,173,230,0.45)" stroke="#32ADE6" stroke-width="1.3" />
+              </g>
               <circle class="comp-num-bg" cx="133" cy="399" r="9" />
               <text class="comp-num-txt" x="133" y="403" text-anchor="middle" font-size="10.5" font-weight="700">4</text>
               <text class="svg-title-text" x="163" y="402" text-anchor="middle" font-size="11" font-weight="700">EEV</text>
