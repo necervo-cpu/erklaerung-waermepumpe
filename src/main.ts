@@ -86,6 +86,8 @@ const circuitElements: CircuitDomElements = {
   btnModeDefrost: requireElement<HTMLButtonElement>("#btnModeDefrost"),
   pipesHeating: requireElement<SVGGElement>("#pipesHeating"),
   pipesDefrost: requireElement<SVGGElement>("#pipesDefrost"),
+  valvePathsHeating: requireElement<SVGGElement>("#valvePathsHeating"),
+  valvePathsDefrost: requireElement<SVGGElement>("#valvePathsDefrost"),
   svgElement: requireElement<SVGSVGElement>("#circuitSvg")
 };
 

@@ -378,8 +378,16 @@
             <!-- 5. 4-Wege-Umschaltventil -->
             <g class="svg-comp" data-comp="5" tabindex="0" role="button" aria-label="Komponente 5: 4-Wege-Umschaltventil">
               <rect class="comp-box" x="305" y="145" width="104" height="74" rx="13" stroke-width="1.5" />
-              <path d="M318 176 Q335 176 335 204" fill="none" stroke="#007AFF" stroke-width="2" />
-              <path d="M378 204 Q378 176 396 176" fill="none" stroke="#FF3B30" stroke-width="2" />
+              <!-- Ventil-Schaltstellung Heizbetrieb -->
+              <g id="valvePathsHeating">
+                <path d="M318 176 Q335 176 335 204" fill="none" stroke="#007AFF" stroke-width="2.2" />
+                <path d="M378 204 Q378 176 396 176" fill="none" stroke="#FF3B30" stroke-width="2.2" />
+              </g>
+              <!-- Ventil-Schaltstellung Abtauphase (Kreislaufumkehr: Kreuzung innen) -->
+              <g id="valvePathsDefrost" class="hidden">
+                <path d="M396 176 C364 176, 335 184, 335 204" fill="none" stroke="#007AFF" stroke-width="2.2" />
+                <path d="M378 204 C378 184, 349 176, 318 176" fill="none" stroke="#FF3B30" stroke-width="2.2" />
+              </g>
               <circle class="comp-num-bg" cx="321" cy="160" r="9.5" />
               <text class="comp-num-txt" x="321" y="164" text-anchor="middle" font-size="10.5" font-weight="700">5</text>
               <text class="svg-title-text" x="366" y="164" text-anchor="middle" font-size="10.5" font-weight="700">4-Wege</text>

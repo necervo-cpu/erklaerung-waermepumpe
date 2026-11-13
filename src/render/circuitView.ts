@@ -41,6 +41,8 @@ export interface CircuitDomElements {
   readonly btnModeDefrost: HTMLButtonElement;
   readonly pipesHeating: SVGGElement;
   readonly pipesDefrost: SVGGElement;
+  readonly valvePathsHeating: SVGGElement;
+  readonly valvePathsDefrost: SVGGElement;
   readonly svgElement: SVGSVGElement;
 }
 
@@ -152,6 +154,8 @@ export function renderOperationMode(
   elements.btnModeDefrost.setAttribute("aria-selected", String(isDefrost));
   elements.pipesHeating.classList.toggle("hidden", isDefrost);
   elements.pipesDefrost.classList.toggle("hidden", !isDefrost);
+  elements.valvePathsHeating.classList.toggle("hidden", isDefrost);
+  elements.valvePathsDefrost.classList.toggle("hidden", !isDefrost);
   renderComponentDetail(elements, state, onSelectComponent);
 }
 
