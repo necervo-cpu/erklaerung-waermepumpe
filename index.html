@@ -1325,7 +1325,7 @@
                 <!-- Primär Vorlauf WP -> Puffer (3) links oben -->
                 <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 160 156 L 468 156 L 468 262 L 488 262" />
                 <path class="pipe-flow" stroke="var(--c-vorlauf)" marker-end="url(#hydArrowVorlauf)" d="M 160 156 L 468 156 L 468 262 L 482 262" />
-                <text x="532" y="206" text-anchor="middle" fill="var(--c-vorlauf)" font-size="9" font-weight="650">4-Leiter-Trennung (Weiche)</text>
+                <text x="480" y="206" text-anchor="start" fill="var(--c-vorlauf)" font-size="8.8" font-weight="650">4-Leiter-Trennung (Weiche)</text>
                 <!-- Sekundär Vorlauf Puffer rechts oben -> Sekundärpumpe (1b) -> Heizkreis -->
                 <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 576 262 L 588 262" />
                 <path class="pipe-flow" stroke="var(--c-vorlauf)" d="M 576 262 L 588 262" />
@@ -1351,9 +1351,9 @@
                 <path class="pipe-flow slow" stroke="var(--c-heissgas)" marker-end="url(#hydArrowWw)" d="M 358 132 L 358 96 L 532 96 L 532 232" />
                 <text x="532" y="80" text-anchor="middle" fill="var(--c-heissgas)" font-size="9" font-weight="650">TWW-Beladung oben (50–55 °C)</text>
 
-                <!-- Wellrohr-Ausgang oben rechts am Kombispeicher -> TWW-Zapfstellen -->
-                <path class="pipe-base" stroke="var(--c-heissgas)" d="M 576 254 L 616 254 L 616 124 L 688 124" />
-                <path class="pipe-flow slow" stroke="var(--c-heissgas)" marker-end="url(#hydArrowWw)" d="M 576 254 L 616 254 L 616 124 L 682 124" />
+                <!-- Wellrohr-Ausgang oben am Kombispeicher -> TWW-Zapfstellen (ohne HK-Pumpe) -->
+                <path class="pipe-base" stroke="var(--c-heissgas)" d="M 556 238 L 556 124 L 688 124" />
+                <path class="pipe-flow slow" stroke="var(--c-heissgas)" marker-end="url(#hydArrowWw)" d="M 556 238 L 556 124 L 682 124" />
 
                 <!-- Heizungs-Vorlauf WP -> mittlere Heizungszone -->
                 <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 160 156 L 468 156 L 468 332 L 488 332" />
@@ -1436,13 +1436,13 @@
                 <text id="hydBufferVol" class="svg-sub-text" x="532" y="361" text-anchor="middle" font-size="8.0">(50–100 l)</text>
               </g>
 
-              <!-- Sekundärpumpe (nur bei Parallelpuffer sichtbar) -->
-              <g id="hydPumpSecParallel" class="svg-comp svg-layer-hidden" data-comp="1" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 1: Sekundär-Heizkreispumpe">
+              <!-- Sekundärpumpe (nur bei Parallel-/Stich-/Kombispeicher sichtbar) -->
+              <g id="hydPumpSecParallel" class="svg-comp svg-layer-hidden" data-comp="1" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 1: Heizkreispumpe (Sekundärkreis)">
                 <rect class="comp-box" x="588" y="218" width="76" height="50" rx="11" stroke-width="1.5" />
-                <circle class="comp-num-bg" cx="600" cy="233" r="7.5" />
-                <text class="comp-num-txt" x="600" y="236.5" text-anchor="middle" font-size="8.8" font-weight="700">1b</text>
-                <text class="svg-title-text" x="636" y="236" text-anchor="middle" font-size="7.8" font-weight="700">Sek.-Pumpe</text>
-                <text class="svg-sub-text" x="626" y="256" text-anchor="middle" font-size="7.8">Heizkreis</text>
+                <circle class="comp-num-bg" cx="600" cy="233" r="8" />
+                <text class="comp-num-txt" x="600" y="236" text-anchor="middle" font-size="7.5" font-weight="700">HK</text>
+                <text class="svg-title-text" x="636" y="236" text-anchor="middle" font-size="8.4" font-weight="700">HK-Pumpe</text>
+                <text class="svg-sub-text" x="626" y="256" text-anchor="middle" font-size="7.6">Nur Heizkreis</text>
               </g>
 
               <!-- 7. Schlamm- & Magnetitabscheider -->
