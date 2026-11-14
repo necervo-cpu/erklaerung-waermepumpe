@@ -326,6 +326,7 @@ const btnViewHeatingCurve = requireElement<HTMLButtonElement>("#btnViewHeatingCu
 const btnViewCalculator = requireElement<HTMLButtonElement>("#btnViewCalculator");
 const btnViewInstallation = requireElement<HTMLButtonElement>("#btnViewInstallation");
 const btnViewFaults = requireElement<HTMLButtonElement>("#btnViewFaults");
+const btnViewFaultsLabel = requireElement<HTMLElement>("#btnViewFaultsLabel");
 const btnViewNiceToKnow = requireElement<HTMLButtonElement>("#btnViewNiceToKnow");
 const btnViewQuiz = requireElement<HTMLButtonElement>("#btnViewQuiz");
 const btnMobileViewMenu = requireElement<HTMLButtonElement>("#btnMobileViewMenu");
@@ -462,9 +463,12 @@ function renderViewSwitcher(): void {
   viewNiceToKnow.classList.toggle("hidden", !isNice);
   viewQuiz.classList.toggle("hidden", !isQuiz);
 
+  const faultsCountLabel = state.category === "hvac" ? "Störungen (7)" : "Störungen (9)";
+  btnViewFaultsLabel.textContent = faultsCountLabel;
+
   const meta = VIEW_META[state.view];
   mobileViewIcon.textContent = meta.icon;
-  mobileViewLabel.textContent = meta.label;
+  mobileViewLabel.textContent = state.view === "faults" ? faultsCountLabel : meta.label;
   viewTabs.classList.remove("is-mobile-open");
   btnMobileViewMenu.setAttribute("aria-expanded", "false");
 
@@ -621,6 +625,7 @@ function handleSetCategory(category: CategoryType): void {
     renderSystemView(circuitElements, state, handleSelectComponent);
     renderFaultsView(faultsElements, state, handleSelectFault, handleJumpToComponent);
     renderNiceToKnowView(niceElements, state.category);
+    renderViewSwitcher();
     syncAllSegmentedPills();
   }, triggerBtn);
 }
