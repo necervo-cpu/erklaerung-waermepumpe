@@ -1537,58 +1537,69 @@
 
                 <!-- LAYER 2: STICHANBINDUNG (T-STÜCK) -->
                 <g id="bufLayerTeeBranch" class="is-svg-hidden">
-                  <text class="svg-sub-text" x="465" y="114" text-anchor="middle" font-size="9">Parallel am Stich (Differenzmenge)</text>
+                  <text class="svg-sub-text" x="465" y="116" text-anchor="middle" font-size="10.5">Parallel am Stich (Differenzmenge)</text>
                   <!-- Vorlauf durchgehend mit T-Stich nach unten in Puffer -->
-                  <path d="M 170 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 170 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 170 156 L 740 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
                   <line x1="465" y1="156" x2="465" y2="180" stroke="var(--c-vorlauf)" stroke-width="4" />
                   <circle cx="465" cy="156" r="6" fill="var(--c-vorlauf)" />
-                  <text class="svg-sub-text" x="465" y="42" text-anchor="middle" font-size="9.5" font-weight="700">T-Stück-Stich + Systemfühler</text>
+                  <text class="svg-sub-text" x="465" y="42" text-anchor="middle" font-size="11" font-weight="700">T-Stück-Stich + Systemfühler</text>
                   <!-- Rücklauf mit T-Stich -->
-                  <path d="M 740 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 740 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 740 300 L 170 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
                   <line x1="465" y1="300" x2="465" y2="340" stroke="var(--c-ruecklauf)" stroke-width="4" />
                   <circle cx="465" cy="300" r="6" fill="var(--c-ruecklauf)" />
                   <!-- Sekundärpumpe rechts -->
-                  <rect class="comp-box" x="600" y="138" width="96" height="36" rx="9" stroke-width="1.4" />
-                  <text class="svg-title-text" x="648" y="160" text-anchor="middle" font-size="9" font-weight="700">Sek.-Pumpe</text>
+                  <rect class="comp-box" x="596" y="138" width="104" height="36" rx="9" stroke-width="1.4" />
+                  <text class="svg-title-text" x="648" y="160" text-anchor="middle" font-size="10.5" font-weight="700">Sek.-Pumpe</text>
                 </g>
 
                 <!-- LAYER 3: PARALLELPUFFER (4-LEITER) -->
                 <g id="bufLayerParallel4Pipe" class="is-svg-hidden">
-                  <text class="svg-sub-text" x="465" y="114" text-anchor="middle" font-size="9">4-Leiter-Trennspeicher</text>
+                  <text class="svg-sub-text" x="465" y="116" text-anchor="middle" font-size="10.5">4-Leiter-Trennspeicher</text>
                   <!-- Primärkreis links in Puffer -->
-                  <path d="M 170 156 L 390 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
-                  <path d="M 390 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 170 156 L 390 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 170 156 L 390 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
+                  <path d="M 390 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 390 300 L 170 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
                   <!-- Sekundärkreis rechts aus Puffer -->
-                  <path d="M 540 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
-                  <path d="M 740 300 L 540 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 540 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 540 156 L 740 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
+                  <path d="M 740 300 L 540 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 740 300 L 540 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
                   <!-- Sekundärpumpe rechts -->
-                  <rect class="comp-box" x="600" y="138" width="96" height="36" rx="9" stroke-width="1.4" />
-                  <text class="svg-title-text" x="648" y="160" text-anchor="middle" font-size="9" font-weight="700">Sek.-Pumpe</text>
+                  <rect class="comp-box" x="596" y="138" width="104" height="36" rx="9" stroke-width="1.4" />
+                  <text class="svg-title-text" x="648" y="160" text-anchor="middle" font-size="10.5" font-weight="700">Sek.-Pumpe</text>
                   <!-- Fühler Oben / Unten -->
                   <circle cx="465" cy="156" r="5" fill="var(--c-heissgas)" />
-                  <text class="svg-sub-text" x="465" y="144" text-anchor="middle" font-size="8.5">Fühler Oben</text>
+                  <text class="svg-sub-text" x="465" y="144" text-anchor="middle" font-size="10">Fühler Oben</text>
                   <circle cx="465" cy="300" r="5" fill="var(--c-ruecklauf)" />
-                  <text class="svg-sub-text" x="465" y="322" text-anchor="middle" font-size="8.5">Fühler Unten</text>
+                  <text class="svg-sub-text" x="465" y="322" text-anchor="middle" font-size="10">Fühler Unten</text>
                 </g>
 
                 <!-- LAYER 4: KOMBISPEICHER (HEIZUNG + TWW) -->
                 <g id="bufLayerCombiTank" class="is-svg-hidden">
-                  <text class="svg-sub-text" x="465" y="114" text-anchor="middle" font-size="9">Schichtspeicher (TWW + Heizung)</text>
+                  <text class="svg-sub-text" x="465" y="116" text-anchor="middle" font-size="10.5">Schichtspeicher (TWW + Heizung)</text>
                   <!-- Schichtleitblech -->
                   <line x1="398" y1="210" x2="532" y2="210" stroke="var(--c-heissgas)" stroke-width="2" stroke-dasharray="6 4" />
-                  <text class="svg-sub-text" x="465" y="142" text-anchor="middle" font-size="8.5" font-weight="700">TWW-Zone (55 °C)</text>
-                  <text class="svg-sub-text" x="465" y="234" text-anchor="middle" font-size="8.5" font-weight="700">Heizungszone (35–45 °C)</text>
+                  <text class="svg-sub-text" x="465" y="142" text-anchor="middle" font-size="10" font-weight="700">TWW-Zone (55 °C)</text>
+                  <text class="svg-sub-text" x="465" y="234" text-anchor="middle" font-size="10" font-weight="700">Heizungszone (35–45 °C)</text>
                   <!-- Wellrohr / TWW Abgang oben -->
-                  <path d="M 465 64 L 465 36 L 740 36" fill="none" stroke="var(--c-heissgas)" stroke-width="4" stroke-linecap="round" />
-                  <text class="svg-sub-text" x="625" y="26" text-anchor="middle" font-size="9" font-weight="700">Trinkwarmwasser (Wellrohr / FriWa)</text>
+                  <path d="M 465 64 L 465 36 L 740 36" fill="none" stroke="var(--c-heissgas)" stroke-width="5" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 465 64 L 465 36 L 740 36" class="pipe-flow-soft" stroke="var(--c-heissgas)" />
+                  <text class="svg-sub-text" x="625" y="24" text-anchor="middle" font-size="10.5" font-weight="700">Trinkwarmwasser (Wellrohr / FriWa)</text>
                   <!-- WP Ladekreis -->
-                  <path d="M 170 156 L 390 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
-                  <path d="M 390 320 L 170 320" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 170 156 L 390 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 170 156 L 390 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
+                  <path d="M 390 320 L 170 320" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 390 320 L 170 320" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
                   <!-- Heizkreis Entnahme unterhalb der Trennzone -->
-                  <path d="M 540 245 L 740 245" fill="none" stroke="var(--c-vorlauf)" stroke-width="4.5" stroke-linecap="round" />
-                  <path d="M 740 320 L 540 320" fill="none" stroke="var(--c-ruecklauf)" stroke-width="4.5" stroke-linecap="round" />
-                  <rect class="comp-box" x="600" y="227" width="96" height="36" rx="9" stroke-width="1.4" />
-                  <text class="svg-title-text" x="648" y="249" text-anchor="middle" font-size="9" font-weight="700">Sek.-Pumpe</text>
+                  <path d="M 540 245 L 740 245" fill="none" stroke="var(--c-vorlauf)" stroke-width="5.5" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 540 245 L 740 245" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
+                  <path d="M 740 320 L 540 320" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5.5" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 740 320 L 540 320" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
+                  <rect class="comp-box" x="596" y="227" width="104" height="36" rx="9" stroke-width="1.4" />
+                  <text class="svg-title-text" x="648" y="249" text-anchor="middle" font-size="10.5" font-weight="700">Sek.-Pumpe</text>
                 </g>
               </svg>
             </div>
