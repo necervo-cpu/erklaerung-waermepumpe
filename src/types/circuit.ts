@@ -21,6 +21,7 @@ export type ViewType =
   | "hydraulics"
   | "waterQuality"
   | "heatingCurve"
+  | "calculator"
   | "installation"
   | "faults"
   | "niceToKnow"

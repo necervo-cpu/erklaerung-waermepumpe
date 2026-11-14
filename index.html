@@ -196,6 +196,17 @@
           <button
             type="button"
             class="segmented-btn view-nav-btn press-btn"
+            data-view="calculator"
+            role="tab"
+            aria-selected="false"
+            id="btnViewCalculator"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">calculate</span>
+            <span>Praxis-Rechner</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
             data-view="installation"
             role="tab"
             aria-selected="false"
@@ -1130,7 +1141,7 @@
           <div class="legend-item"><span class="legend-swatch is-sauggas"></span>Sauggas (ND, überhitzt)</div>
           <div class="legend-item" id="legendVorlaufItem"><span class="legend-swatch is-vorlauf"></span><span id="legendVorlaufText">Heizung Vorlauf</span></div>
           <div class="legend-item" id="legendRuecklaufItem"><span class="legend-swatch is-ruecklauf"></span><span id="legendRuecklaufText">Heizung Rücklauf</span></div>
-          <div class="legend-item hidden" id="legendVrvItem"><span class="legend-swatch is-vrv"></span><span>VRF-Verteilernetz (Y-Abzweige)</span></div>
+          <div class="legend-item hidden" id="legendVrvItem" hidden><span class="legend-swatch is-vrv"></span><span>VRF-Verteilernetz (Y-Abzweige)</span></div>
         </div>
       </section>
 
@@ -1591,6 +1602,177 @@
 
       <div id="hcMetricsGrid" class="water-metrics-grid"></div>
       <div id="hcRulesGrid" class="nice-grid"></div>
+    </section>
+
+    <!-- ANSICHT 9: PRAXIS-RECHNER FÜR WÄRMEPUMPEN -->
+    <section id="viewCalculator" class="water-layout hidden" aria-label="Praxis-Rechner für Wärmepumpen">
+      <div class="nice-header-banner liquid-glass-card">
+        <div class="nice-header-copy">
+          <p class="detail-kicker">Azubi- &amp; Servicetechniker-Werkzeug · Live-Berechnung</p>
+          <h2 class="detail-title">Praxis-Rechner für Wärmepumpen &amp; Kältekreis</h2>
+          <p class="section-text" style="margin-top:4px;">
+            Verstelle die Regler oder tippe deine Messwerte direkt ein – alle Ergebnisse und Diagnose-Ampeln aktualisieren in Echtzeit.
+          </p>
+        </div>
+      </div>
+
+      <div class="calc-grid">
+        <!-- RECHNER 1: HEIZWASSER-VOLUMENSTROM & SPREIZUNG -->
+        <article class="calc-card liquid-glass-card">
+          <div class="calc-card-head">
+            <div>
+              <p class="detail-kicker">Rechner 1 · Hydraulik</p>
+              <h3 class="nice-title">Heizwasser-Volumenstrom &amp; Spreizung</h3>
+            </div>
+            <span class="badge-tag" id="calcFlowBadge" data-color="mint">Grün · Optimal</span>
+          </div>
+
+          <div class="calc-inputs">
+            <div class="calc-input-group">
+              <div class="calc-label-row">
+                <label for="calcFlowQInput">Heizleistung Q̇ (kW)</label>
+                <input type="number" class="calc-number-input tabular" id="calcFlowQInput" min="3" max="25" step="0.5" value="8" />
+              </div>
+              <input type="range" id="calcFlowQRange" min="3" max="25" step="0.5" value="8" />
+            </div>
+
+            <div class="calc-input-group">
+              <div class="calc-label-row">
+                <label for="calcFlowDtInput">Spreizung ΔT (T_VL − T_RL) in K</label>
+                <input type="number" class="calc-number-input tabular" id="calcFlowDtInput" min="2" max="10" step="0.5" value="5" />
+              </div>
+              <input type="range" id="calcFlowDtRange" min="2" max="10" step="0.5" value="5" />
+            </div>
+          </div>
+
+          <div class="calc-result-box">
+            <div class="calc-result-row">
+              <div>
+                <span class="calc-result-label">Benötigter Nenn-Volumenstrom</span>
+                <div class="calc-result-hero tabular" id="calcFlowResultLph">1.376 l/h</div>
+              </div>
+              <div class="calc-result-sub-col tabular">
+                <span class="ref-pill" id="calcFlowResultLpm">22,9 l/min</span>
+                <span class="ref-pill" id="calcFlowResultM3h">1,38 m³/h</span>
+              </div>
+            </div>
+            <p class="section-text" id="calcFlowNote">Optimal für Wärmepumpen-Verflüssiger.</p>
+          </div>
+        </article>
+
+        <!-- RECHNER 2: ÜBERHITZUNG & UNTERKÜHLUNG -->
+        <article class="calc-card liquid-glass-card">
+          <div class="calc-card-head">
+            <div>
+              <p class="detail-kicker">Rechner 2 · Kältekreis-Diagnose</p>
+              <h3 class="nice-title">Überhitzung (ΔT_ÜH) &amp; Unterkühlung (ΔT_UK)</h3>
+            </div>
+          </div>
+
+          <div class="calc-sub-section">
+            <div class="calc-sub-head">
+              <strong>Überhitzung am Verdampferaustritt (Sauggas)</strong>
+              <span class="badge-tag" id="calcShBadge" data-color="mint">Grün · Optimal (5–8 K)</span>
+            </div>
+            <div class="calc-inputs">
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <label for="calcShT0Input">Verdampfungstemp. t₀ (ND) in °C</label>
+                  <input type="number" class="calc-number-input tabular" id="calcShT0Input" min="-25" max="15" step="0.5" value="-3" />
+                </div>
+                <input type="range" id="calcShT0Range" min="-25" max="15" step="0.5" value="-3" />
+              </div>
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <label for="calcShTsaugInput">Sauggastemp. t_Saug in °C</label>
+                  <input type="number" class="calc-number-input tabular" id="calcShTsaugInput" min="-20" max="25" step="0.5" value="4" />
+                </div>
+                <input type="range" id="calcShTsaugRange" min="-20" max="25" step="0.5" value="4" />
+              </div>
+            </div>
+            <div class="calc-result-box">
+              <div class="calc-result-row">
+                <span class="calc-result-label">Überhitzung ΔT_ÜH = t_Saug − t₀</span>
+                <span class="calc-result-hero tabular" id="calcShValue">7,0 K</span>
+              </div>
+              <p class="section-text" id="calcShNote"></p>
+            </div>
+          </div>
+
+          <div class="calc-sub-section">
+            <div class="calc-sub-head">
+              <strong>Unterkühlung am Verflüssigeraustritt (vor EEV)</strong>
+              <span class="badge-tag" id="calcScBadge" data-color="mint">Grün · Optimal (3–7 K)</span>
+            </div>
+            <div class="calc-inputs">
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <label for="calcScTcInput">Verflüssigungstemp. t_c (HD) in °C</label>
+                  <input type="number" class="calc-number-input tabular" id="calcScTcInput" min="25" max="65" step="0.5" value="38" />
+                </div>
+                <input type="range" id="calcScTcRange" min="25" max="65" step="0.5" value="38" />
+              </div>
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <label for="calcScTliqInput">Flüssigkeitstemp. t_Flüss in °C</label>
+                  <input type="number" class="calc-number-input tabular" id="calcScTliqInput" min="15" max="60" step="0.5" value="33" />
+                </div>
+                <input type="range" id="calcScTliqRange" min="15" max="60" step="0.5" value="33" />
+              </div>
+            </div>
+            <div class="calc-result-box">
+              <div class="calc-result-row">
+                <span class="calc-result-label">Unterkühlung ΔT_UK = t_c − t_Flüss</span>
+                <span class="calc-result-hero tabular" id="calcScValue">5,0 K</span>
+              </div>
+              <p class="section-text" id="calcScNote"></p>
+            </div>
+          </div>
+        </article>
+
+        <!-- RECHNER 3: MOMENTANER COP & STROMKOSTEN-INDIKATOR -->
+        <article class="calc-card liquid-glass-card">
+          <div class="calc-card-head">
+            <div>
+              <p class="detail-kicker">Rechner 3 · Effizienz</p>
+              <h3 class="nice-title">Momentaner COP &amp; Umweltwärme-Anteil</h3>
+            </div>
+            <span class="badge-tag" id="calcCopBadge" data-color="mint">Sehr effizient (COP ≥ 4,0)</span>
+          </div>
+
+          <div class="calc-inputs">
+            <div class="calc-input-group">
+              <div class="calc-label-row">
+                <label for="calcCopQInput">Thermische Heizleistung Q̇_Heiz (kW)</label>
+                <input type="number" class="calc-number-input tabular" id="calcCopQInput" min="1" max="30" step="0.1" value="7.2" />
+              </div>
+              <input type="range" id="calcCopQRange" min="1" max="30" step="0.1" value="7.2" />
+            </div>
+
+            <div class="calc-input-group">
+              <div class="calc-label-row">
+                <label for="calcCopPInput">Elektrische Aufnahme P_el (kW)</label>
+                <input type="number" class="calc-number-input tabular" id="calcCopPInput" min="0.3" max="15" step="0.1" value="1.6" />
+              </div>
+              <input type="range" id="calcCopPRange" min="0.3" max="15" step="0.1" value="1.6" />
+            </div>
+          </div>
+
+          <div class="calc-result-box">
+            <div class="calc-result-row">
+              <span class="calc-result-label">Momentaner COP (Q̇_Heiz / P_el)</span>
+              <span class="calc-result-hero tabular" id="calcCopValue">4,50</span>
+            </div>
+            <div class="quiz-progress-track" aria-hidden="true">
+              <div class="quiz-progress-fill" id="calcCopAmbientBar" style="width: 78%;"></div>
+            </div>
+            <div class="calc-split-meta tabular">
+              <span id="calcCopAmbientText">Umweltwärme: 5,6 kW (77,8 %)</span>
+              <span id="calcCopElectricText">Antriebsstrom: 1,6 kW (22,2 %)</span>
+            </div>
+          </div>
+        </article>
+      </div>
     </section>
 
     <!-- ANSICHT 9: AUFSTELLUNG, R290-SCHUTZZONEN & SCHALLSCHUTZ -->

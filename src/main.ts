@@ -31,6 +31,10 @@ import type {
 } from "./types/circuit";
 import { HEATING_CURVE_PRESETS } from "./data/heatingCurve";
 import {
+  attachCalculatorListeners,
+  type CalculatorDomElements
+} from "./render/calculatorView";
+import {
   renderHeatingCurveView,
   type HeatingCurveDomElements
 } from "./render/heatingCurveView";
@@ -305,6 +309,7 @@ const viewCircuit = requireElement<HTMLElement>("#viewCircuit");
 const viewHydraulics = requireElement<HTMLElement>("#viewHydraulics");
 const viewWaterQuality = requireElement<HTMLElement>("#viewWaterQuality");
 const viewHeatingCurve = requireElement<HTMLElement>("#viewHeatingCurve");
+const viewCalculator = requireElement<HTMLElement>("#viewCalculator");
 const viewInstallation = requireElement<HTMLElement>("#viewInstallation");
 const viewFaults = requireElement<HTMLElement>("#viewFaults");
 const viewNiceToKnow = requireElement<HTMLElement>("#viewNiceToKnow");
@@ -313,6 +318,7 @@ const btnViewCircuit = requireElement<HTMLButtonElement>("#btnViewCircuit");
 const btnViewHydraulics = requireElement<HTMLButtonElement>("#btnViewHydraulics");
 const btnViewWaterQuality = requireElement<HTMLButtonElement>("#btnViewWaterQuality");
 const btnViewHeatingCurve = requireElement<HTMLButtonElement>("#btnViewHeatingCurve");
+const btnViewCalculator = requireElement<HTMLButtonElement>("#btnViewCalculator");
 const btnViewInstallation = requireElement<HTMLButtonElement>("#btnViewInstallation");
 const btnViewFaults = requireElement<HTMLButtonElement>("#btnViewFaults");
 const btnViewNiceToKnow = requireElement<HTMLButtonElement>("#btnViewNiceToKnow");
@@ -413,6 +419,7 @@ const VIEW_META: Readonly<Record<ViewType, { readonly icon: string; readonly lab
   hydraulics: { icon: "plumbing", label: "Hydraulik & Puffer" },
   waterQuality: { icon: "water_drop", label: "Heizungswasser" },
   heatingCurve: { icon: "show_chart", label: "Heizkurve" },
+  calculator: { icon: "calculate", label: "Praxis-Rechner" },
   installation: { icon: "home_work", label: "Aufstellung" },
   faults: { icon: "warning", label: "Störungen (9)" },
   niceToKnow: { icon: "lightbulb", label: "Nice to Know" },
@@ -424,6 +431,7 @@ function renderViewSwitcher(): void {
   const isHydraulics = state.view === "hydraulics";
   const isWater = state.view === "waterQuality";
   const isHeatingCurve = state.view === "heatingCurve";
+  const isCalculator = state.view === "calculator";
   const isInstallation = state.view === "installation";
   const isFaults = state.view === "faults";
   const isNice = state.view === "niceToKnow";
@@ -433,6 +441,7 @@ function renderViewSwitcher(): void {
   btnViewHydraulics.setAttribute("aria-selected", String(isHydraulics));
   btnViewWaterQuality.setAttribute("aria-selected", String(isWater));
   btnViewHeatingCurve.setAttribute("aria-selected", String(isHeatingCurve));
+  btnViewCalculator.setAttribute("aria-selected", String(isCalculator));
   btnViewInstallation.setAttribute("aria-selected", String(isInstallation));
   btnViewFaults.setAttribute("aria-selected", String(isFaults));
   btnViewNiceToKnow.setAttribute("aria-selected", String(isNice));
@@ -442,6 +451,7 @@ function renderViewSwitcher(): void {
   viewHydraulics.classList.toggle("hidden", !isHydraulics);
   viewWaterQuality.classList.toggle("hidden", !isWater);
   viewHeatingCurve.classList.toggle("hidden", !isHeatingCurve);
+  viewCalculator.classList.toggle("hidden", !isCalculator);
   viewInstallation.classList.toggle("hidden", !isInstallation);
   viewFaults.classList.toggle("hidden", !isFaults);
   viewNiceToKnow.classList.toggle("hidden", !isNice);
@@ -715,6 +725,7 @@ function handleSetView(view: ViewType): void {
     hydraulics: viewHydraulics,
     waterQuality: viewWaterQuality,
     heatingCurve: viewHeatingCurve,
+    calculator: viewCalculator,
     installation: viewInstallation,
     faults: viewFaults,
     niceToKnow: viewNiceToKnow,
@@ -805,6 +816,7 @@ btnViewCircuit.addEventListener("click", () => handleSetView("circuit"));
 btnViewHydraulics.addEventListener("click", () => handleSetView("hydraulics"));
 btnViewWaterQuality.addEventListener("click", () => handleSetView("waterQuality"));
 btnViewHeatingCurve.addEventListener("click", () => handleSetView("heatingCurve"));
+btnViewCalculator.addEventListener("click", () => handleSetView("calculator"));
 btnViewInstallation.addEventListener("click", () => handleSetView("installation"));
 btnViewFaults.addEventListener("click", () => handleSetView("faults"));
 
@@ -944,6 +956,42 @@ document
     });
   });
 
+// DOM-Elemente für den Praxis-Rechner
+const calculatorElements: CalculatorDomElements = {
+  flowQRange: requireElement<HTMLInputElement>("#calcFlowQRange"),
+  flowQInput: requireElement<HTMLInputElement>("#calcFlowQInput"),
+  flowDtRange: requireElement<HTMLInputElement>("#calcFlowDtRange"),
+  flowDtInput: requireElement<HTMLInputElement>("#calcFlowDtInput"),
+  flowResultLph: requireElement<HTMLElement>("#calcFlowResultLph"),
+  flowResultLpm: requireElement<HTMLElement>("#calcFlowResultLpm"),
+  flowResultM3h: requireElement<HTMLElement>("#calcFlowResultM3h"),
+  flowBadge: requireElement<HTMLElement>("#calcFlowBadge"),
+  flowNote: requireElement<HTMLElement>("#calcFlowNote"),
+  shT0Range: requireElement<HTMLInputElement>("#calcShT0Range"),
+  shT0Input: requireElement<HTMLInputElement>("#calcShT0Input"),
+  shTsaugRange: requireElement<HTMLInputElement>("#calcShTsaugRange"),
+  shTsaugInput: requireElement<HTMLInputElement>("#calcShTsaugInput"),
+  shValue: requireElement<HTMLElement>("#calcShValue"),
+  shBadge: requireElement<HTMLElement>("#calcShBadge"),
+  shNote: requireElement<HTMLElement>("#calcShNote"),
+  scTcRange: requireElement<HTMLInputElement>("#calcScTcRange"),
+  scTcInput: requireElement<HTMLInputElement>("#calcScTcInput"),
+  scTliqRange: requireElement<HTMLInputElement>("#calcScTliqRange"),
+  scTliqInput: requireElement<HTMLInputElement>("#calcScTliqInput"),
+  scValue: requireElement<HTMLElement>("#calcScValue"),
+  scBadge: requireElement<HTMLElement>("#calcScBadge"),
+  scNote: requireElement<HTMLElement>("#calcScNote"),
+  copQRange: requireElement<HTMLInputElement>("#calcCopQRange"),
+  copQInput: requireElement<HTMLInputElement>("#calcCopQInput"),
+  copPRange: requireElement<HTMLInputElement>("#calcCopPRange"),
+  copPInput: requireElement<HTMLInputElement>("#calcCopPInput"),
+  copValue: requireElement<HTMLElement>("#calcCopValue"),
+  copBadge: requireElement<HTMLElement>("#calcCopBadge"),
+  copAmbientText: requireElement<HTMLElement>("#calcCopAmbientText"),
+  copElectricText: requireElement<HTMLElement>("#calcCopElectricText"),
+  copAmbientBar: requireElement<HTMLElement>("#calcCopAmbientBar")
+};
+
 // -----------------------------------------------------------------------------
 // Initiale Ausführung nach DOMContentLoaded (inkl. Farblegenden-Filterung)
 // -----------------------------------------------------------------------------
@@ -954,6 +1002,7 @@ function initApp(): void {
   renderBufferStorageView(bufferElements, state);
   renderWaterQualityView(waterQualityElements, state);
   renderHeatingCurveView(heatingCurveElements, state);
+  attachCalculatorListeners(calculatorElements);
   renderInstallationView(installationElements, state);
   renderQuizView(quizElements, state, quizCallbacks);
   renderViewSwitcher();

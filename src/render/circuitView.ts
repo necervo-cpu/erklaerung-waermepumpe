@@ -664,11 +664,14 @@ export function renderOperationMode(
   const isVrv = state.system === "vrv";
   const showVorlaufLegend = !isHvac || isHeating;
   elements.legendVorlaufItem.classList.toggle("hidden", !showVorlaufLegend);
+  elements.legendVorlaufItem.hidden = !showVorlaufLegend;
   elements.legendVorlaufText.textContent = isHvac
     ? "Zuluft (warm · Heizbetrieb)"
     : "Heizung Vorlauf";
   elements.legendRuecklaufItem.classList.toggle("hidden", isHvac);
+  elements.legendRuecklaufItem.hidden = isHvac;
   elements.legendVrvItem.classList.toggle("hidden", !isVrv);
+  elements.legendVrvItem.hidden = !isVrv;
 
   renderComponentDetail(elements, state, onSelectComponent);
 }
@@ -771,11 +774,14 @@ export function renderSystemView(
   // Farblegende an Sekundärkreis und Betriebsmodus anpassen
   const showVorlaufLegend = !isHvac || state.mode === "heating";
   elements.legendVorlaufItem.classList.toggle("hidden", !showVorlaufLegend);
+  elements.legendVorlaufItem.hidden = !showVorlaufLegend;
   elements.legendVorlaufText.textContent = isHvac
     ? "Zuluft (warm · Heizbetrieb)"
     : "Heizung Vorlauf";
   elements.legendRuecklaufItem.classList.toggle("hidden", isHvac);
+  elements.legendRuecklaufItem.hidden = isHvac;
   elements.legendVrvItem.classList.toggle("hidden", !isVrv);
+  elements.legendVrvItem.hidden = !isVrv;
 
   renderOperationMode(elements, state, onSelectComponent);
 }

@@ -2267,7 +2267,7 @@ svg#installSvg {
 .view-nav-segmented {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(9, minmax(0, 1fr));
   gap: 4px;
 }
 
@@ -2275,15 +2275,15 @@ svg#installSvg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   min-width: 0;
-  padding: 8px 10px;
-  font-size: 0.8rem;
+  padding: 8px 8px;
+  font-size: 0.78rem;
 }
 
 @media (max-width: 1080px) {
   .view-nav-segmented {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -2373,6 +2373,141 @@ svg#installSvg {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+}
+
+/* ==========================================================================
+   Praxis-Rechner (Volumenstrom, Überhitzung/Unterkühlung, Momentaner COP)
+   ========================================================================== */
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 16px;
+}
+
+.calc-card {
+  padding: 18px;
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.calc-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.calc-sub-section {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calc-sub-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.86rem;
+  color: var(--ink);
+}
+
+.calc-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calc-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calc-input-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--pastel-mint);
+  cursor: pointer;
+}
+
+.calc-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.calc-number-input {
+  width: 84px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border);
+  background: var(--surface-field);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 16px; /* verhindert iOS Auto-Zoom */
+  font-weight: 600;
+  text-align: right;
+}
+
+.calc-result-box {
+  padding: 14px;
+  border-radius: var(--radius-well);
+  background: var(--surface-field);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calc-result-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.calc-result-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  display: block;
+}
+
+.calc-result-hero {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.calc-result-sub-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.calc-split-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
 }
 
 @media (forced-colors: active) {

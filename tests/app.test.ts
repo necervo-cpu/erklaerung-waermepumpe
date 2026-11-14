@@ -10,6 +10,12 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import {
+  calculateCopMetrics,
+  calculateSubcooling,
+  calculateSuperheat,
+  calculateVolumeFlow
+} from "../src/data/calculator";
 import { COMPONENTS } from "../src/data/components";
 import { FAULTS } from "../src/data/faults";
 import { BUFFER_PRACTICE_RULES, BUFFER_VARIANTS } from "../src/data/bufferStorage";
@@ -565,6 +571,13 @@ describe("DOM-Integrität (index.html)", () => {
       "quizQuestionHost",
       "btnViewHeatingCurve",
       "viewHeatingCurve",
+      "btnViewCalculator",
+      "viewCalculator",
+      "calcFlowQRange",
+      "calcFlowDtRange",
+      "calcShT0Range",
+      "calcScTcRange",
+      "calcCopQRange",
       "btnHcPresetFbh",
       "btnHcPresetLowHk",
       "btnHcPresetOldHk",
@@ -733,5 +746,32 @@ describe("Azubi-Dashboards: Hydraulik-Kreis & Heizungswasser (VDI 2035)", () => 
     expect(INSTALL_SYSTEMS.r290.badgeText).toContain("R290");
     expect(INSTALL_SYSTEMS.r32.badgeText).toContain("R32");
     expect(INSTALL_RULES).toHaveLength(4);
+  });
+
+  it("berechnet Volumenstrom, Überhitzung, Unterkühlung und COP exakt mit Ampelbewertung", () => {
+    const flow = calculateVolumeFlow(8, 5);
+    expect(Math.round(flow.lPerHour)).toBe(1376);
+    expect(flow.lPerMin).toBeCloseTo(22.93, 1);
+    expect(flow.statusColor).toBe("mint");
+
+    const flowLow = calculateVolumeFlow(8, 8.5);
+    expect(flowLow.statusColor).toBe("rose");
+
+    const shOk = calculateSuperheat(-3, 4);
+    expect(shOk.deltaK).toBe(7);
+    expect(shOk.statusColor).toBe("mint");
+
+    const shDanger = calculateSuperheat(0, 2);
+    expect(shDanger.statusColor).toBe("rose");
+
+    const scOk = calculateSubcooling(38, 33);
+    expect(scOk.deltaK).toBe(5);
+    expect(scOk.statusColor).toBe("mint");
+
+    const copRes = calculateCopMetrics(7.2, 1.6);
+    expect(copRes.cop).toBeCloseTo(4.5, 2);
+    expect(copRes.ambientKw).toBeCloseTo(5.6, 1);
+    expect(copRes.ambientPct).toBeCloseTo(77.78, 1);
+    expect(copRes.statusColor).toBe("mint");
   });
 });
