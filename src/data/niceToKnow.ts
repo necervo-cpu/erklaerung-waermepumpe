@@ -61,12 +61,12 @@ export const NICE_TO_KNOW: readonly NiceToKnowItem[] = [
     summary:
       "Aufsteigender weißer Dampf und ein verändertes Betriebsgeräusch an der Außeneinheit im Winter sind kein Brand, sondern die notwendige Heißgas-Abtauung.",
     keyFacts: [
-      "Physikalische Vereisung: Bei feuchter Außenluft zwischen -5 °C und +7 °C schlägt sich Kondensat an den kalten Verdampferlamellen nieder und gefriert.",
-      "Kreislaufumkehr via 4-Wege-Ventil: Die Wärmepumpe kehrt die Flussrichtung kurzzeitig um, leitet Heißgas in den Verdampfer und schmilzt das Eis in 2–5 Minuten.",
-      "Dampfbildung: Das schmelzende Eis verdampft teilweise an den warmen Rohren und erzeugt sichtbare, harmlose Kondensatnebelwolken."
+      "Physikalische Vereisung: Bei feuchter Außenluft zwischen -5 °C und +7 °C schlägt sich Kondensat an den kalten Verdampferlamellen nieder und gefriert. Optimierte Verdampfer (z. B. Lambdas 3K-Prozess mit nur ca. 3 K Luft-Kältemittel-Differenz) vereisen deutlich später und seltener.",
+      "Kreislaufumkehr via 4-Wege-Ventil: Standard bei modernen R290-Monoblocks (Bosch, Lambda) – eine Heißgas-Bypass-Abtauung wird nicht mehr eingesetzt. Das Heißgas schmilzt das Eis von innen in 2–5 Minuten.",
+      "Abtauenergie & Hydraulik: Die Energie kommt aus dem Heizkreis/Puffer (bei Bosch kann der integrierte Zuheizer stützen, bei Lambda zählt das reine Heizwasservolumen). Ein gesicherter Mindestvolumenstrom verhindert Frost- und HD/ND-Störungen."
     ],
     proTip:
-      "Halten Sie den Kondensatablauf unter dem Außengerät stets laub- und eisfrei. Gefriert das Tauwasser am Boden zurück, kann das Eis in den Ventilator wachsen."
+      "Halten Sie den Kondensatablauf unter dem Außengerät stets laub- und eisfrei und stellen Sie den Abtau-Mindestvolumenstrom sicher (Überströmventil/Puffer nicht absperren)."
   },
   {
     id: "refrigerants",
@@ -81,7 +81,7 @@ export const NICE_TO_KNOW: readonly NiceToKnowItem[] = [
       "Thermodynamische Vorlauftemperaturen: R290 erreicht effizient bis zu 70–75 °C Vorlauf und eignet sich daher hervorragend für die Altbausanierung."
     ],
     proTip:
-      "Monoblock-Systeme mit R290 erfordern im Gebäudeinneren keinen Kälteschein, da der Kältekreis hermetisch geschlossen komplett draußen verbleibt."
+      "Monoblock-Systeme mit R290 erfordern im Gebäudeinneren keinen Kälteschein, da der Kältekreis hermetisch geschlossen draußen verbleibt. Beachten Sie jedoch die Hersteller-Schutzbereiche um die Außeneinheit sowie Sicherheitsentlüfter/-abscheider in der Hydraulik gegen möglichen R290-Eintrag."
   },
   {
     id: "acoustics",

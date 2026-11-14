@@ -120,7 +120,7 @@ export const COMPONENTS: readonly ComponentData[] = [
       "Unterkühlung (Verflüssigungstemperatur minus Flüssigkeitsaustritt) und wasserseitige Spreizung (Vorlauf minus Rücklauf) messen.",
     serviceMetric: "Unterkühlung: 3 – 6 K · Spreizung Wasser: 4 – 7 K",
     defrostNote:
-      "Kehrt seine Funktion um und arbeitet als Verdampfer: Entzieht dem Heizungswasser für ca. 45–120 s Wärme (Umwälzpumpe muss sicher weiterlaufen)."
+      "Kehrt seine Funktion um und arbeitet als Verdampfer: Entzieht dem Heizungswasser für ca. 45–120 s Wärme. Ein gesicherter Mindestvolumenstrom (Puffer/Überströmventil) ist Pflicht; je nach Hersteller stützt ein elektrischer Zuheizer (z. B. Bosch) oder rein das Heizwasservolumen (z. B. Lambda)."
   },
   {
     id: 4,
@@ -307,7 +307,7 @@ export const COMPONENTS: readonly ComponentData[] = [
       }
     },
     service:
-      "Dampfblasen im stationären Betrieb weisen meist auf Kältemittelmangel oder zu geringe Unterkühlung hin. Indikatorfarbe immer erst nach einigen Stunden Laufzeit beurteilen.",
+      "Dampfblasen im stationären Betrieb weisen meist auf Kältemittelmangel oder zu geringe Unterkühlung hin. Indikatorfarbe immer erst nach einigen Stunden Laufzeit beurteilen. Praxishinweis: In hermetisch verlöteten R290-Serien-Monoblocks (z. B. Bosch, Lambda) entfällt das Schauglas meist – die Bewertung erfolgt dort über Überhitzung/Unterkühlung per Sensorik.",
     serviceMetric: "Soll-Zustand: 100 % blasenfrei · Indikator Grün",
     defrostNote:
       "Während der kurzen Abtauumkehr sind vorübergehend Dampfblasen im Schauglas normal – eine Füllstandsbewertung erfolgt erst wieder im stationären Heizbetrieb."
@@ -345,7 +345,7 @@ export const COMPONENTS: readonly ComponentData[] = [
       }
     },
     service:
-      "Sensordrücke in der Steuerung mit einer Monteurhilfe (Manometer) plausibilisieren. Bei HD-Abschaltung zuerst die Wärmesenke (Heizungswasserdurchfluss) prüfen!",
+      "Sensordrücke in der Steuerung mit einer Monteurhilfe (Manometer) plausibilisieren – in modernen R290-Monoblocks (z. B. Bosch, Lambda) arbeiten meist elektronische Drucktransmitter plus mechanischer HD-Begrenzer statt klassischer Schraubpressostate. Bei HD-Abschaltung zuerst die Wärmesenke (Heizungswasserdurchfluss) prüfen!",
     serviceMetric: "Plausibilität Manometer vs. Steuerung: ±0,3 bar",
     defrostNote:
       "Überwachen auch die Druckspitzen beim Umschalten des 4-Wege-Ventils und lösen bei Frostgefahr im Plattenwärmetauscher einen ND-Schutzstopp aus."
