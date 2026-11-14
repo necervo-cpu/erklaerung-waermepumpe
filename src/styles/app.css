@@ -865,6 +865,19 @@ svg#installSvg {
   color: var(--muted);
 }
 
+.mode-switch-bar .segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.mode-switch-bar .segmented-btn {
+  flex: 1 1 auto;
+  font-size: 0.78rem;
+  padding: 8px 10px;
+}
+
 .segmented-btn.is-cooling-btn[aria-selected="true"] {
   background: color-mix(in srgb, var(--pastel-sky) 20%, transparent);
   color: var(--accent-text-sky);

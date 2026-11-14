@@ -236,6 +236,7 @@ const hydraulicsElements: HydraulicsDomElements = {
   hydSepWwTank: requireElement<SVGGElement>("#hydSepWwTank"),
   hydCombiWwTap: requireElement<SVGGElement>("#hydCombiWwTap"),
   hydCombiTankInternals: requireElement<SVGGElement>("#hydCombiTankInternals"),
+  hydCoparTankInternals: requireElement<SVGGElement>("#hydCoparTankInternals"),
   hydBypassSeries: requireElement<SVGGElement>("#hydBypassSeries"),
   hydPumpSecParallel: requireElement<SVGGElement>("#hydPumpSecParallel"),
   hydBufferTitle: requireElement<SVGTextElement>("#hydBufferTitle"),
@@ -261,6 +262,7 @@ const bufferElements: BufferStorageDomElements = {
   btnTeeBranch: requireElement<HTMLButtonElement>("#btnBufTeeBranch"),
   btnParallel4Pipe: requireElement<HTMLButtonElement>("#btnBufParallel4Pipe"),
   btnCombiTank: requireElement<HTMLButtonElement>("#btnBufCombiTank"),
+  btnCoparTank: requireElement<HTMLButtonElement>("#btnBufCoparTank"),
   detailContainer: requireElement<HTMLElement>("#bufferDetailPanel"),
   practiceGrid: requireElement<HTMLElement>("#bufferPracticeGrid")
 };
@@ -886,6 +888,9 @@ bufferElements.btnParallel4Pipe.addEventListener("click", () =>
 );
 bufferElements.btnCombiTank.addEventListener("click", () =>
   handleSetBufferVariant("combiTank")
+);
+bufferElements.btnCoparTank.addEventListener("click", () =>
+  handleSetBufferVariant("coparTank")
 );
 
 // Hydraulik-SVG-Klicks

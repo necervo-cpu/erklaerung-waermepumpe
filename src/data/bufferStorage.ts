@@ -136,6 +136,38 @@ export const BUFFER_VARIANTS: Readonly<Record<BufferVariant, BufferVariantData>>
       "Heizkreis-Vorlauf aus Versehen an den obersten TWW-Stutzen angeschlossen: Die Fußbodenheizung zieht das teure 55 °C-Duschwasser leer und die Wärmepumpe lädt permanent mit schlechtem COP nach!",
     azubiMerksatz:
       "Anschlusshöhen sind heilig! Oben = TWW-Zone, Mitte = Heizkreis-Vorlauf, Unten = Rücklauf. Schichtleitbleche und Rückschlagklappen genau nach Herstellerplan setzen."
+  },
+  coparTank: {
+    id: "coparTank",
+    shortLabel: "Copar-Speicher (2-Zonen)",
+    title: "Copar-Speicher (2-Zonen-Wärmepumpen-Kombispeicher)",
+    subtitle: "100 % Zonentrennung · Integrierte TWW-Vorwärmung & Überströmkammer",
+    efficiencyBadge: "2-Zonen · Hohe JAZ",
+    color: "aqua",
+    principle:
+      "Zweigeteilter Wärmepumpen-Kombispeicher (z. B. Copar 500 / 800) mit 100 % thermischer Trennung zwischen oberer Warmwasserzone (50–55 °C) und unterer Heizungszone (30–45 °C). Kaltes Trinkwasser wird im Durchlauf zuerst im Heizungsteil vorgewärmt und erst danach im oberen TWW-Teil auf Endtemperatur gebracht; eine Überströmkammer verhindert Durchmischung im Heizungspuffer.",
+    sizingFormula: "Copar 500 (~536 l) oder Copar 800 (~812 l) · für Wärmepumpen bis ca. 22 kW",
+    sensorPlacement:
+      "TWW-Fühler in der oberen Warmwasser-Kammer; Heizungs-Fühler in der thermisch getrennten unteren Heizungs-Kammer.",
+    useCases: [
+      "Einfamilien- und Zweifamilienhäuser mit Wunsch nach maximaler JAZ trotz Kombispeicher",
+      "Sanierung & enge Kellerräume (Speicher lässt sich für die Einbringung in Ober- und Unterteil trennen)",
+      "Hygienische Trinkwassererwärmung im Durchlauf mit minimalem Bereitschaftsverlust"
+    ],
+    pros: [
+      "100 % thermische Zonentrennung verhindert Durchmischung zwischen TWW- und Heizungszone",
+      "Vorwärmstufe im Heizungsteil senkt den Temperaturhub der Wärmepumpe und steigert die JAZ",
+      "Überströmkammer stabilisiert den Heizungsvorlauf; teilbare Bauweise erleichtert den Transport"
+    ],
+    cons: [
+      "Höhere Investitionskosten als ein einfacher Standard-Kombispeicher",
+      "Mehrere Verrohrungsanschlüsse (Vorwärm- und Endstufe) erfordern saubere Beschriftung",
+      "Hydraulischer Abgleich und korrekte Fühlerzuordnung beider Kammern zwingend erforderlich"
+    ],
+    azubiMistake:
+      "Vorwärm- und Endstufe am Edelstahl-Wärmetauscher verwechseln oder die thermische Trennung zwischen Ober- und Unterteil bei der Montage nicht sauber abdichten und dämmen!",
+    azubiMerksatz:
+      "Kaltwasser erst durch den Heizungsteil vorwärmen, dann oben im TWW-Teil nachheizen – so spart die Wärmepumpe wertvolle Hochtemperatur-Laufzeit!"
   }
 };
 

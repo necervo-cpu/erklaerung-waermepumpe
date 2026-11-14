@@ -15,6 +15,7 @@ export interface BufferStorageDomElements {
   readonly btnTeeBranch: HTMLButtonElement;
   readonly btnParallel4Pipe: HTMLButtonElement;
   readonly btnCombiTank: HTMLButtonElement;
+  readonly btnCoparTank: HTMLButtonElement;
   readonly detailContainer: HTMLElement;
   readonly practiceGrid: HTMLElement;
 }
@@ -180,6 +181,7 @@ export function renderBufferStorageView(
   elements.btnTeeBranch.setAttribute("aria-selected", String(variantKey === "teeBranch"));
   elements.btnParallel4Pipe.setAttribute("aria-selected", String(variantKey === "parallel4Pipe"));
   elements.btnCombiTank.setAttribute("aria-selected", String(variantKey === "combiTank"));
+  elements.btnCoparTank.setAttribute("aria-selected", String(variantKey === "coparTank"));
 
   elements.detailContainer.replaceChildren(createDetailPanel(data));
 

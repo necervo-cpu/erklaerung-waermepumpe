@@ -698,8 +698,8 @@ describe("Azubi-Dashboards: Hydraulik-Kreis & Heizungswasser (VDI 2035)", () => 
     }
   });
 
-  it("liefert alle 4 Pufferspeicher-Einbindungen und 4 Praxisregeln", () => {
-    const keys = ["seriesReturn", "teeBranch", "parallel4Pipe", "combiTank"] as const;
+  it("liefert alle 5 Pufferspeicher-Einbindungen und 4 Praxisregeln", () => {
+    const keys = ["seriesReturn", "teeBranch", "parallel4Pipe", "combiTank", "coparTank"] as const;
     for (const key of keys) {
       const variant = BUFFER_VARIANTS[key];
       expect(variant.title.length).toBeGreaterThan(5);

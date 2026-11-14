@@ -33,7 +33,7 @@ export type InstallSystemType = "r290" | "r32";
 
 export type HydraulicsVariant = "series" | "parallel";
 
-export type BufferVariant = "seriesReturn" | "teeBranch" | "parallel4Pipe" | "combiTank";
+export type BufferVariant = "seriesReturn" | "teeBranch" | "parallel4Pipe" | "combiTank" | "coparTank";
 
 export type WaterSystemMaterial = "noAluminum" | "withAluminum";
 

@@ -24,6 +24,7 @@ export interface HydraulicsDomElements {
   readonly hydSepWwTank: SVGGElement;
   readonly hydCombiWwTap: SVGGElement;
   readonly hydCombiTankInternals: SVGGElement;
+  readonly hydCoparTankInternals: SVGGElement;
   readonly hydBypassSeries: SVGGElement;
   readonly hydPumpSecParallel: SVGGElement;
   readonly hydBufferTitle: SVGTextElement;
@@ -79,6 +80,8 @@ export function renderHydraulicsView(
   const isTee = state.bufferVariant === "teeBranch";
   const isParallel = state.bufferVariant === "parallel4Pipe";
   const isCombi = state.bufferVariant === "combiTank";
+  const isCopar = state.bufferVariant === "coparTank";
+  const hasIntegratedWw = isCombi || isCopar;
   const mappedVariant: HydraulicsVariant = isSeries ? "series" : "parallel";
   const variant = HYDRAULICS_VARIANTS[mappedVariant];
 
@@ -89,14 +92,15 @@ export function renderHydraulicsView(
   elements.hydBannerBadge.dataset.color = bufData.color;
   elements.hydBannerBadge.textContent = bufData.efficiencyBadge;
 
-  // SVG-Layer exakt für alle 4 Pufferspeicher-Schaltungen umschalten
+  // SVG-Layer exakt für alle 5 Pufferspeicher-Schaltungen umschalten
   elements.hydPipesSeries.classList.toggle("svg-layer-hidden", !isSeries);
   elements.hydPipesTee.classList.toggle("svg-layer-hidden", !isTee);
   elements.hydPipesParallel.classList.toggle("svg-layer-hidden", !isParallel);
-  elements.hydPipesCombi.classList.toggle("svg-layer-hidden", !isCombi);
-  elements.hydSepWwTank.classList.toggle("svg-layer-hidden", isCombi);
-  elements.hydCombiWwTap.classList.toggle("svg-layer-hidden", !isCombi);
+  elements.hydPipesCombi.classList.toggle("svg-layer-hidden", !hasIntegratedWw);
+  elements.hydSepWwTank.classList.toggle("svg-layer-hidden", hasIntegratedWw);
+  elements.hydCombiWwTap.classList.toggle("svg-layer-hidden", !hasIntegratedWw);
   elements.hydCombiTankInternals.classList.toggle("svg-layer-hidden", !isCombi);
+  elements.hydCoparTankInternals.classList.toggle("svg-layer-hidden", !isCopar);
   elements.hydBypassSeries.classList.toggle("svg-layer-hidden", !isSeries);
   elements.hydPumpSecParallel.classList.toggle("svg-layer-hidden", isSeries);
 
@@ -104,7 +108,8 @@ export function renderHydraulicsView(
     seriesReturn: { title: "Reihenpuffer", sub: "Rücklauf", vol: "(50–100 l)" },
     teeBranch: { title: "Pendelspeicher", sub: "Stich-T-Stück", vol: "(100–300 l)" },
     parallel4Pipe: { title: "Parallelpuffer", sub: "Hydr. Weiche", vol: "(100–300 l)" },
-    combiTank: { title: "Kombispeicher", sub: "Heizung + TWW", vol: "(300–500 l)" }
+    combiTank: { title: "Kombispeicher", sub: "Heizung + TWW", vol: "(300–500 l)" },
+    coparTank: { title: "Copar-Speicher", sub: "2-Zonen + Vorwärm.", vol: "(500 / 800 l)" }
   };
   const labelInfo = bufferLabels[state.bufferVariant];
   elements.hydBufferTitle.textContent = labelInfo.title;

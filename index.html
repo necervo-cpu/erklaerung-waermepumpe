@@ -1200,6 +1200,9 @@
             <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufCombiTank">
               Kombispeicher (inkl. TWW)
             </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufCoparTank">
+              Copar-Speicher (2-Zonen)
+            </button>
           </div>
         </div>
 
@@ -1428,6 +1431,15 @@
                   <path d="M 522 252 L 566 252 L 522 264 L 566 264 L 522 276 L 566 276" fill="none" stroke="var(--c-heissgas)" stroke-width="1.8" opacity="0.85" />
                   <line x1="494" y1="306" x2="570" y2="306" stroke="var(--svg-detail-stroke)" stroke-width="2" stroke-dasharray="5 3" />
                   <text class="svg-sub-text" x="532" y="298" text-anchor="middle" font-size="7.2" font-weight="700" style="fill: var(--c-heissgas)">TWW · Leitblech</text>
+                </g>
+                <!-- Copar-Speicher 2-Zonen-Aufbau (nur bei coparTank sichtbar) -->
+                <g id="hydCoparTankInternals" class="svg-layer-hidden">
+                  <rect x="492" y="242" width="80" height="54" rx="12" fill="var(--c-heissgas)" opacity="0.18" />
+                  <path d="M 522 250 L 566 250 L 522 261 L 566 261 L 522 272 L 566 272" fill="none" stroke="var(--c-heissgas)" stroke-width="1.8" opacity="0.9" />
+                  <line x1="490" y1="301" x2="574" y2="301" stroke="var(--c-ruecklauf)" stroke-width="2.5" />
+                  <line x1="490" y1="305" x2="574" y2="305" stroke="var(--c-vorlauf)" stroke-width="1.5" />
+                  <path d="M 516 372 L 558 372 L 516 381 L 558 381" fill="none" stroke="var(--c-vorlauf)" stroke-width="1.5" opacity="0.8" />
+                  <text class="svg-sub-text" x="532" y="293" text-anchor="middle" font-size="6.8" font-weight="700" style="fill: var(--c-heissgas)">100 % getrennt</text>
                 </g>
                 <circle class="comp-num-bg" cx="506" cy="258" r="9.5" />
                 <text class="comp-num-txt" x="506" y="262" text-anchor="middle" font-size="10.5" font-weight="700">3</text>
