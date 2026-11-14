@@ -15,19 +15,8 @@ export interface BufferStorageDomElements {
   readonly btnTeeBranch: HTMLButtonElement;
   readonly btnParallel4Pipe: HTMLButtonElement;
   readonly btnCombiTank: HTMLButtonElement;
-  readonly bannerTitle: HTMLElement;
-  readonly bannerDesc: HTMLElement;
-  readonly bannerBadge: HTMLElement;
-  readonly layerSeriesReturn: SVGGElement;
-  readonly layerTeeBranch: SVGGElement;
-  readonly layerParallel4Pipe: SVGGElement;
-  readonly layerCombiTank: SVGGElement;
   readonly detailContainer: HTMLElement;
   readonly practiceGrid: HTMLElement;
-}
-
-function setSvgLayerVisible(el: SVGElement, visible: boolean): void {
-  el.classList.toggle("is-svg-hidden", !visible);
 }
 
 function createBulletListCard(title: string, items: readonly string[], iconName: string): HTMLElement {
@@ -189,16 +178,6 @@ export function renderBufferStorageView(
   elements.btnTeeBranch.setAttribute("aria-selected", String(variantKey === "teeBranch"));
   elements.btnParallel4Pipe.setAttribute("aria-selected", String(variantKey === "parallel4Pipe"));
   elements.btnCombiTank.setAttribute("aria-selected", String(variantKey === "combiTank"));
-
-  elements.bannerTitle.textContent = data.title;
-  elements.bannerDesc.textContent = data.subtitle;
-  elements.bannerBadge.textContent = data.efficiencyBadge;
-  elements.bannerBadge.dataset.color = data.color;
-
-  setSvgLayerVisible(elements.layerSeriesReturn, variantKey === "seriesReturn");
-  setSvgLayerVisible(elements.layerTeeBranch, variantKey === "teeBranch");
-  setSvgLayerVisible(elements.layerParallel4Pipe, variantKey === "parallel4Pipe");
-  setSvgLayerVisible(elements.layerCombiTank, variantKey === "combiTank");
 
   elements.detailContainer.replaceChildren(createDetailPanel(data));
 

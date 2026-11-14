@@ -32,8 +32,8 @@ export const INSTALL_SYSTEMS: Readonly<Record<InstallSystemType, InstallSystemCo
     label: "Luft/Wasser Monoblock (R290 · A3)",
     bannerTitle: "Aufstellung R290-Monoblock · Schutzzone & Kondensatsiphon beachten",
     bannerDesc:
-      "R290 (Propan, Gruppe A3, UEG 1,7 Vol.-% / OEG 10,8 Vol.-%) ist schwerer als Luft und sinkt zu Boden. Schutzzone (am Gerät 1 m, am Boden kegel-/trapezförmig je nach Hersteller bis 1,5–3,0 m) frei von Öffnungen & Zündquellen halten!",
-    badgeText: "R290 · A3 · Schutzzone 1–3 m",
+      "R290 (Propan, Gruppe A3, UEG 1,7 Vol.-% / OEG 10,8 Vol.-%) ist schwerer als Luft und sinkt zu Boden. Schutzzone (am Gerät 1 m, am Boden kegel-/trapezförmig je nach Hersteller bis 1,5–3,0 m) frei von Öffnungen & Zündquellen halten! Wichtig: Kondensatleitung bei Kanalanschluss zwingend über einen frostsicheren Siphon (Geruchsverschluss) führen, damit kein Propan ins Abwassernetz gelangen kann!",
+    badgeText: "R290 (A3) · Schutzbereich 1–3 m & Siphon-Pflicht",
     badgeColor: "mint"
   },
   r32: {

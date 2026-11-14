@@ -1175,25 +1175,19 @@
         </div>
 
         <div class="mode-switch-bar">
-          <span class="mode-switch-label">Hydraulik-Schaltung:</span>
-          <div class="segmented" role="tablist" aria-label="Hydraulik-Variante wählen">
-            <button
-              type="button"
-              class="segmented-btn press-btn"
-              role="tab"
-              aria-selected="true"
-              id="btnHydSeries"
-            >
-              Reihenpuffer + Überströmventil
+          <span class="mode-switch-label">Hydraulik- &amp; Pufferschaltung:</span>
+          <div class="segmented" role="tablist" aria-label="Hydraulik- und Pufferspeicher-Schaltung wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnBufSeriesReturn">
+              Reihenpuffer + ÜSV
             </button>
-            <button
-              type="button"
-              class="segmented-btn press-btn"
-              role="tab"
-              aria-selected="false"
-              id="btnHydParallel"
-            >
-              Parallelpuffer (Entkoppelt)
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufTeeBranch">
+              Stichanbindung (Pendel)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufParallel4Pipe">
+              Parallelpuffer (Weiche)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufCombiTank">
+              Kombispeicher (inkl. TWW)
             </button>
           </div>
         </div>
@@ -1403,168 +1397,13 @@
         </div>
       </section>
 
-      <aside class="detail-card" aria-label="Hydraulik-Bauteile">
+      <aside class="detail-card" aria-label="Schaltungsanalyse und Hydraulik-Bauteile">
+        <div id="bufferDetailPanel"></div>
+        <div class="water-section-head" style="margin-top: 18px;">
+          <h3 class="detail-title">Hydraulik-Bauteile (im Schema anklickbar)</h3>
+        </div>
         <div id="hydraulicsAccordionList" class="comp-list"></div>
       </aside>
-      </div>
-
-      <div class="water-section-head">
-        <h3 class="detail-title">Pufferspeicher-Einbindungsvarianten &amp; Schichtung</h3>
-      </div>
-      <div class="refrigerant-banner is-r290" id="bufBanner">
-        <div class="banner-copy">
-          <p class="banner-title" id="bufBannerTitle">Reihenpuffer im Rücklauf + Überströmventil</p>
-          <p class="banner-desc" id="bufBannerDesc">
-            Höchste Effizienz · Direkte Vorlauf-Versorgung ohne Mischverlust
-          </p>
-        </div>
-        <span class="badge-tag" id="bufBannerBadge" data-color="mint">JAZ-Optimum · 1 Pumpe</span>
-      </div>
-
-      <div class="water-controls-card liquid-glass-card">
-        <div class="water-filter-group">
-          <span class="mode-switch-label">Einbindungsvariante wählen:</span>
-          <div class="segmented" role="tablist" aria-label="Pufferspeicher-Schaltung wählen">
-            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnBufSeriesReturn">
-              Reihenpuffer (Rücklauf)
-            </button>
-            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufTeeBranch">
-              Stichanbindung (T-Stück)
-            </button>
-            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufParallel4Pipe">
-              Parallelpuffer (4-Leiter)
-            </button>
-            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufCombiTank">
-              Kombispeicher (Heizung + TWW)
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="workspace-grid">
-        <section class="schema-card" aria-label="Pufferspeicher-Schema">
-          <div class="schema-toolbar">
-            <span class="schema-toolbar-hint">Fließbild der gewählten Speicher-Einbindung</span>
-            <button type="button" class="schema-zoom-btn press-btn" data-toggle-schema-expand aria-pressed="false">
-              <span class="ag-icon ag-icon--xs" aria-hidden="true">open_in_full</span>
-              <span data-expand-label>Großansicht</span>
-            </button>
-          </div>
-          <div class="svg-stage-wrap">
-            <div class="svg-stage">
-              <svg id="bufferSvg" viewBox="0 0 920 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schema verschiedener Pufferspeicher-Einbindungen an Luft/Wasser-Wärmepumpen">
-                <!-- Wärmepumpe links -->
-                <rect class="hyd-zone-box" x="20" y="130" width="150" height="200" rx="18" stroke-width="1.5" />
-                <text class="svg-title-text" x="95" y="164" text-anchor="middle" font-size="13" font-weight="700">Luft/Wasser-WP</text>
-                <text class="svg-sub-text" x="95" y="184" text-anchor="middle" font-size="10.5">Wärmeerzeuger</text>
-                <rect class="comp-box" x="40" y="205" width="110" height="46" rx="10" stroke-width="1.4" />
-                <text class="svg-title-text" x="95" y="226" text-anchor="middle" font-size="10.5" font-weight="700">Primärpumpe</text>
-                <text class="svg-sub-text" x="95" y="242" text-anchor="middle" font-size="9.5">Vorlauf / Rücklauf</text>
-
-                <!-- Pufferspeicher Mitte -->
-                <rect class="comp-box" x="390" y="64" width="150" height="320" rx="26" stroke-width="2" />
-                <text class="svg-title-text" x="465" y="96" text-anchor="middle" font-size="13" font-weight="700">Pufferspeicher</text>
-
-                <!-- Heizkreis rechts -->
-                <rect class="hyd-zone-box" x="740" y="130" width="160" height="200" rx="18" stroke-width="1.5" />
-                <text class="svg-title-text" x="820" y="164" text-anchor="middle" font-size="13" font-weight="700">Heizkreis</text>
-                <text class="svg-sub-text" x="820" y="184" text-anchor="middle" font-size="10.5">FBH / Heizkörper</text>
-                <rect class="comp-box" x="760" y="205" width="120" height="46" rx="10" stroke-width="1.4" />
-                <text class="svg-title-text" x="820" y="226" text-anchor="middle" font-size="10.5" font-weight="700">Wärmeabgabe</text>
-                <text class="svg-sub-text" x="820" y="242" text-anchor="middle" font-size="9.5">Verteiler / ERR</text>
-
-                <!-- LAYER 1: REIHENPUFFER IM RÜCKLAUF -->
-                <g id="bufLayerSeriesReturn">
-                  <text class="svg-sub-text" x="465" y="116" text-anchor="middle" font-size="10.5">Rücklaufpuffer (in Reihe)</text>
-                  <!-- Vorlauf direkt WP -> Heizkreis -->
-                  <path d="M 170 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 170 156 L 740 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
-                  <text class="svg-sub-text" x="465" y="42" text-anchor="middle" font-size="11" font-weight="700">Vorlauf direkt zum Heizkreis (kein Mischverlust)</text>
-                  <!-- Überströmventil -->
-                  <line x1="270" y1="156" x2="270" y2="300" stroke="var(--c-vorlauf)" stroke-width="2.5" stroke-dasharray="5 4" />
-                  <rect class="comp-box" x="212" y="210" width="116" height="36" rx="9" stroke-width="1.4" />
-                  <text class="svg-title-text" x="270" y="232" text-anchor="middle" font-size="10.5" font-weight="700">Überströmventil</text>
-                  <!-- Rücklauf Heizkreis -> Puffer -> WP -->
-                  <path d="M 740 300 L 540 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 740 300 L 540 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
-                  <path d="M 465 300 L 465 180 L 390 180 L 350 180 L 350 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 465 300 L 465 180 L 390 180 L 350 180 L 350 300 L 170 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
-                </g>
-
-                <!-- LAYER 2: STICHANBINDUNG (T-STÜCK) -->
-                <g id="bufLayerTeeBranch" class="is-svg-hidden">
-                  <text class="svg-sub-text" x="465" y="116" text-anchor="middle" font-size="10.5">Parallel am Stich (Differenzmenge)</text>
-                  <!-- Vorlauf durchgehend mit T-Stich nach unten in Puffer -->
-                  <path d="M 170 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 170 156 L 740 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
-                  <line x1="465" y1="156" x2="465" y2="180" stroke="var(--c-vorlauf)" stroke-width="4" />
-                  <circle cx="465" cy="156" r="6" fill="var(--c-vorlauf)" />
-                  <text class="svg-sub-text" x="465" y="42" text-anchor="middle" font-size="11" font-weight="700">T-Stück-Stich + Systemfühler</text>
-                  <!-- Rücklauf mit T-Stich -->
-                  <path d="M 740 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 740 300 L 170 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
-                  <line x1="465" y1="300" x2="465" y2="340" stroke="var(--c-ruecklauf)" stroke-width="4" />
-                  <circle cx="465" cy="300" r="6" fill="var(--c-ruecklauf)" />
-                  <!-- Sekundärpumpe rechts -->
-                  <rect class="comp-box" x="596" y="138" width="104" height="36" rx="9" stroke-width="1.4" />
-                  <text class="svg-title-text" x="648" y="160" text-anchor="middle" font-size="10.5" font-weight="700">Sek.-Pumpe</text>
-                </g>
-
-                <!-- LAYER 3: PARALLELPUFFER (4-LEITER) -->
-                <g id="bufLayerParallel4Pipe" class="is-svg-hidden">
-                  <text class="svg-sub-text" x="465" y="116" text-anchor="middle" font-size="10.5">4-Leiter-Trennspeicher</text>
-                  <!-- Primärkreis links in Puffer -->
-                  <path d="M 170 156 L 390 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 170 156 L 390 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
-                  <path d="M 390 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 390 300 L 170 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
-                  <!-- Sekundärkreis rechts aus Puffer -->
-                  <path d="M 540 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 540 156 L 740 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
-                  <path d="M 740 300 L 540 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 740 300 L 540 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
-                  <!-- Sekundärpumpe rechts -->
-                  <rect class="comp-box" x="596" y="138" width="104" height="36" rx="9" stroke-width="1.4" />
-                  <text class="svg-title-text" x="648" y="160" text-anchor="middle" font-size="10.5" font-weight="700">Sek.-Pumpe</text>
-                  <!-- Fühler Oben / Unten -->
-                  <circle cx="465" cy="156" r="5" fill="var(--c-heissgas)" />
-                  <text class="svg-sub-text" x="465" y="144" text-anchor="middle" font-size="10">Fühler Oben</text>
-                  <circle cx="465" cy="300" r="5" fill="var(--c-ruecklauf)" />
-                  <text class="svg-sub-text" x="465" y="322" text-anchor="middle" font-size="10">Fühler Unten</text>
-                </g>
-
-                <!-- LAYER 4: KOMBISPEICHER (HEIZUNG + TWW) -->
-                <g id="bufLayerCombiTank" class="is-svg-hidden">
-                  <text class="svg-sub-text" x="465" y="116" text-anchor="middle" font-size="10.5">Schichtspeicher (TWW + Heizung)</text>
-                  <!-- Schichtleitblech -->
-                  <line x1="398" y1="210" x2="532" y2="210" stroke="var(--c-heissgas)" stroke-width="2" stroke-dasharray="6 4" />
-                  <text class="svg-sub-text" x="465" y="142" text-anchor="middle" font-size="10" font-weight="700">TWW-Zone (55 °C)</text>
-                  <text class="svg-sub-text" x="465" y="234" text-anchor="middle" font-size="10" font-weight="700">Heizungszone (35–45 °C)</text>
-                  <!-- Wellrohr / TWW Abgang oben -->
-                  <path d="M 465 64 L 465 36 L 740 36" fill="none" stroke="var(--c-heissgas)" stroke-width="5" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 465 64 L 465 36 L 740 36" class="pipe-flow-soft" stroke="var(--c-heissgas)" />
-                  <text class="svg-sub-text" x="625" y="24" text-anchor="middle" font-size="10.5" font-weight="700">Trinkwarmwasser (Wellrohr / FriWa)</text>
-                  <!-- WP Ladekreis -->
-                  <path d="M 170 156 L 390 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 170 156 L 390 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
-                  <path d="M 390 320 L 170 320" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 390 320 L 170 320" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
-                  <!-- Heizkreis Entnahme unterhalb der Trennzone -->
-                  <path d="M 540 245 L 740 245" fill="none" stroke="var(--c-vorlauf)" stroke-width="5.5" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 540 245 L 740 245" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
-                  <path d="M 740 320 L 540 320" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5.5" stroke-linecap="round" opacity="0.32" />
-                  <path d="M 740 320 L 540 320" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
-                  <rect class="comp-box" x="596" y="227" width="104" height="36" rx="9" stroke-width="1.4" />
-                  <text class="svg-title-text" x="648" y="249" text-anchor="middle" font-size="10.5" font-weight="700">Sek.-Pumpe</text>
-                </g>
-              </svg>
-            </div>
-          </div>
-
-
-        </section>
-
-        <aside class="detail-card" id="bufferDetailPanel" aria-label="Analyse der Pufferspeicher-Einbindung"></aside>
       </div>
 
       <div class="water-section-head">
@@ -1758,12 +1597,12 @@
     <section id="viewInstallation" class="water-layout hidden" aria-label="Aufstellung, R290-Schutzzonen und Schallschutz">
       <div class="refrigerant-banner is-r290" id="instBanner">
         <div class="banner-copy">
-          <p class="banner-title" id="instBannerTitle">Aufstellung R290-Monoblock · Schutzzone &amp; Kondensat beachten</p>
+          <p class="banner-title" id="instBannerTitle">Aufstellung R290-Monoblock · Schutzzone &amp; Kondensatsiphon beachten</p>
           <p class="banner-desc" id="instBannerDesc">
-            R290 (Propan, Gruppe A3) ist schwerer als Luft und sinkt bei einer Leckage zu Boden. Schutzzone rund um die Außeneinheit frei von Öffnungen und Zündquellen halten!
+            R290 (Propan, Gruppe A3, UEG 1,7 Vol.-% / OEG 10,8 Vol.-%) ist schwerer als Luft und sinkt zu Boden. Schutzzone (am Gerät 1 m, am Boden kegel-/trapezförmig je nach Hersteller bis 1,5–3,0 m) frei von Öffnungen &amp; Zündquellen halten! Wichtig: Kondensatleitung bei Kanalanschluss zwingend über einen frostsicheren Siphon (Geruchsverschluss) führen, damit kein Propan ins Abwassernetz gelangen kann!
           </p>
         </div>
-        <span class="badge-tag" id="instBannerBadge" data-color="mint">R290 · A3 · Schutzzone 1 m</span>
+        <span class="badge-tag" id="instBannerBadge" data-color="mint">R290 (A3) · Schutzbereich 1–3 m &amp; Siphon-Pflicht</span>
       </div>
 
       <div class="water-controls-card liquid-glass-card">

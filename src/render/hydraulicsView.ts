@@ -6,13 +6,12 @@
  * Sicherheitsrelevanz: Vollständig XSS-sicher ohne String-HTML-Injektion.
  */
 
+import { BUFFER_VARIANTS } from "../data/bufferStorage";
 import { HYDRAULICS_VARIANTS, HYDRAULIC_COMPONENTS } from "../data/hydraulics";
-import type { AppState, PaletteColorKey } from "../types/circuit";
+import type { AppState, HydraulicsVariant, PaletteColorKey } from "../types/circuit";
 import { createChevronIcon } from "./uiIcons";
 
 export interface HydraulicsDomElements {
-  readonly btnHydSeries: HTMLButtonElement;
-  readonly btnHydParallel: HTMLButtonElement;
   readonly hydBanner: HTMLElement;
   readonly hydBannerTitle: HTMLElement;
   readonly hydBannerDesc: HTMLElement;
@@ -69,26 +68,33 @@ export function renderHydraulicsView(
   state: AppState,
   onSelectComponent: (id: number) => void
 ): void {
-  const variant = HYDRAULICS_VARIANTS[state.hydraulicsVariant];
-  const isParallel = state.hydraulicsVariant === "parallel";
+  const bufData = BUFFER_VARIANTS[state.bufferVariant];
+  const isSeries = state.bufferVariant === "seriesReturn";
+  const mappedVariant: HydraulicsVariant = isSeries ? "series" : "parallel";
+  const variant = HYDRAULICS_VARIANTS[mappedVariant];
 
-  elements.btnHydSeries.setAttribute("aria-selected", String(!isParallel));
-  elements.btnHydParallel.setAttribute("aria-selected", String(isParallel));
+  elements.hydBanner.className = `refrigerant-banner ${isSeries ? "is-r290" : "is-r32"}`;
+  elements.hydBannerTitle.textContent = bufData.title;
+  elements.hydBannerDesc.textContent = bufData.principle;
+  elements.hydBannerBadge.className = "badge-tag";
+  elements.hydBannerBadge.dataset.color = bufData.color;
+  elements.hydBannerBadge.textContent = bufData.efficiencyBadge;
 
-  elements.hydBanner.className = `refrigerant-banner ${variant.bannerClass}`;
-  elements.hydBannerTitle.textContent = variant.bannerTitle;
-  elements.hydBannerDesc.textContent = variant.bannerDesc;
-  elements.hydBannerBadge.className = `badge-tag ${variant.badgeClass}`;
-  elements.hydBannerBadge.textContent = variant.badgeText;
+  // SVG-Layer zwischen Reihenschaltung (1 Pumpe + ÜSV) und entkoppelten Schaltungen (2 Pumpen) umschalten
+  elements.hydPipesSeries.classList.toggle("svg-layer-hidden", !isSeries);
+  elements.hydPipesParallel.classList.toggle("svg-layer-hidden", isSeries);
+  elements.hydBypassSeries.classList.toggle("svg-layer-hidden", !isSeries);
+  elements.hydPumpSecParallel.classList.toggle("svg-layer-hidden", isSeries);
 
-  // SVG-Layer zwischen Reihen- und Parallelpuffer umschalten
-  elements.hydPipesSeries.classList.toggle("svg-layer-hidden", isParallel);
-  elements.hydPipesParallel.classList.toggle("svg-layer-hidden", !isParallel);
-  elements.hydBypassSeries.classList.toggle("svg-layer-hidden", isParallel);
-  elements.hydPumpSecParallel.classList.toggle("svg-layer-hidden", !isParallel);
-
-  elements.hydBufferTitle.textContent = isParallel ? "Trennpuffer" : "Reihenpuffer";
-  elements.hydBufferSub.textContent = isParallel ? "Entkoppelt (100–300 l)" : "Rücklauf (50–100 l)";
+  const bufferLabels: Readonly<Record<AppState["bufferVariant"], { readonly title: string; readonly sub: string }>> = {
+    seriesReturn: { title: "Reihenpuffer", sub: "Rücklauf (50–100 l)" },
+    teeBranch: { title: "Pendelspeicher", sub: "Stich-T-Stück (100–300 l)" },
+    parallel4Pipe: { title: "Parallelpuffer", sub: "Hydr. Weiche (100–300 l)" },
+    combiTank: { title: "Kombispeicher", sub: "Heizung + TWW (300–500 l)" }
+  };
+  const labelInfo = bufferLabels[state.bufferVariant];
+  elements.hydBufferTitle.textContent = labelInfo.title;
+  elements.hydBufferSub.textContent = labelInfo.sub;
 
   // Aktives Bauteil im Hydraulik-SVG hervorheben
   const svgNodes = elements.hydraulicsSvg.querySelectorAll<SVGGElement>(".svg-comp");
@@ -101,7 +107,7 @@ export function renderHydraulicsView(
 
   // In-Place-Update innerhalb derselben Variante erhält offene Akkordeon-Transitionen
   if (
-    elements.accordionList.dataset.renderedVariant === state.hydraulicsVariant &&
+    elements.accordionList.dataset.renderedVariant === mappedVariant &&
     elements.accordionList.childElementCount === HYDRAULIC_COMPONENTS.length
   ) {
     HYDRAULIC_COMPONENTS.forEach((comp) => {
@@ -120,7 +126,7 @@ export function renderHydraulicsView(
 
   const cards = HYDRAULIC_COMPONENTS.map((comp) => {
     const isOpen = comp.id === state.hydraulicComponentId;
-    const location = comp.location[state.hydraulicsVariant];
+    const location = comp.location[mappedVariant];
     const badgeBg = HYD_BADGE_GRADIENTS[comp.badgeColor];
 
     const card = document.createElement("div");
@@ -207,5 +213,5 @@ export function renderHydraulicsView(
   });
 
   elements.accordionList.replaceChildren(...cards);
-  elements.accordionList.dataset.renderedVariant = state.hydraulicsVariant;
+  elements.accordionList.dataset.renderedVariant = mappedVariant;
 }

@@ -21,7 +21,6 @@ import type {
   AppState,
   BufferVariant,
   CategoryType,
-  HydraulicsVariant,
   InstallSystemType,
   OperationMode,
   QuizTopic,
@@ -221,8 +220,6 @@ const niceElements: NiceToKnowDomElements = {
 
 // DOM-Elemente für das Hydraulik-Dashboard
 const hydraulicsElements: HydraulicsDomElements = {
-  btnHydSeries: requireElement<HTMLButtonElement>("#btnHydSeries"),
-  btnHydParallel: requireElement<HTMLButtonElement>("#btnHydParallel"),
   hydBanner: requireElement<HTMLElement>("#hydBanner"),
   hydBannerTitle: requireElement<HTMLElement>("#hydBannerTitle"),
   hydBannerDesc: requireElement<HTMLElement>("#hydBannerDesc"),
@@ -254,13 +251,6 @@ const bufferElements: BufferStorageDomElements = {
   btnTeeBranch: requireElement<HTMLButtonElement>("#btnBufTeeBranch"),
   btnParallel4Pipe: requireElement<HTMLButtonElement>("#btnBufParallel4Pipe"),
   btnCombiTank: requireElement<HTMLButtonElement>("#btnBufCombiTank"),
-  bannerTitle: requireElement<HTMLElement>("#bufBannerTitle"),
-  bannerDesc: requireElement<HTMLElement>("#bufBannerDesc"),
-  bannerBadge: requireElement<HTMLElement>("#bufBannerBadge"),
-  layerSeriesReturn: requireElement<SVGGElement>("#bufLayerSeriesReturn"),
-  layerTeeBranch: requireElement<SVGGElement>("#bufLayerTeeBranch"),
-  layerParallel4Pipe: requireElement<SVGGElement>("#bufLayerParallel4Pipe"),
-  layerCombiTank: requireElement<SVGGElement>("#bufLayerCombiTank"),
   detailContainer: requireElement<HTMLElement>("#bufferDetailPanel"),
   practiceGrid: requireElement<HTMLElement>("#bufferPracticeGrid")
 };
@@ -657,16 +647,10 @@ function handleOpenHydraulicComponent(id: number): void {
   }, 140);
 }
 
-function handleSetHydraulicsVariant(variant: HydraulicsVariant): void {
-  if (state.hydraulicsVariant === variant) return;
-  state.hydraulicsVariant = variant;
-  renderHydraulicsView(hydraulicsElements, state, handleSelectHydraulicComponent);
-  syncAllSegmentedPills();
-}
-
 function handleSetBufferVariant(variant: BufferVariant): void {
   if (state.bufferVariant === variant) return;
   state.bufferVariant = variant;
+  renderHydraulicsView(hydraulicsElements, state, handleSelectHydraulicComponent);
   renderBufferStorageView(bufferElements, state);
   syncAllSegmentedPills();
 }
@@ -881,13 +865,7 @@ bufferElements.btnCombiTank.addEventListener("click", () =>
   handleSetBufferVariant("combiTank")
 );
 
-// Hydraulik-Schaltungs-Tabs & SVG-Klicks
-hydraulicsElements.btnHydSeries.addEventListener("click", () =>
-  handleSetHydraulicsVariant("series")
-);
-hydraulicsElements.btnHydParallel.addEventListener("click", () =>
-  handleSetHydraulicsVariant("parallel")
-);
+// Hydraulik-SVG-Klicks
 hydraulicsElements.hydraulicsSvg
   .querySelectorAll<SVGGElement>(".svg-comp")
   .forEach((node) => {
@@ -967,23 +945,31 @@ document
   });
 
 // -----------------------------------------------------------------------------
-// Initiale Ausführung
+// Initiale Ausführung nach DOMContentLoaded (inkl. Farblegenden-Filterung)
 // -----------------------------------------------------------------------------
-updateThemeButton(currentTheme);
-renderSystemView(circuitElements, state, handleSelectComponent);
-renderHydraulicsView(hydraulicsElements, state, handleSelectHydraulicComponent);
-renderBufferStorageView(bufferElements, state);
-renderWaterQualityView(waterQualityElements, state);
-renderHeatingCurveView(heatingCurveElements, state);
-renderInstallationView(installationElements, state);
-renderQuizView(quizElements, state, quizCallbacks);
-renderViewSwitcher();
-updateSvgScrollIndicators();
-renderFaultsView(
-  faultsElements,
-  state,
-  handleSelectFault,
-  handleJumpToComponent
-);
-renderNiceToKnowView(niceElements, state.category);
-window.requestAnimationFrame(syncAllSegmentedPills);
+function initApp(): void {
+  updateThemeButton(currentTheme);
+  renderSystemView(circuitElements, state, handleSelectComponent);
+  renderHydraulicsView(hydraulicsElements, state, handleSelectHydraulicComponent);
+  renderBufferStorageView(bufferElements, state);
+  renderWaterQualityView(waterQualityElements, state);
+  renderHeatingCurveView(heatingCurveElements, state);
+  renderInstallationView(installationElements, state);
+  renderQuizView(quizElements, state, quizCallbacks);
+  renderViewSwitcher();
+  updateSvgScrollIndicators();
+  renderFaultsView(
+    faultsElements,
+    state,
+    handleSelectFault,
+    handleJumpToComponent
+  );
+  renderNiceToKnowView(niceElements, state.category);
+  window.requestAnimationFrame(syncAllSegmentedPills);
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp, { once: true });
+} else {
+  initApp();
+}
