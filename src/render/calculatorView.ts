@@ -52,6 +52,7 @@ export interface CalculatorDomElements {
   readonly copAmbientText: HTMLElement;
   readonly copElectricText: HTMLElement;
   readonly copAmbientBar: HTMLElement;
+  readonly copPlausibilityNote: HTMLElement;
 }
 
 function formatDe(val: number, decimals: number): string {
@@ -124,6 +125,8 @@ export function renderCalculatorView(el: CalculatorDomElements): void {
   el.copAmbientText.textContent = `Umweltwärme: ${formatDe(copRes.ambientKw, 1)} kW (${formatDe(copRes.ambientPct, 1)} %)`;
   el.copElectricText.textContent = `Antriebsstrom: ${formatDe(copP, 1)} kW (${formatDe(copRes.electricPct, 1)} %)`;
   el.copAmbientBar.style.width = `${Math.round(copRes.ambientPct)}%`;
+  el.copPlausibilityNote.textContent = copRes.plausibilityNote;
+  el.copPlausibilityNote.classList.toggle("hidden", !copRes.plausibilityNote);
 }
 
 /**

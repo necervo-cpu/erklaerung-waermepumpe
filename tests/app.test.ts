@@ -773,5 +773,15 @@ describe("Azubi-Dashboards: Hydraulik-Kreis & Heizungswasser (VDI 2035)", () => 
     expect(copRes.ambientKw).toBeCloseTo(5.6, 1);
     expect(copRes.ambientPct).toBeCloseTo(77.78, 1);
     expect(copRes.statusColor).toBe("mint");
+    expect(copRes.plausibilityNote).toBe("");
+
+    const copTooHigh = calculateCopMetrics(18, 2);
+    expect(copTooHigh.cop).toBeCloseTo(9, 2);
+    expect(copTooHigh.plausibilityNote).toContain("Praxis-Hinweis");
+
+    const copTooLow = calculateCopMetrics(2, 1.6);
+    expect(copTooLow.cop).toBeCloseTo(1.25, 2);
+    expect(copTooLow.statusColor).toBe("rose");
+    expect(copTooLow.plausibilityNote).toContain("Praxis-Hinweis");
   });
 });

@@ -989,7 +989,8 @@ const calculatorElements: CalculatorDomElements = {
   copBadge: requireElement<HTMLElement>("#calcCopBadge"),
   copAmbientText: requireElement<HTMLElement>("#calcCopAmbientText"),
   copElectricText: requireElement<HTMLElement>("#calcCopElectricText"),
-  copAmbientBar: requireElement<HTMLElement>("#calcCopAmbientBar")
+  copAmbientBar: requireElement<HTMLElement>("#calcCopAmbientBar"),
+  copPlausibilityNote: requireElement<HTMLElement>("#calcCopPlausibilityNote")
 };
 
 // -----------------------------------------------------------------------------

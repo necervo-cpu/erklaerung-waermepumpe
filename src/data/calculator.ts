@@ -31,6 +31,7 @@ export interface CopResult {
   readonly electricPct: number;
   readonly statusColor: TrafficColor;
   readonly statusLabel: string;
+  readonly plausibilityNote: string;
 }
 
 /**
@@ -50,7 +51,7 @@ export function calculateVolumeFlow(heatingKw: number, deltaTK: number): VolumeF
       lPerMin,
       m3PerHour,
       statusColor: "mint",
-      statusLabel: "Grün · Optimal",
+      statusLabel: "Optimal",
       statusDetail: "Optimal für Wärmepumpen-Verflüssiger (idealer Wärmeübergang & niedriger Pumpenstrom)."
     };
   }
@@ -60,7 +61,7 @@ export function calculateVolumeFlow(heatingKw: number, deltaTK: number): VolumeF
       lPerMin,
       m3PerHour,
       statusColor: "rose",
-      statusLabel: "Rot · Durchfluss zu gering",
+      statusLabel: "Durchfluss zu gering",
       statusDetail:
         "Durchfluss zu gering! Gefahr von Hochdruckstörung & schlechtem COP – Schmutzfänger, Pumpe und Ventile prüfen."
     };
@@ -71,7 +72,7 @@ export function calculateVolumeFlow(heatingKw: number, deltaTK: number): VolumeF
       lPerMin,
       m3PerHour,
       statusColor: "peach",
-      statusLabel: "Gelb · Sehr hoher Volumenstrom",
+      statusLabel: "Sehr hoher Volumenstrom",
       statusDetail:
         "Sehr hoher Volumenstrom – Pumpenstromverbrauch und mögliche Fließgeräusche in den Leitungen prüfen."
     };
@@ -96,7 +97,7 @@ export function calculateSuperheat(t0: number, tSuction: number): ThermoDeltaRes
     return {
       deltaK,
       statusColor: "mint",
-      statusLabel: "Grün · Optimal (5–8 K)",
+      statusLabel: "Optimal (5–8 K)",
       statusDetail:
         "Optimal – sicherer Schutz vor Flüssigkeitsschlägen bei gleichzeitig guter Verdampfernutzung."
     };
@@ -105,7 +106,7 @@ export function calculateSuperheat(t0: number, tSuction: number): ThermoDeltaRes
     return {
       deltaK,
       statusColor: "rose",
-      statusLabel: "Rot · Zu niedrig (< 4 K)",
+      statusLabel: "Zu niedrig (< 4 K)",
       statusDetail:
         "Zu niedrig! Akute Gefahr von Flüssigkeitsschlägen / nasser Verdichtung am Verdichter."
     };
@@ -114,7 +115,7 @@ export function calculateSuperheat(t0: number, tSuction: number): ThermoDeltaRes
     return {
       deltaK,
       statusColor: "peach",
-      statusLabel: "Gelb/Rot · Zu hoch (> 10 K)",
+      statusLabel: "Zu hoch (> 10 K)",
       statusDetail:
         "Zu hoch! Hinweis auf Kältemittelmangel, zu stark drosselndes EEV oder schlechte Wärmeaufnahme."
     };
@@ -137,7 +138,7 @@ export function calculateSubcooling(tc: number, tLiquid: number): ThermoDeltaRes
     return {
       deltaK,
       statusColor: "mint",
-      statusLabel: "Grün · Optimal (3–7 K)",
+      statusLabel: "Optimal (3–7 K)",
       statusDetail:
         "Optimal – reine Flüssigkeit vor dem Expansionsventil, kein Flashgas."
     };
@@ -146,7 +147,7 @@ export function calculateSubcooling(tc: number, tLiquid: number): ThermoDeltaRes
     return {
       deltaK,
       statusColor: "rose",
-      statusLabel: "Rot · Zu gering (< 2 K)",
+      statusLabel: "Zu gering (< 2 K)",
       statusDetail:
         "Zu gering! Gefahr von Dampfblasen / Flashgas vor dem EEV → Leistungsverlust, Kältemittelfüllmenge prüfen."
     };
@@ -155,7 +156,7 @@ export function calculateSubcooling(tc: number, tLiquid: number): ThermoDeltaRes
     return {
       deltaK,
       statusColor: "peach",
-      statusLabel: "Gelb · Sehr hoch (> 10 K)",
+      statusLabel: "Sehr hoch (> 10 K)",
       statusDetail:
         "Sehr hoch! Hinweis auf Kältemittel-Überfüllung oder Rückstau im Verflüssiger."
     };
@@ -179,6 +180,15 @@ export function calculateCopMetrics(heatingKw: number, electricKw: number): CopR
   const ambientPct = safeQ > 0 ? (ambientKw / safeQ) * 100 : 0;
   const electricPct = Math.max(0, 100 - ambientPct);
 
+  let plausibilityNote = "";
+  if (cop > 6.5) {
+    plausibilityNote =
+      "Praxis-Hinweis: Extrem hoher Wert – im realen Heizbetrieb liegen Luft/Wasser-Wärmepumpen meist zwischen COP 2,5 und 5,5.";
+  } else if (cop < 1.5) {
+    plausibilityNote =
+      "Praxis-Hinweis: Extrem niedriger COP (< 1,5) – prüfe Messwerte, Abtauung, Heizstab-Einsatz oder Kältemittelverlust.";
+  }
+
   if (cop >= 4.0) {
     return {
       cop,
@@ -186,7 +196,8 @@ export function calculateCopMetrics(heatingKw: number, electricKw: number): CopR
       ambientPct,
       electricPct,
       statusColor: "mint",
-      statusLabel: "Sehr effizient (COP ≥ 4,0)"
+      statusLabel: "Sehr effizient (COP ≥ 4,0)",
+      plausibilityNote
     };
   }
   if (cop >= 3.0) {
@@ -196,7 +207,8 @@ export function calculateCopMetrics(heatingKw: number, electricKw: number): CopR
       ambientPct,
       electricPct,
       statusColor: "sky",
-      statusLabel: "Guter Betriebspunkt"
+      statusLabel: "Guter Betriebspunkt",
+      plausibilityNote
     };
   }
   return {
@@ -204,7 +216,8 @@ export function calculateCopMetrics(heatingKw: number, electricKw: number): CopR
     ambientKw,
     ambientPct,
     electricPct,
-    statusColor: "peach",
-    statusLabel: "Niedriger COP (Vorlauf / Abtauung prüfen)"
+    statusColor: cop < 1.5 ? "rose" : "peach",
+    statusLabel: "Niedriger COP (Vorlauf / Abtauung prüfen)",
+    plausibilityNote
   };
 }

@@ -1624,13 +1624,13 @@
               <p class="detail-kicker">Rechner 1 · Hydraulik</p>
               <h3 class="nice-title">Heizwasser-Volumenstrom &amp; Spreizung</h3>
             </div>
-            <span class="badge-tag" id="calcFlowBadge" data-color="mint">Grün · Optimal</span>
+            <span class="badge-tag" id="calcFlowBadge" data-color="mint">Optimal</span>
           </div>
 
           <div class="calc-inputs">
             <div class="calc-input-group">
               <div class="calc-label-row">
-                <label for="calcFlowQInput">Heizleistung Q̇ (kW)</label>
+                <label for="calcFlowQInput">Heizleistung Q (kW)</label>
                 <input type="number" class="calc-number-input tabular" id="calcFlowQInput" min="3" max="25" step="0.5" value="8" />
               </div>
               <input type="range" id="calcFlowQRange" min="3" max="25" step="0.5" value="8" />
@@ -1638,7 +1638,7 @@
 
             <div class="calc-input-group">
               <div class="calc-label-row">
-                <label for="calcFlowDtInput">Spreizung ΔT (T_VL − T_RL) in K</label>
+                <label for="calcFlowDtInput">Spreizung ΔT (T<sub>VL</sub> − T<sub>RL</sub>) in K</label>
                 <input type="number" class="calc-number-input tabular" id="calcFlowDtInput" min="2" max="10" step="0.5" value="5" />
               </div>
               <input type="range" id="calcFlowDtRange" min="2" max="10" step="0.5" value="5" />
@@ -1665,26 +1665,26 @@
           <div class="calc-card-head">
             <div>
               <p class="detail-kicker">Rechner 2 · Kältekreis-Diagnose</p>
-              <h3 class="nice-title">Überhitzung (ΔT_ÜH) &amp; Unterkühlung (ΔT_UK)</h3>
+              <h3 class="nice-title">Überhitzung (ΔT<sub>ÜH</sub>) &amp; Unterkühlung (ΔT<sub>UK</sub>)</h3>
             </div>
           </div>
 
           <div class="calc-sub-section">
             <div class="calc-sub-head">
               <strong>Überhitzung am Verdampferaustritt (Sauggas)</strong>
-              <span class="badge-tag" id="calcShBadge" data-color="mint">Grün · Optimal (5–8 K)</span>
+              <span class="badge-tag" id="calcShBadge" data-color="mint">Optimal (5–8 K)</span>
             </div>
             <div class="calc-inputs">
               <div class="calc-input-group">
                 <div class="calc-label-row">
-                  <label for="calcShT0Input">Verdampfungstemp. t₀ (ND) in °C</label>
+                  <label for="calcShT0Input">Verdampfungstemp. t<sub>0</sub> (ND) in °C</label>
                   <input type="number" class="calc-number-input tabular" id="calcShT0Input" min="-25" max="15" step="0.5" value="-3" />
                 </div>
                 <input type="range" id="calcShT0Range" min="-25" max="15" step="0.5" value="-3" />
               </div>
               <div class="calc-input-group">
                 <div class="calc-label-row">
-                  <label for="calcShTsaugInput">Sauggastemp. t_Saug in °C</label>
+                  <label for="calcShTsaugInput">Sauggastemp. t<sub>Saug</sub> in °C</label>
                   <input type="number" class="calc-number-input tabular" id="calcShTsaugInput" min="-20" max="25" step="0.5" value="4" />
                 </div>
                 <input type="range" id="calcShTsaugRange" min="-20" max="25" step="0.5" value="4" />
@@ -1692,7 +1692,7 @@
             </div>
             <div class="calc-result-box">
               <div class="calc-result-row">
-                <span class="calc-result-label">Überhitzung ΔT_ÜH = t_Saug − t₀</span>
+                <span class="calc-result-label">Überhitzung ΔT<sub>ÜH</sub> = t<sub>Saug</sub> − t<sub>0</sub></span>
                 <span class="calc-result-hero tabular" id="calcShValue">7,0 K</span>
               </div>
               <p class="section-text" id="calcShNote"></p>
@@ -1702,19 +1702,19 @@
           <div class="calc-sub-section">
             <div class="calc-sub-head">
               <strong>Unterkühlung am Verflüssigeraustritt (vor EEV)</strong>
-              <span class="badge-tag" id="calcScBadge" data-color="mint">Grün · Optimal (3–7 K)</span>
+              <span class="badge-tag" id="calcScBadge" data-color="mint">Optimal (3–7 K)</span>
             </div>
             <div class="calc-inputs">
               <div class="calc-input-group">
                 <div class="calc-label-row">
-                  <label for="calcScTcInput">Verflüssigungstemp. t_c (HD) in °C</label>
+                  <label for="calcScTcInput">Verflüssigungstemp. t<sub>c</sub> (HD) in °C</label>
                   <input type="number" class="calc-number-input tabular" id="calcScTcInput" min="25" max="65" step="0.5" value="38" />
                 </div>
                 <input type="range" id="calcScTcRange" min="25" max="65" step="0.5" value="38" />
               </div>
               <div class="calc-input-group">
                 <div class="calc-label-row">
-                  <label for="calcScTliqInput">Flüssigkeitstemp. t_Flüss in °C</label>
+                  <label for="calcScTliqInput">Flüssigkeitstemp. t<sub>Flüss</sub> in °C</label>
                   <input type="number" class="calc-number-input tabular" id="calcScTliqInput" min="15" max="60" step="0.5" value="33" />
                 </div>
                 <input type="range" id="calcScTliqRange" min="15" max="60" step="0.5" value="33" />
@@ -1722,7 +1722,7 @@
             </div>
             <div class="calc-result-box">
               <div class="calc-result-row">
-                <span class="calc-result-label">Unterkühlung ΔT_UK = t_c − t_Flüss</span>
+                <span class="calc-result-label">Unterkühlung ΔT<sub>UK</sub> = t<sub>c</sub> − t<sub>Flüss</sub></span>
                 <span class="calc-result-hero tabular" id="calcScValue">5,0 K</span>
               </div>
               <p class="section-text" id="calcScNote"></p>
@@ -1743,7 +1743,7 @@
           <div class="calc-inputs">
             <div class="calc-input-group">
               <div class="calc-label-row">
-                <label for="calcCopQInput">Thermische Heizleistung Q̇_Heiz (kW)</label>
+                <label for="calcCopQInput">Thermische Heizleistung Q<sub>Heiz</sub> (kW)</label>
                 <input type="number" class="calc-number-input tabular" id="calcCopQInput" min="1" max="30" step="0.1" value="7.2" />
               </div>
               <input type="range" id="calcCopQRange" min="1" max="30" step="0.1" value="7.2" />
@@ -1751,7 +1751,7 @@
 
             <div class="calc-input-group">
               <div class="calc-label-row">
-                <label for="calcCopPInput">Elektrische Aufnahme P_el (kW)</label>
+                <label for="calcCopPInput">Elektrische Aufnahme P<sub>el</sub> (kW)</label>
                 <input type="number" class="calc-number-input tabular" id="calcCopPInput" min="0.3" max="15" step="0.1" value="1.6" />
               </div>
               <input type="range" id="calcCopPRange" min="0.3" max="15" step="0.1" value="1.6" />
@@ -1760,7 +1760,7 @@
 
           <div class="calc-result-box">
             <div class="calc-result-row">
-              <span class="calc-result-label">Momentaner COP (Q̇_Heiz / P_el)</span>
+              <span class="calc-result-label">Momentaner COP (Q<sub>Heiz</sub> / P<sub>el</sub>)</span>
               <span class="calc-result-hero tabular" id="calcCopValue">4,50</span>
             </div>
             <div class="quiz-progress-track" aria-hidden="true">
@@ -1770,6 +1770,7 @@
               <span id="calcCopAmbientText">Umweltwärme: 5,6 kW (77,8 %)</span>
               <span id="calcCopElectricText">Antriebsstrom: 1,6 kW (22,2 %)</span>
             </div>
+            <p class="section-text calc-plausibility-note hidden" id="calcCopPlausibilityNote"></p>
           </div>
         </article>
       </div>
