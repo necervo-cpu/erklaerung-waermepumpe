@@ -10,13 +10,34 @@ export type CategoryType = "heatpump" | "hvac";
 
 export type HeatpumpSystemType = "monoblock" | "split";
 
-export type HvacSystemType = "klimasplit" | "vrv";
+export type HvacSystemType = "klimasplit" | "multisplit" | "vrv";
 
 export type SystemType = HeatpumpSystemType | HvacSystemType;
 
 export type OperationMode = "heating" | "cooling" | "defrost";
 
-export type ViewType = "circuit" | "faults" | "niceToKnow";
+export type ViewType =
+  | "circuit"
+  | "hydraulics"
+  | "bufferStorage"
+  | "waterQuality"
+  | "heatingCurve"
+  | "installation"
+  | "faults"
+  | "niceToKnow"
+  | "quiz";
+
+export type QuizTopic = "all" | "heatpump" | "hvac";
+
+export type InstallSystemType = "r290" | "r32";
+
+export type HydraulicsVariant = "series" | "parallel";
+
+export type BufferVariant = "seriesReturn" | "teeBranch" | "parallel4Pipe" | "combiTank";
+
+export type WaterSystemMaterial = "noAluminum" | "withAluminum";
+
+export type WaterTreatmentMode = "lowSalt" | "saline";
 
 /**
  * Erlaubte semantische Pastell-Farbkeys gemäß FARBPALETTE.md.
@@ -114,6 +135,108 @@ export interface NiceToKnowItem {
 }
 
 /**
+ * Fachdaten einer Hydraulik-Komponente im Heizungswasserkreis (Azubi-Leitfaden).
+ */
+export interface HydraulicComponentData {
+  readonly id: number;
+  readonly shortName: string;
+  readonly name: string;
+  readonly location: Record<HydraulicsVariant, string>;
+  readonly badgeColor: PaletteColorKey;
+  readonly metricBadge: string;
+  readonly task: string;
+  readonly azubiRule: string;
+  readonly commonMistake: string;
+  readonly checkValue: string;
+}
+
+/**
+ * Kennwert nach VDI 2035 für das Heizungswasser-Dashboard.
+ */
+export interface WaterQualityMetric {
+  readonly id: string;
+  readonly name: string;
+  readonly symbol: string;
+  readonly color: PaletteColorKey;
+  readonly targetValue: string;
+  readonly unit: string;
+  readonly explanation: string;
+  readonly azubiTip: string;
+}
+
+/**
+ * Bauteil oder Armatur für Befüllung, Schutz und Aufbereitung von Heizungswasser.
+ */
+export interface WaterEquipmentItem {
+  readonly id: string;
+  readonly name: string;
+  readonly norm: string;
+  readonly color: PaletteColorKey;
+  readonly purpose: string;
+  readonly installRule: string;
+  readonly azubiCheck: string;
+}
+
+/**
+ * Schritt-für-Schritt-Praxisanleitung oder Schadensbild für Azubis.
+ */
+export interface WaterPracticeItem {
+  readonly id: string;
+  readonly stepBadge: string;
+  readonly title: string;
+  readonly summary: string;
+  readonly bullets: readonly string[];
+  readonly warning: string;
+}
+
+/**
+ * Fachdaten einer Pufferspeicher-Einbindung für Luft/Wasser-Wärmepumpen.
+ */
+export interface BufferVariantData {
+  readonly id: BufferVariant;
+  readonly shortLabel: string;
+  readonly title: string;
+  readonly subtitle: string;
+  readonly efficiencyBadge: string;
+  readonly color: PaletteColorKey;
+  readonly principle: string;
+  readonly sizingFormula: string;
+  readonly sensorPlacement: string;
+  readonly useCases: readonly string[];
+  readonly pros: readonly string[];
+  readonly cons: readonly string[];
+  readonly azubiMistake: string;
+  readonly azubiMerksatz: string;
+}
+
+/**
+ * Allgemeine Praxis- & Dimensionierungsregel für Pufferspeicher.
+ */
+export interface BufferPracticeRule {
+  readonly id: string;
+  readonly icon: string;
+  readonly badge: string;
+  readonly title: string;
+  readonly summary: string;
+  readonly bullets: readonly string[];
+}
+
+/**
+ * Prüfungsfrage für das Azubi-Prüfungstraining (Luft/Wasser & Luft/Luft).
+ */
+export interface QuizQuestion {
+  readonly id: string;
+  readonly topic: "heatpump" | "hvac";
+  readonly badge: string;
+  readonly examLevel: string;
+  readonly question: string;
+  readonly options: readonly [string, string, string, string];
+  readonly correctIndex: 0 | 1 | 2 | 3;
+  readonly explanation: string;
+  readonly examTip: string;
+}
+
+/**
  * Gesamtzustand der Fachanwendung.
  */
 export interface AppState {
@@ -123,4 +246,15 @@ export interface AppState {
   view: ViewType;
   componentId: number;
   faultId: string;
+  hydraulicsVariant: HydraulicsVariant;
+  hydraulicComponentId: number;
+  bufferVariant: BufferVariant;
+  waterMaterial: WaterSystemMaterial;
+  waterTreatment: WaterTreatmentMode;
+  hcSlope: number;
+  hcShift: number;
+  installSystem: InstallSystemType;
+  quizTopic: QuizTopic;
+  quizIndex: number;
+  quizAnswers: Record<string, number>;
 }

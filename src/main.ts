@@ -19,11 +19,36 @@ import {
 } from "./theme-init";
 import type {
   AppState,
+  BufferVariant,
   CategoryType,
+  HydraulicsVariant,
+  InstallSystemType,
   OperationMode,
+  QuizTopic,
   SystemType,
-  ViewType
+  ViewType,
+  WaterSystemMaterial,
+  WaterTreatmentMode
 } from "./types/circuit";
+import { HEATING_CURVE_PRESETS } from "./data/heatingCurve";
+import {
+  renderHeatingCurveView,
+  type HeatingCurveDomElements
+} from "./render/heatingCurveView";
+import {
+  renderInstallationView,
+  type InstallationDomElements
+} from "./render/installationView";
+import {
+  getFilteredQuizQuestions,
+  renderQuizView,
+  type QuizCallbacks,
+  type QuizDomElements
+} from "./render/quizView";
+import {
+  renderBufferStorageView,
+  type BufferStorageDomElements
+} from "./render/bufferStorageView";
 import {
   renderComponentDetail,
   renderOperationMode,
@@ -35,9 +60,17 @@ import {
   type FaultsDomElements
 } from "./render/faultsView";
 import {
+  renderHydraulicsView,
+  type HydraulicsDomElements
+} from "./render/hydraulicsView";
+import {
   renderNiceToKnowView,
   type NiceToKnowDomElements
 } from "./render/niceToKnowView";
+import {
+  renderWaterQualityView,
+  type WaterQualityDomElements
+} from "./render/waterQualityView";
 
 /**
  * Typsicherer DOM-Helper, der ein Element anfordert oder einen aussagekräftigen Fehler wirft.
@@ -70,7 +103,18 @@ const state: AppState = {
   mode: "heating",
   view: "circuit",
   componentId: 0,
-  faultId: "hd"
+  faultId: "hd",
+  hydraulicsVariant: "series",
+  hydraulicComponentId: 1,
+  bufferVariant: "seriesReturn",
+  waterMaterial: "noAluminum",
+  waterTreatment: "lowSalt",
+  hcSlope: 0.35,
+  hcShift: 0,
+  installSystem: "r290",
+  quizTopic: "all",
+  quizIndex: 0,
+  quizAnswers: {}
 };
 
 let currentTheme: ThemeMode = getStoredThemeMode();
@@ -85,6 +129,7 @@ const circuitElements: CircuitDomElements = {
   btnMonoblock: requireElement<HTMLButtonElement>("#btnMonoblock"),
   btnSplit: requireElement<HTMLButtonElement>("#btnSplit"),
   btnKlimasplit: requireElement<HTMLButtonElement>("#btnKlimasplit"),
+  btnMultisplit: requireElement<HTMLButtonElement>("#btnMultisplit"),
   btnVrv: requireElement<HTMLButtonElement>("#btnVrv"),
   refrigerantBanner: requireElement<HTMLElement>("#refrigerantBanner"),
   bannerTitle: requireElement<HTMLElement>("#bannerTitle"),
@@ -134,8 +179,10 @@ const circuitElements: CircuitDomElements = {
   hvacPipesCooling: requireElement<SVGGElement>("#hvacPipesCooling"),
   hvacPipesHeating: requireElement<SVGGElement>("#hvacPipesHeating"),
   hvacSplitPipesCooling: requireElement<SVGGElement>("#hvacSplitPipesCooling"),
+  hvacMultisplitPipesCooling: requireElement<SVGGElement>("#hvacMultisplitPipesCooling"),
   hvacVrvPipesCooling: requireElement<SVGGElement>("#hvacVrvPipesCooling"),
   hvacSplitPipesHeating: requireElement<SVGGElement>("#hvacSplitPipesHeating"),
+  hvacMultisplitPipesHeating: requireElement<SVGGElement>("#hvacMultisplitPipesHeating"),
   hvacVrvPipesHeating: requireElement<SVGGElement>("#hvacVrvPipesHeating"),
   hvacLblCoolingHeissgas: requireElement<SVGTextElement>("#hvacLblCoolingHeissgas"),
   hvacValvePathsCooling: requireElement<SVGGElement>("#hvacValvePathsCooling"),
@@ -149,7 +196,9 @@ const circuitElements: CircuitDomElements = {
   hvacComp8Sub: requireElement<SVGTextElement>("#hvacComp8Sub"),
   hvacOelBadge: requireElement<SVGGElement>("#hvacOelBadge"),
   hvacSplitEevComp: requireElement<SVGGElement>("#hvacSplitEevComp"),
+  hvacMultisplitEevComp: requireElement<SVGGElement>("#hvacMultisplitEevComp"),
   hvacSplitIndoorLayer: requireElement<SVGGElement>("#hvacSplitIndoorLayer"),
+  hvacMultisplitIndoorLayer: requireElement<SVGGElement>("#hvacMultisplitIndoorLayer"),
   hvacVrvIndoorLayer: requireElement<SVGGElement>("#hvacVrvIndoorLayer"),
   hvacAirSupplyBase: requireElement<SVGPathElement>("#hvacAirSupplyBase"),
   hvacAirSupplyFlow: requireElement<SVGPathElement>("#hvacAirSupplyFlow"),
@@ -170,13 +219,114 @@ const niceElements: NiceToKnowDomElements = {
   headerDesc: requireElement<HTMLElement>("#niceHeaderDesc")
 };
 
+// DOM-Elemente für das Hydraulik-Dashboard
+const hydraulicsElements: HydraulicsDomElements = {
+  btnHydSeries: requireElement<HTMLButtonElement>("#btnHydSeries"),
+  btnHydParallel: requireElement<HTMLButtonElement>("#btnHydParallel"),
+  hydBanner: requireElement<HTMLElement>("#hydBanner"),
+  hydBannerTitle: requireElement<HTMLElement>("#hydBannerTitle"),
+  hydBannerDesc: requireElement<HTMLElement>("#hydBannerDesc"),
+  hydBannerBadge: requireElement<HTMLElement>("#hydBannerBadge"),
+  hydraulicsSvg: requireElement<SVGSVGElement>("#hydraulicsSvg"),
+  hydPipesSeries: requireElement<SVGGElement>("#hydPipesSeries"),
+  hydPipesParallel: requireElement<SVGGElement>("#hydPipesParallel"),
+  hydBypassSeries: requireElement<SVGGElement>("#hydBypassSeries"),
+  hydPumpSecParallel: requireElement<SVGGElement>("#hydPumpSecParallel"),
+  hydBufferTitle: requireElement<SVGTextElement>("#hydBufferTitle"),
+  hydBufferSub: requireElement<SVGTextElement>("#hydBufferSub"),
+  accordionList: requireElement<HTMLElement>("#hydraulicsAccordionList")
+};
+
+// DOM-Elemente für das Heizungswasser-Dashboard (VDI 2035)
+const waterQualityElements: WaterQualityDomElements = {
+  btnMatNoAlu: requireElement<HTMLButtonElement>("#btnMatNoAlu"),
+  btnMatWithAlu: requireElement<HTMLButtonElement>("#btnMatWithAlu"),
+  btnTreatLowSalt: requireElement<HTMLButtonElement>("#btnTreatLowSalt"),
+  btnTreatSaline: requireElement<HTMLButtonElement>("#btnTreatSaline"),
+  metricsGrid: requireElement<HTMLElement>("#waterMetricsGrid"),
+  equipmentGrid: requireElement<HTMLElement>("#waterEquipmentGrid"),
+  practiceGrid: requireElement<HTMLElement>("#waterPracticeGrid")
+};
+
+// DOM-Elemente für das Pufferspeicher-Dashboard
+const bufferElements: BufferStorageDomElements = {
+  btnSeriesReturn: requireElement<HTMLButtonElement>("#btnBufSeriesReturn"),
+  btnTeeBranch: requireElement<HTMLButtonElement>("#btnBufTeeBranch"),
+  btnParallel4Pipe: requireElement<HTMLButtonElement>("#btnBufParallel4Pipe"),
+  btnCombiTank: requireElement<HTMLButtonElement>("#btnBufCombiTank"),
+  bannerTitle: requireElement<HTMLElement>("#bufBannerTitle"),
+  bannerDesc: requireElement<HTMLElement>("#bufBannerDesc"),
+  bannerBadge: requireElement<HTMLElement>("#bufBannerBadge"),
+  layerSeriesReturn: requireElement<SVGGElement>("#bufLayerSeriesReturn"),
+  layerTeeBranch: requireElement<SVGGElement>("#bufLayerTeeBranch"),
+  layerParallel4Pipe: requireElement<SVGGElement>("#bufLayerParallel4Pipe"),
+  layerCombiTank: requireElement<SVGGElement>("#bufLayerCombiTank"),
+  detailContainer: requireElement<HTMLElement>("#bufferDetailPanel"),
+  practiceGrid: requireElement<HTMLElement>("#bufferPracticeGrid")
+};
+
+// DOM-Elemente für das Azubi-Prüfungstraining
+const quizElements: QuizDomElements = {
+  btnTopicAll: requireElement<HTMLButtonElement>("#btnQuizTopicAll"),
+  btnTopicHeatpump: requireElement<HTMLButtonElement>("#btnQuizTopicHeatpump"),
+  btnTopicHvac: requireElement<HTMLButtonElement>("#btnQuizTopicHvac"),
+  btnReset: requireElement<HTMLButtonElement>("#btnQuizReset"),
+  progressText: requireElement<HTMLElement>("#quizProgressText"),
+  scoreText: requireElement<HTMLElement>("#quizScoreText"),
+  questionHost: requireElement<HTMLElement>("#quizQuestionHost")
+};
+
+// DOM-Elemente für Heizkurve & Thermischen Abgleich
+const heatingCurveElements: HeatingCurveDomElements = {
+  btnPresetFbh: requireElement<HTMLButtonElement>("#btnHcPresetFbh"),
+  btnPresetLowHk: requireElement<HTMLButtonElement>("#btnHcPresetLowHk"),
+  btnPresetOldHk: requireElement<HTMLButtonElement>("#btnHcPresetOldHk"),
+  slopeSlider: requireElement<HTMLInputElement>("#hcSlopeSlider"),
+  shiftSlider: requireElement<HTMLInputElement>("#hcShiftSlider"),
+  slopeValue: requireElement<HTMLElement>("#hcSlopeValue"),
+  shiftValue: requireElement<HTMLElement>("#hcShiftValue"),
+  curvePath: requireElement<SVGPathElement>("#hcCurvePath"),
+  dot10: requireElement<SVGCircleElement>("#hcDot10"),
+  dot0: requireElement<SVGCircleElement>("#hcDot0"),
+  dotMinus12: requireElement<SVGCircleElement>("#hcDotMinus12"),
+  label10: requireElement<SVGTextElement>("#hcLabel10"),
+  label0: requireElement<SVGTextElement>("#hcLabel0"),
+  labelMinus12: requireElement<SVGTextElement>("#hcLabelMinus12"),
+  metricsGrid: requireElement<HTMLElement>("#hcMetricsGrid"),
+  rulesGrid: requireElement<HTMLElement>("#hcRulesGrid")
+};
+
+// DOM-Elemente für Aufstellung, R290-Schutzzonen & Schallschutz
+const installationElements: InstallationDomElements = {
+  btnR290: requireElement<HTMLButtonElement>("#btnInstR290"),
+  btnR32: requireElement<HTMLButtonElement>("#btnInstR32"),
+  bannerTitle: requireElement<HTMLElement>("#instBannerTitle"),
+  bannerDesc: requireElement<HTMLElement>("#instBannerDesc"),
+  bannerBadge: requireElement<HTMLElement>("#instBannerBadge"),
+  layerR290: requireElement<SVGGElement>("#instLayerR290"),
+  layerR32: requireElement<SVGGElement>("#instLayerR32"),
+  cardsGrid: requireElement<HTMLElement>("#installCardsGrid")
+};
+
 // Globale Layout-Elemente
 const viewCircuit = requireElement<HTMLElement>("#viewCircuit");
+const viewHydraulics = requireElement<HTMLElement>("#viewHydraulics");
+const viewBufferStorage = requireElement<HTMLElement>("#viewBufferStorage");
+const viewWaterQuality = requireElement<HTMLElement>("#viewWaterQuality");
+const viewHeatingCurve = requireElement<HTMLElement>("#viewHeatingCurve");
+const viewInstallation = requireElement<HTMLElement>("#viewInstallation");
 const viewFaults = requireElement<HTMLElement>("#viewFaults");
 const viewNiceToKnow = requireElement<HTMLElement>("#viewNiceToKnow");
+const viewQuiz = requireElement<HTMLElement>("#viewQuiz");
 const btnViewCircuit = requireElement<HTMLButtonElement>("#btnViewCircuit");
+const btnViewHydraulics = requireElement<HTMLButtonElement>("#btnViewHydraulics");
+const btnViewBufferStorage = requireElement<HTMLButtonElement>("#btnViewBufferStorage");
+const btnViewWaterQuality = requireElement<HTMLButtonElement>("#btnViewWaterQuality");
+const btnViewHeatingCurve = requireElement<HTMLButtonElement>("#btnViewHeatingCurve");
+const btnViewInstallation = requireElement<HTMLButtonElement>("#btnViewInstallation");
 const btnViewFaults = requireElement<HTMLButtonElement>("#btnViewFaults");
 const btnViewNiceToKnow = requireElement<HTMLButtonElement>("#btnViewNiceToKnow");
+const btnViewQuiz = requireElement<HTMLButtonElement>("#btnViewQuiz");
 const btnThemeToggle = requireElement<HTMLButtonElement>("#btnThemeToggle");
 const themeIconLabel = requireElement<HTMLElement>("#themeIconLabel");
 const themeToggleIcon = requireElement<HTMLElement>("#themeToggleIcon");
@@ -218,6 +368,7 @@ function syncAllSegmentedPills(): void {
       "is-r32",
       activeBtn.dataset.system === "split" || activeBtn.dataset.system === "klimasplit"
     );
+    pill.classList.toggle("is-multisplit", activeBtn.dataset.system === "multisplit");
     pill.classList.toggle("is-vrv", activeBtn.dataset.system === "vrv");
     pill.classList.toggle("is-cooling", activeBtn.dataset.mode === "cooling");
     pill.classList.toggle("is-defrost", activeBtn.dataset.mode === "defrost");
@@ -265,16 +416,34 @@ function handleViewportResize(): void {
  */
 function renderViewSwitcher(): void {
   const isCircuit = state.view === "circuit";
+  const isHydraulics = state.view === "hydraulics";
+  const isBuffer = state.view === "bufferStorage";
+  const isWater = state.view === "waterQuality";
+  const isHeatingCurve = state.view === "heatingCurve";
+  const isInstallation = state.view === "installation";
   const isFaults = state.view === "faults";
   const isNice = state.view === "niceToKnow";
+  const isQuiz = state.view === "quiz";
 
   btnViewCircuit.setAttribute("aria-selected", String(isCircuit));
+  btnViewHydraulics.setAttribute("aria-selected", String(isHydraulics));
+  btnViewBufferStorage.setAttribute("aria-selected", String(isBuffer));
+  btnViewWaterQuality.setAttribute("aria-selected", String(isWater));
+  btnViewHeatingCurve.setAttribute("aria-selected", String(isHeatingCurve));
+  btnViewInstallation.setAttribute("aria-selected", String(isInstallation));
   btnViewFaults.setAttribute("aria-selected", String(isFaults));
   btnViewNiceToKnow.setAttribute("aria-selected", String(isNice));
+  btnViewQuiz.setAttribute("aria-selected", String(isQuiz));
 
   viewCircuit.classList.toggle("hidden", !isCircuit);
+  viewHydraulics.classList.toggle("hidden", !isHydraulics);
+  viewBufferStorage.classList.toggle("hidden", !isBuffer);
+  viewWaterQuality.classList.toggle("hidden", !isWater);
+  viewHeatingCurve.classList.toggle("hidden", !isHeatingCurve);
+  viewInstallation.classList.toggle("hidden", !isInstallation);
   viewFaults.classList.toggle("hidden", !isFaults);
   viewNiceToKnow.classList.toggle("hidden", !isNice);
+  viewQuiz.classList.toggle("hidden", !isQuiz);
   syncAllSegmentedPills();
 }
 
@@ -422,8 +591,8 @@ function handleSetCategory(category: CategoryType): void {
 
     document.title =
       category === "hvac"
-        ? "Kältekreislauf Split-Klima & VRF – Interaktives Fachschema & Fehleranalyse"
-        : "Kältekreislauf Wärmepumpe – Interaktives Fachschema & Fehleranalyse";
+        ? "Azubi-Portal Luft/Luft-WP (Split & VRF) – Kältekreis & Fehleranalyse"
+        : "Azubi-Portal Luft/Wasser-WP – Kältekreis, Hydraulik & VDI 2035";
 
     renderSystemView(circuitElements, state, handleSelectComponent);
     renderFaultsView(faultsElements, state, handleSelectFault, handleJumpToComponent);
@@ -452,13 +621,104 @@ function handleSetMode(mode: OperationMode): void {
   syncAllSegmentedPills();
 }
 
+function handleSelectHydraulicComponent(id: number): void {
+  state.hydraulicComponentId = state.hydraulicComponentId === id ? 0 : id;
+  renderHydraulicsView(hydraulicsElements, state, handleSelectHydraulicComponent);
+}
+
+function handleOpenHydraulicComponent(id: number): void {
+  state.hydraulicComponentId = id;
+  renderHydraulicsView(hydraulicsElements, state, handleSelectHydraulicComponent);
+
+  window.setTimeout(() => {
+    document.getElementById(`hyd-card-${id}`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
+  }, 140);
+}
+
+function handleSetHydraulicsVariant(variant: HydraulicsVariant): void {
+  if (state.hydraulicsVariant === variant) return;
+  state.hydraulicsVariant = variant;
+  renderHydraulicsView(hydraulicsElements, state, handleSelectHydraulicComponent);
+  syncAllSegmentedPills();
+}
+
+function handleSetBufferVariant(variant: BufferVariant): void {
+  if (state.bufferVariant === variant) return;
+  state.bufferVariant = variant;
+  renderBufferStorageView(bufferElements, state);
+  syncAllSegmentedPills();
+}
+
+function handleSetWaterMaterial(material: WaterSystemMaterial): void {
+  if (state.waterMaterial === material) return;
+  state.waterMaterial = material;
+  renderWaterQualityView(waterQualityElements, state);
+  syncAllSegmentedPills();
+}
+
+function handleSetWaterTreatment(treatment: WaterTreatmentMode): void {
+  if (state.waterTreatment === treatment) return;
+  state.waterTreatment = treatment;
+  renderWaterQualityView(waterQualityElements, state);
+  syncAllSegmentedPills();
+}
+
 /**
  * Schaltet die aktive Ansicht flüssig um.
  */
+const quizCallbacks: QuizCallbacks = {
+  onAnswer(questionId: string, optionIndex: number): void {
+    state.quizAnswers = { ...state.quizAnswers, [questionId]: optionIndex };
+    renderQuizView(quizElements, state, quizCallbacks);
+  },
+  onPrev(): void {
+    state.quizIndex = Math.max(0, state.quizIndex - 1);
+    renderQuizView(quizElements, state, quizCallbacks);
+  },
+  onNext(): void {
+    const total = getFilteredQuizQuestions(state.quizTopic).length;
+    state.quizIndex = Math.min(total - 1, state.quizIndex + 1);
+    renderQuizView(quizElements, state, quizCallbacks);
+  },
+  onReset(): void {
+    state.quizAnswers = {};
+    state.quizIndex = 0;
+    renderQuizView(quizElements, state, quizCallbacks);
+  }
+};
+
+function handleSetQuizTopic(topic: QuizTopic): void {
+  if (state.quizTopic === topic) return;
+  state.quizTopic = topic;
+  state.quizIndex = 0;
+  renderQuizView(quizElements, state, quizCallbacks);
+  syncAllSegmentedPills();
+}
+
+function handleSetInstallSystem(sys: InstallSystemType): void {
+  if (state.installSystem === sys) return;
+  state.installSystem = sys;
+  renderInstallationView(installationElements, state);
+  syncAllSegmentedPills();
+}
+
 function handleSetView(view: ViewType): void {
   if (state.view === view) return;
-  const activeContainer =
-    view === "circuit" ? viewCircuit : view === "faults" ? viewFaults : viewNiceToKnow;
+  const viewContainerMap: Readonly<Record<ViewType, HTMLElement>> = {
+    circuit: viewCircuit,
+    hydraulics: viewHydraulics,
+    bufferStorage: viewBufferStorage,
+    waterQuality: viewWaterQuality,
+    heatingCurve: viewHeatingCurve,
+    installation: viewInstallation,
+    faults: viewFaults,
+    niceToKnow: viewNiceToKnow,
+    quiz: viewQuiz
+  };
+  const activeContainer = viewContainerMap[view];
   if (!activeContainer.hasAttribute("tabindex")) {
     activeContainer.setAttribute("tabindex", "-1");
   }
@@ -525,6 +785,7 @@ circuitElements.btnCatHvac.addEventListener("click", () => handleSetCategory("hv
 circuitElements.btnMonoblock.addEventListener("click", () => handleSetSystem("monoblock"));
 circuitElements.btnSplit.addEventListener("click", () => handleSetSystem("split"));
 circuitElements.btnKlimasplit.addEventListener("click", () => handleSetSystem("klimasplit"));
+circuitElements.btnMultisplit.addEventListener("click", () => handleSetSystem("multisplit"));
 circuitElements.btnVrv.addEventListener("click", () => handleSetSystem("vrv"));
 
 // Betriebsmodus-Tabs (Kühlbetrieb / Heizbetrieb / Abtauphase)
@@ -534,8 +795,103 @@ circuitElements.btnModeDefrost.addEventListener("click", () => handleSetMode("de
 
 // Ansichts-Tabs
 btnViewCircuit.addEventListener("click", () => handleSetView("circuit"));
+btnViewHydraulics.addEventListener("click", () => handleSetView("hydraulics"));
+btnViewBufferStorage.addEventListener("click", () => handleSetView("bufferStorage"));
+btnViewWaterQuality.addEventListener("click", () => handleSetView("waterQuality"));
+btnViewHeatingCurve.addEventListener("click", () => handleSetView("heatingCurve"));
+btnViewInstallation.addEventListener("click", () => handleSetView("installation"));
 btnViewFaults.addEventListener("click", () => handleSetView("faults"));
+
+// Heizkurve: Presets & Slider
+const [presetFbh, presetLowHk, presetOldHk] = HEATING_CURVE_PRESETS;
+heatingCurveElements.btnPresetFbh.addEventListener("click", () => {
+  state.hcSlope = presetFbh.slope;
+  state.hcShift = presetFbh.shift;
+  renderHeatingCurveView(heatingCurveElements, state);
+  syncAllSegmentedPills();
+});
+heatingCurveElements.btnPresetLowHk.addEventListener("click", () => {
+  state.hcSlope = presetLowHk.slope;
+  state.hcShift = presetLowHk.shift;
+  renderHeatingCurveView(heatingCurveElements, state);
+  syncAllSegmentedPills();
+});
+heatingCurveElements.btnPresetOldHk.addEventListener("click", () => {
+  state.hcSlope = presetOldHk.slope;
+  state.hcShift = presetOldHk.shift;
+  renderHeatingCurveView(heatingCurveElements, state);
+  syncAllSegmentedPills();
+});
+heatingCurveElements.slopeSlider.addEventListener("input", () => {
+  state.hcSlope = Number(heatingCurveElements.slopeSlider.value);
+  renderHeatingCurveView(heatingCurveElements, state);
+  syncAllSegmentedPills();
+});
+heatingCurveElements.shiftSlider.addEventListener("input", () => {
+  state.hcShift = Number(heatingCurveElements.shiftSlider.value);
+  renderHeatingCurveView(heatingCurveElements, state);
+  syncAllSegmentedPills();
+});
+
+// Aufstellung & Schall: Systemumschalter
+installationElements.btnR290.addEventListener("click", () => handleSetInstallSystem("r290"));
+installationElements.btnR32.addEventListener("click", () => handleSetInstallSystem("r32"));
 btnViewNiceToKnow.addEventListener("click", () => handleSetView("niceToKnow"));
+btnViewQuiz.addEventListener("click", () => handleSetView("quiz"));
+
+// Quiz-Themenfilter & Reset
+quizElements.btnTopicAll.addEventListener("click", () => handleSetQuizTopic("all"));
+quizElements.btnTopicHeatpump.addEventListener("click", () => handleSetQuizTopic("heatpump"));
+quizElements.btnTopicHvac.addEventListener("click", () => handleSetQuizTopic("hvac"));
+quizElements.btnReset.addEventListener("click", () => quizCallbacks.onReset());
+
+// Pufferspeicher-Einbindungs-Tabs
+bufferElements.btnSeriesReturn.addEventListener("click", () =>
+  handleSetBufferVariant("seriesReturn")
+);
+bufferElements.btnTeeBranch.addEventListener("click", () =>
+  handleSetBufferVariant("teeBranch")
+);
+bufferElements.btnParallel4Pipe.addEventListener("click", () =>
+  handleSetBufferVariant("parallel4Pipe")
+);
+bufferElements.btnCombiTank.addEventListener("click", () =>
+  handleSetBufferVariant("combiTank")
+);
+
+// Hydraulik-Schaltungs-Tabs & SVG-Klicks
+hydraulicsElements.btnHydSeries.addEventListener("click", () =>
+  handleSetHydraulicsVariant("series")
+);
+hydraulicsElements.btnHydParallel.addEventListener("click", () =>
+  handleSetHydraulicsVariant("parallel")
+);
+hydraulicsElements.hydraulicsSvg
+  .querySelectorAll<SVGGElement>(".svg-comp")
+  .forEach((node) => {
+    const id = Number(node.getAttribute("data-comp"));
+    node.addEventListener("click", () => handleOpenHydraulicComponent(id));
+    node.addEventListener("keydown", (evt: KeyboardEvent) => {
+      if (evt.key === "Enter" || evt.key === " ") {
+        evt.preventDefault();
+        handleOpenHydraulicComponent(id);
+      }
+    });
+  });
+
+// Heizungswasser VDI-2035 Filter-Tabs
+waterQualityElements.btnMatNoAlu.addEventListener("click", () =>
+  handleSetWaterMaterial("noAluminum")
+);
+waterQualityElements.btnMatWithAlu.addEventListener("click", () =>
+  handleSetWaterMaterial("withAluminum")
+);
+waterQualityElements.btnTreatLowSalt.addEventListener("click", () =>
+  handleSetWaterTreatment("lowSalt")
+);
+waterQualityElements.btnTreatSaline.addEventListener("click", () =>
+  handleSetWaterTreatment("saline")
+);
 
 // 3-Stufen-Theme-Umschalter mit .t-icon-swap
 btnThemeToggle.addEventListener("click", () => {
@@ -572,6 +928,12 @@ attachTablistKeyboardNavigation();
 // -----------------------------------------------------------------------------
 updateThemeButton(currentTheme);
 renderSystemView(circuitElements, state, handleSelectComponent);
+renderHydraulicsView(hydraulicsElements, state, handleSelectHydraulicComponent);
+renderBufferStorageView(bufferElements, state);
+renderWaterQualityView(waterQualityElements, state);
+renderHeatingCurveView(heatingCurveElements, state);
+renderInstallationView(installationElements, state);
+renderQuizView(quizElements, state, quizCallbacks);
 renderViewSwitcher();
 updateSvgScrollIndicators();
 renderFaultsView(

@@ -60,13 +60,13 @@ export const SYSTEMS: Record<SystemType, SystemConfig> = {
   },
   klimasplit: {
     category: "hvac",
-    name: "Split-Klimaanlage (Single / Multi)",
-    refrigerant: "R32 (Difluormethan)",
-    headerText: "Split-Klimaanlage · R32 (Direktverdampfung)",
-    bannerTitle: "Split-Klimaanlage (Single-/Multi-Split) · Luft/Luft-Direktverdampfung",
+    name: "Split-Klimaanlage (1:1)",
+    refrigerant: "R32 (Difluormethan · 1:1)",
+    headerText: "1:1 Split-Klimaanlage · R32 (Direktverdampfung)",
+    bannerTitle: "1:1 Split-Klimaanlage · Luft/Luft-Direktverdampfung",
     bannerDesc:
-      "R32 (Sicherheitsgruppe A2L, GWP 675): Direkter Wärmeaustausch zwischen Kältemittel und Raumluft ohne Heizungswasserkreis. Das Expansionsventil (EEV) sitzt meist in der Außeneinheit; gedämmte Einspritz- und Saugleitung führen zum Wand-, Truhen- oder Kassettengerät. F-Gase-Sachkunde Pflicht.",
-    badgeText: "R32 · A2L · F-Gase-Pflicht",
+      "R32 (Sicherheitsgruppe A2L, GWP 675): Direkter Wärmeaustausch zwischen Kältemittel und Raumluft ohne Heizungswasserkreis. Ein zentrales EEV in der Außeneinheit versorgt über gedämmte Einspritz- und Sauggasleitung genau ein Wand-, Truhen- oder Kassettengerät. F-Gase-Sachkunde Pflicht.",
+    badgeText: "R32 · A2L · 1:1 Split",
     badgeClass: "r32",
     bannerClass: "is-r32",
     boundaryX: 540,
@@ -75,6 +75,29 @@ export const SYSTEMS: Record<SystemType, SystemConfig> = {
     indoorWidth: 348,
     outdoorLabel: "AUSSENEINHEIT (CONDENSING UNIT)",
     indoorLabel: "INNENGERÄT (DIREKTVERDAMPFER)",
+    refCondition: {
+      cooling: "Referenz: Kühlbetrieb A35 / R27",
+      heating: "Referenz: Heizbetrieb A7 / R20",
+      defrost: "Referenz: Abtauphase (Kreislaufumkehr)"
+    }
+  },
+  multisplit: {
+    category: "hvac",
+    name: "Multi-Split-Klimaanlage (2–5 Zonen)",
+    refrigerant: "R32 (Difluormethan · Multi-Split)",
+    headerText: "Multi-Split-Anlage · R32 (Sternverteilung ab Außeneinheit)",
+    bannerTitle: "Multi-Split-Anlage (2–5 Innengeräte) · EEV-Batterie in der Außeneinheit",
+    bannerDesc:
+      "Eine gemeinsame Außeneinheit versorgt 2 bis 5 Innengeräte in Sternverteilung: Jeder Raumstrang erhält direkt am Verteilerblock der Außeneinheit ein eigenes elektronisches Expansionsventil (EEV) und ein separates Kältemittel-Leitungspaar. Alle aktiven Räume laufen gemeinsam im Kühl- oder Heizbetrieb.",
+    badgeText: "R32 · 2–5 Zonen · Sternnetz",
+    badgeClass: "multisplit",
+    bannerClass: "is-multisplit",
+    boundaryX: 540,
+    outdoorWidth: 518,
+    indoorX: 556,
+    indoorWidth: 348,
+    outdoorLabel: "MULTI-SPLIT-AUSSENEINHEIT (EEV-BATTERIE)",
+    indoorLabel: "GEBÄUDE / SEPARATE RAUMSTRÄNGE (2–5 ZONEN)",
     refCondition: {
       cooling: "Referenz: Kühlbetrieb A35 / R27",
       heating: "Referenz: Heizbetrieb A7 / R20",

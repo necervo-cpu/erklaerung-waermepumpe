@@ -34,6 +34,7 @@ export interface CircuitDomElements {
   readonly btnMonoblock: HTMLButtonElement;
   readonly btnSplit: HTMLButtonElement;
   readonly btnKlimasplit: HTMLButtonElement;
+  readonly btnMultisplit: HTMLButtonElement;
   readonly btnVrv: HTMLButtonElement;
   readonly refrigerantBanner: HTMLElement;
   readonly bannerTitle: HTMLElement;
@@ -83,8 +84,10 @@ export interface CircuitDomElements {
   readonly hvacPipesCooling: SVGGElement;
   readonly hvacPipesHeating: SVGGElement;
   readonly hvacSplitPipesCooling: SVGGElement;
+  readonly hvacMultisplitPipesCooling: SVGGElement;
   readonly hvacVrvPipesCooling: SVGGElement;
   readonly hvacSplitPipesHeating: SVGGElement;
+  readonly hvacMultisplitPipesHeating: SVGGElement;
   readonly hvacVrvPipesHeating: SVGGElement;
   readonly hvacLblCoolingHeissgas: SVGTextElement;
   readonly hvacValvePathsCooling: SVGGElement;
@@ -98,7 +101,9 @@ export interface CircuitDomElements {
   readonly hvacComp8Sub: SVGTextElement;
   readonly hvacOelBadge: SVGGElement;
   readonly hvacSplitEevComp: SVGGElement;
+  readonly hvacMultisplitEevComp: SVGGElement;
   readonly hvacSplitIndoorLayer: SVGGElement;
+  readonly hvacMultisplitIndoorLayer: SVGGElement;
   readonly hvacVrvIndoorLayer: SVGGElement;
   readonly hvacAirSupplyBase: SVGPathElement;
   readonly hvacAirSupplyFlow: SVGPathElement;
@@ -577,17 +582,21 @@ function syncHvacDedicatedSvgMode(elements: CircuitDomElements, state: AppState)
     elements.hvacAirStatusSub.textContent = "Raumluft R27 → Ausblas ~12 °C";
   }
 
-  // VRV-Zonenkarten im SVG synchronisieren
-  const vrvRoles = elements.hvacSvgElement.querySelectorAll<SVGTextElement>(".hvac-vrv-unit-role");
-  const vrvAirs = elements.hvacSvgElement.querySelectorAll<SVGTextElement>(".hvac-vrv-unit-air");
-  vrvRoles.forEach((el) => {
+  // VRF- und Multi-Split-Zonenkarten im SVG synchronisieren
+  const zoneRoles = elements.hvacSvgElement.querySelectorAll<SVGTextElement>(
+    ".hvac-vrv-unit-role, .hvac-ms-unit-role"
+  );
+  const zoneAirs = elements.hvacSvgElement.querySelectorAll<SVGTextElement>(
+    ".hvac-vrv-unit-air, .hvac-ms-unit-air"
+  );
+  zoneRoles.forEach((el) => {
     el.textContent = isHeating
       ? "Verflüssiger (Heizen)"
       : isDefrost
         ? "Verdampfer (Abtau)"
         : "Direktverdampfer (Kühlen)";
   });
-  vrvAirs.forEach((el) => {
+  zoneAirs.forEach((el) => {
     if (isHeating) {
       el.setAttribute("fill", "var(--c-vorlauf)");
       el.textContent = "Warmluft → Raum aktiv";
@@ -664,24 +673,28 @@ export function renderSystemView(
 ): void {
   const sys = SYSTEMS[state.system];
   const isHvac = state.category === "hvac";
+  const isKlimasplit = state.system === "klimasplit";
+  const isMultisplit = state.system === "multisplit";
   const isVrv = state.system === "vrv";
 
   // Haupt-Reiter & Kopfbereich synchronisieren
   elements.btnCatHeatpump.setAttribute("aria-selected", String(!isHvac));
   elements.btnCatHvac.setAttribute("aria-selected", String(isHvac));
   elements.brandMainTitle.textContent = isHvac
-    ? "Kältekreislauf Split-Klima & VRF"
-    : "Kältekreislauf Wärmepumpe";
+    ? "Luft/Luft-Wärmepumpe (Split & VRF)"
+    : "Luft/Wasser-Wärmepumpe";
 
   // Bauart-Tabs je Kategorie ein- bzw. ausblenden
   elements.btnMonoblock.classList.toggle("hidden", isHvac);
   elements.btnSplit.classList.toggle("hidden", isHvac);
   elements.btnKlimasplit.classList.toggle("hidden", !isHvac);
+  elements.btnMultisplit.classList.toggle("hidden", !isHvac);
   elements.btnVrv.classList.toggle("hidden", !isHvac);
 
   elements.btnMonoblock.setAttribute("aria-selected", String(state.system === "monoblock"));
   elements.btnSplit.setAttribute("aria-selected", String(state.system === "split"));
-  elements.btnKlimasplit.setAttribute("aria-selected", String(state.system === "klimasplit"));
+  elements.btnKlimasplit.setAttribute("aria-selected", String(isKlimasplit));
+  elements.btnMultisplit.setAttribute("aria-selected", String(isMultisplit));
   elements.btnVrv.setAttribute("aria-selected", String(isVrv));
 
   elements.headerSystemText.textContent = sys.headerText;
@@ -694,27 +707,38 @@ export function renderSystemView(
   elements.bannerBadge.className = `badge-tag ${sys.badgeClass}`;
   elements.bannerBadge.textContent = sys.badgeText;
 
-  // Zwischen Wärmepumpen-SVG und dediziertem Split-Klima-/VRV-SVG umschalten
+  // Zwischen Wärmepumpen-SVG und dediziertem Split-Klima-/Multi-Split-/VRF-SVG umschalten
   elements.svgElement.classList.toggle("hidden", isHvac);
   elements.hvacSvgElement.classList.toggle("hidden", !isHvac);
 
-  // SVG-Systemgrenze, Sekundärkreis und VRV-Refnet anpassen
+  // SVG-Systemgrenze, Sekundärkreis, Multi-Split-Sternnetz und VRF-Y-Verteiler anpassen
   if (isHvac) {
-    elements.hvacSplitIndoorLayer.classList.toggle("svg-layer-hidden", isVrv);
+    elements.hvacSplitIndoorLayer.classList.toggle("svg-layer-hidden", !isKlimasplit);
+    elements.hvacMultisplitIndoorLayer.classList.toggle("svg-layer-hidden", !isMultisplit);
     elements.hvacVrvIndoorLayer.classList.toggle("svg-layer-hidden", !isVrv);
-    elements.hvacSplitPipesCooling.classList.toggle("svg-layer-hidden", isVrv);
+
+    elements.hvacSplitPipesCooling.classList.toggle("svg-layer-hidden", !isKlimasplit);
+    elements.hvacMultisplitPipesCooling.classList.toggle("svg-layer-hidden", !isMultisplit);
     elements.hvacVrvPipesCooling.classList.toggle("svg-layer-hidden", !isVrv);
-    elements.hvacSplitPipesHeating.classList.toggle("svg-layer-hidden", isVrv);
+
+    elements.hvacSplitPipesHeating.classList.toggle("svg-layer-hidden", !isKlimasplit);
+    elements.hvacMultisplitPipesHeating.classList.toggle("svg-layer-hidden", !isMultisplit);
     elements.hvacVrvPipesHeating.classList.toggle("svg-layer-hidden", !isVrv);
-    elements.hvacSplitEevComp.classList.toggle("svg-layer-hidden", isVrv);
+
+    elements.hvacSplitEevComp.classList.toggle("svg-layer-hidden", !isKlimasplit);
+    elements.hvacMultisplitEevComp.classList.toggle("svg-layer-hidden", !isMultisplit);
     elements.hvacOelBadge.classList.toggle("svg-layer-hidden", !isVrv);
 
     elements.hvacLabelOutdoor.textContent = isVrv
       ? "VRF-AUSSENEINHEIT (VERFLÜSSIGER / SUBCOOLER)"
-      : "AUSSENEINHEIT (INVERTER / EEV)";
+      : isMultisplit
+        ? "MULTI-SPLIT-AUSSENEINHEIT (EEV-BATTERIE)"
+        : "AUSSENEINHEIT (INVERTER / EEV)";
     elements.hvacLabelIndoor.textContent = isVrv
       ? "GEBÄUDE / Y-VERTEILER-ZONEN (1…64 INNENGERÄTE)"
-      : "GEBÄUDE / RAUMLUFT (DIREKTVERDAMPFUNG)";
+      : isMultisplit
+        ? "GEBÄUDE / SEPARATE RAUMSTRÄNGE (2–5 ZONEN)"
+        : "GEBÄUDE / RAUMLUFT (DIREKTVERDAMPFUNG)";
     elements.hvacComp8Title.textContent = isVrv ? "Subcooler" : "Schauglas";
     elements.hvacComp8Sub.textContent = isVrv ? "Bypass +12–15 K" : "Feuchte-Indikator";
   } else {

@@ -12,11 +12,25 @@ import { fileURLToPath } from "node:url";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { COMPONENTS } from "../src/data/components";
 import { FAULTS } from "../src/data/faults";
+import { BUFFER_PRACTICE_RULES, BUFFER_VARIANTS } from "../src/data/bufferStorage";
+import {
+  HEATING_CURVE_PRESETS,
+  HEATING_CURVE_RULES,
+  calculateFlowTemp
+} from "../src/data/heatingCurve";
 import { HVAC_COMPONENTS } from "../src/data/hvacComponents";
+import { INSTALL_RULES, INSTALL_SYSTEMS } from "../src/data/installation";
+import { QUIZ_QUESTIONS } from "../src/data/quizQuestions";
 import { HVAC_FAULTS } from "../src/data/hvacFaults";
 import { HVAC_NICE_TO_KNOW } from "../src/data/hvacNiceToKnow";
+import { HYDRAULICS_VARIANTS, HYDRAULIC_COMPONENTS } from "../src/data/hydraulics";
 import { NICE_TO_KNOW } from "../src/data/niceToKnow";
 import { SYSTEMS } from "../src/data/systems";
+import {
+  WATER_EQUIPMENT,
+  WATER_PRACTICE_STEPS,
+  getWaterQualityMetrics
+} from "../src/data/waterQuality";
 import {
   cycleThemeMode,
   getThemeModeLabel,
@@ -131,9 +145,10 @@ describe("Systemdaten-Integrität (systems.ts)", () => {
     expect(SYSTEMS).toHaveProperty("monoblock");
     expect(SYSTEMS).toHaveProperty("split");
     expect(SYSTEMS).toHaveProperty("klimasplit");
+    expect(SYSTEMS).toHaveProperty("multisplit");
     expect(SYSTEMS).toHaveProperty("vrv");
 
-    const { monoblock, split, klimasplit, vrv } = SYSTEMS;
+    const { monoblock, split, klimasplit, multisplit, vrv } = SYSTEMS;
 
     expect(monoblock.category).toBe("heatpump");
     expect(monoblock.refrigerant).toContain("R290");
@@ -149,10 +164,17 @@ describe("Systemdaten-Integrität (systems.ts)", () => {
 
     expect(klimasplit.category).toBe("hvac");
     expect(klimasplit.refrigerant).toContain("R32");
-    expect(klimasplit.badgeText).toContain("F-Gase");
+    expect(klimasplit.badgeText).toContain("1:1 Split");
     expect(klimasplit.boundaryX).toBeGreaterThan(0);
     expect(klimasplit.outdoorWidth).toBeGreaterThan(0);
     expect(klimasplit.refCondition.cooling).toContain("A35");
+
+    expect(multisplit.category).toBe("hvac");
+    expect(multisplit.refrigerant).toContain("Multi-Split");
+    expect(multisplit.badgeText).toContain("2–5 Zonen");
+    expect(multisplit.boundaryX).toBeGreaterThan(0);
+    expect(multisplit.outdoorWidth).toBeGreaterThan(0);
+    expect(multisplit.refCondition.cooling).toContain("A35");
 
     expect(vrv.category).toBe("hvac");
     expect(vrv.refrigerant).toContain("VRF");
@@ -319,9 +341,10 @@ describe("Split-Klima & VRV Datenintegrität (hvac*.ts)", () => {
       expect(comp.shortName).toBeTruthy();
       expect(comp.task).toBeTruthy();
       expect(comp.location.klimasplit).toBeTruthy();
+      expect(comp.location.multisplit).toBeTruthy();
       expect(comp.location.vrv).toBeTruthy();
 
-      for (const variant of [comp.thermo.klimasplit, comp.thermo.vrv]) {
+      for (const variant of [comp.thermo.klimasplit, comp.thermo.multisplit, comp.thermo.vrv]) {
         expect(variant.inState).toBeTruthy();
         expect(validPaletteColors.has(variant.inColor)).toBe(true);
         expect(variant.inMetric).toBeTruthy();
@@ -440,6 +463,7 @@ describe("DOM-Integrität (index.html)", () => {
       "btnCatHeatpump",
       "btnCatHvac",
       "btnKlimasplit",
+      "btnMultisplit",
       "btnVrv",
       "btnModeCooling",
       "lblReverseHeissgas",
@@ -469,8 +493,10 @@ describe("DOM-Integrität (index.html)", () => {
       "hvacPipesCooling",
       "hvacPipesHeating",
       "hvacSplitPipesCooling",
+      "hvacMultisplitPipesCooling",
       "hvacVrvPipesCooling",
       "hvacSplitPipesHeating",
+      "hvacMultisplitPipesHeating",
       "hvacVrvPipesHeating",
       "hvacLblCoolingHeissgas",
       "hvacValvePathsCooling",
@@ -484,12 +510,80 @@ describe("DOM-Integrität (index.html)", () => {
       "hvacComp8Sub",
       "hvacOelBadge",
       "hvacSplitEevComp",
+      "hvacMultisplitEevComp",
       "hvacSplitIndoorLayer",
+      "hvacMultisplitIndoorLayer",
       "hvacVrvIndoorLayer",
       "hvacAirSupplyBase",
       "hvacAirSupplyFlow",
       "hvacAirStatusTitle",
-      "hvacAirStatusSub"
+      "hvacAirStatusSub",
+      "btnViewHydraulics",
+      "btnViewWaterQuality",
+      "viewHydraulics",
+      "viewWaterQuality",
+      "btnHydSeries",
+      "btnHydParallel",
+      "hydBanner",
+      "hydBannerTitle",
+      "hydBannerDesc",
+      "hydBannerBadge",
+      "hydraulicsSvg",
+      "hydPipesSeries",
+      "hydPipesParallel",
+      "hydBypassSeries",
+      "hydPumpSecParallel",
+      "hydBufferTitle",
+      "hydBufferSub",
+      "hydraulicsAccordionList",
+      "btnMatNoAlu",
+      "btnMatWithAlu",
+      "btnTreatLowSalt",
+      "btnTreatSaline",
+      "waterMetricsGrid",
+      "waterEquipmentGrid",
+      "waterPracticeGrid",
+      "btnViewBufferStorage",
+      "viewBufferStorage",
+      "btnBufSeriesReturn",
+      "btnBufTeeBranch",
+      "btnBufParallel4Pipe",
+      "btnBufCombiTank",
+      "bufferSvg",
+      "bufLayerSeriesReturn",
+      "bufLayerTeeBranch",
+      "bufLayerParallel4Pipe",
+      "bufLayerCombiTank",
+      "bufferDetailPanel",
+      "bufferPracticeGrid",
+      "btnViewQuiz",
+      "viewQuiz",
+      "btnQuizReset",
+      "btnQuizTopicAll",
+      "btnQuizTopicHeatpump",
+      "btnQuizTopicHvac",
+      "quizProgressText",
+      "quizScoreText",
+      "quizQuestionHost",
+      "btnViewHeatingCurve",
+      "viewHeatingCurve",
+      "btnHcPresetFbh",
+      "btnHcPresetLowHk",
+      "btnHcPresetOldHk",
+      "hcSlopeSlider",
+      "hcShiftSlider",
+      "heatingCurveSvg",
+      "hcCurvePath",
+      "hcMetricsGrid",
+      "hcRulesGrid",
+      "btnViewInstallation",
+      "viewInstallation",
+      "btnInstR290",
+      "btnInstR32",
+      "installSvg",
+      "instLayerR290",
+      "instLayerR32",
+      "installCardsGrid"
     ];
 
     for (const id of requiredMainIds) {
@@ -501,6 +595,14 @@ describe("DOM-Integrität (index.html)", () => {
       expect(
         hvacSvgSlice,
         `Komponente data-comp="${compId}" fehlt in #hvacCircuitSvg`
+      ).toContain(`data-comp="${compId}"`);
+    }
+
+    const hydSvgSlice = html.slice(html.indexOf('id="hydraulicsSvg"'));
+    for (let compId = 1; compId <= 9; compId += 1) {
+      expect(
+        hydSvgSlice,
+        `Komponente data-comp="${compId}" fehlt in #hydraulicsSvg`
       ).toContain(`data-comp="${compId}"`);
     }
 
@@ -532,5 +634,105 @@ describe("DOM-Integrität (index.html)", () => {
         `Rolle ${role} (gemappt auf #${actualId}) fehlt in index.html`
       ).toContain(`id="${actualId}"`);
     }
+  });
+});
+
+describe("Azubi-Dashboards: Hydraulik-Kreis & Heizungswasser (VDI 2035)", () => {
+  it("liefert beide Hydraulik-Varianten und 9 fortlaufende Bauteile", () => {
+    expect(HYDRAULICS_VARIANTS.series.label).toContain("Reihenpuffer");
+    expect(HYDRAULICS_VARIANTS.parallel.label).toContain("Parallelpuffer");
+    expect(HYDRAULIC_COMPONENTS).toHaveLength(9);
+
+    HYDRAULIC_COMPONENTS.forEach((comp, index) => {
+      expect(comp.id).toBe(index + 1);
+      expect(comp.name.length).toBeGreaterThan(2);
+      expect(comp.azubiRule.length).toBeGreaterThan(10);
+      expect(comp.commonMistake.length).toBeGreaterThan(10);
+      expect(comp.checkValue.length).toBeGreaterThan(3);
+    });
+  });
+
+  it("berechnet VDI-2035-Richtwerte abhängig von Aluminium und Fahrweise", () => {
+    const noAluLowSalt = getWaterQualityMetrics("noAluminum", "lowSalt");
+    const withAluSaline = getWaterQualityMetrics("withAluminum", "saline");
+
+    expect(noAluLowSalt).toHaveLength(5);
+    expect(withAluSaline).toHaveLength(5);
+
+    const phNoAlu = noAluLowSalt.find((m) => m.id === "ph");
+    const phWithAlu = withAluSaline.find((m) => m.id === "ph");
+    expect(phNoAlu?.targetValue).toBe("8,2 – 10,0");
+    expect(phWithAlu?.targetValue).toBe("8,2 – 8,5");
+
+    const condLow = noAluLowSalt.find((m) => m.id === "conductivity");
+    const condSaline = withAluSaline.find((m) => m.id === "conductivity");
+    expect(condLow?.targetValue).toBe("< 100 µS/cm");
+    expect(condSaline?.targetValue).toBe("100 – 1500 µS/cm");
+  });
+
+  it("liefert vollständige Equipment- und Praxis-Checklisten für Heizungswasser", () => {
+    expect(WATER_EQUIPMENT).toHaveLength(4);
+    expect(WATER_PRACTICE_STEPS).toHaveLength(4);
+
+    for (const eq of WATER_EQUIPMENT) {
+      expect(eq.norm.length).toBeGreaterThan(0);
+      expect(eq.name.length).toBeGreaterThan(3);
+      expect(eq.azubiCheck.length).toBeGreaterThan(10);
+    }
+
+    for (const step of WATER_PRACTICE_STEPS) {
+      expect(step.title.length).toBeGreaterThan(3);
+      expect(step.bullets.length).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("liefert alle 4 Pufferspeicher-Einbindungen und 4 Praxisregeln", () => {
+    const keys = ["seriesReturn", "teeBranch", "parallel4Pipe", "combiTank"] as const;
+    for (const key of keys) {
+      const variant = BUFFER_VARIANTS[key];
+      expect(variant.title.length).toBeGreaterThan(5);
+      expect(variant.useCases.length).toBeGreaterThanOrEqual(3);
+      expect(variant.pros.length).toBeGreaterThanOrEqual(3);
+      expect(variant.cons.length).toBeGreaterThanOrEqual(3);
+      expect(variant.azubiMerksatz.length).toBeGreaterThan(10);
+    }
+
+    expect(BUFFER_PRACTICE_RULES).toHaveLength(4);
+    for (const rule of BUFFER_PRACTICE_RULES) {
+      expect(rule.title.length).toBeGreaterThan(3);
+      expect(rule.bullets.length).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("liefert 16 Prüfungsfragen (je 8 Luft/Wasser und Luft/Luft) mit gültigen Antwortindizes", () => {
+    expect(QUIZ_QUESTIONS).toHaveLength(16);
+    const heatpumpQuestions = QUIZ_QUESTIONS.filter((q) => q.topic === "heatpump");
+    const hvacQuestions = QUIZ_QUESTIONS.filter((q) => q.topic === "hvac");
+    expect(heatpumpQuestions).toHaveLength(8);
+    expect(hvacQuestions).toHaveLength(8);
+
+    for (const q of QUIZ_QUESTIONS) {
+      expect(q.question.length).toBeGreaterThan(15);
+      expect(q.options).toHaveLength(4);
+      expect(q.correctIndex).toBeGreaterThanOrEqual(0);
+      expect(q.correctIndex).toBeLessThanOrEqual(3);
+      expect(q.explanation.length).toBeGreaterThan(20);
+      expect(q.examTip.length).toBeGreaterThan(10);
+    }
+  });
+
+  it("berechnet plausible Vorlauftemperaturen für Heizkurve und liefert Aufstellungsregeln", () => {
+    expect(HEATING_CURVE_PRESETS).toHaveLength(3);
+    expect(HEATING_CURVE_RULES).toHaveLength(4);
+
+    const fbhAtMinus12 = calculateFlowTemp(-12, 0.35, 0);
+    const oldHkAtMinus12 = calculateFlowTemp(-12, 1.15, 1);
+    expect(fbhAtMinus12).toBeGreaterThan(28);
+    expect(fbhAtMinus12).toBeLessThan(38);
+    expect(oldHkAtMinus12).toBeGreaterThan(50);
+
+    expect(INSTALL_SYSTEMS.r290.badgeText).toContain("R290");
+    expect(INSTALL_SYSTEMS.r32.badgeText).toContain("R32");
+    expect(INSTALL_RULES).toHaveLength(4);
   });
 });

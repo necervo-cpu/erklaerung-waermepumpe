@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f2f7" />
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
-  <title>Kältekreislauf Wärmepumpe – Interaktives Fachschema &amp; Fehleranalyse</title>
+  <title>Azubi-Portal Wärmepumpen – Luft/Wasser &amp; Luft/Luft (Kältekreis, Hydraulik &amp; VDI 2035)</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
   <!-- Synchrones iOS-Safari Reflow-Skript zur Vermeidung des Chin-Gaps (danach Freigabe der Top-Layer für flüssige View Transitions) -->
@@ -26,7 +26,7 @@
           <span class="ag-icon ag-icon--active">ac_unit</span>
         </div>
         <div class="brand-text">
-          <h1 class="brand-title" id="brandMainTitle">Kältekreislauf Wärmepumpe</h1>
+          <h1 class="brand-title" id="brandMainTitle">Luft/Wasser-Wärmepumpe</h1>
           <div class="brand-sub">
             <span id="headerSystemText">Monoblock-Bauart · R290 (Propan)</span>
             <span class="ref-pill tabular" id="headerRefPill">Referenz: Heizbetrieb A2 / W35</span>
@@ -35,7 +35,7 @@
       </div>
 
       <div class="controls-row">
-        <!-- Übergeordneter Haupt-Reiter: Wärmepumpe vs. Split-Klima & VRV -->
+        <!-- Übergeordneter Haupt-Reiter: Luft/Wasser-WP vs. Luft/Luft-WP (Split-Klima & VRF) -->
         <div class="segmented is-category-segmented" role="tablist" aria-label="Anlagenkategorie wählen" id="categoryTabs">
           <button
             type="button"
@@ -46,7 +46,7 @@
             id="btnCatHeatpump"
           >
             <span class="ag-icon ag-icon--xs" aria-hidden="true">heat_pump</span>
-            <span>Wärmepumpe</span>
+            <span>Luft/Wasser-WP</span>
           </button>
           <button
             type="button"
@@ -57,7 +57,7 @@
             id="btnCatHvac"
           >
             <span class="ag-icon ag-icon--xs" aria-hidden="true">air</span>
-            <span>Split-Klima &amp; VRF</span>
+            <span>Luft/Luft-WP (Klima/VRF)</span>
           </button>
         </div>
 
@@ -94,7 +94,18 @@
             id="btnKlimasplit"
           >
             <span class="dot-indicator is-klimasplit"></span>
-            Split-Klima (R32)
+            Split-Klima (1:1)
+          </button>
+          <button
+            type="button"
+            class="segmented-btn is-system press-btn hidden"
+            data-system="multisplit"
+            role="tab"
+            aria-selected="false"
+            id="btnMultisplit"
+          >
+            <span class="dot-indicator is-multisplit"></span>
+            Multi-Split (2–5)
           </button>
           <button
             type="button"
@@ -124,6 +135,56 @@
           <button
             type="button"
             class="segmented-btn press-btn"
+            data-view="hydraulics"
+            role="tab"
+            aria-selected="false"
+            id="btnViewHydraulics"
+          >
+            Hydraulik-Kreis
+          </button>
+          <button
+            type="button"
+            class="segmented-btn press-btn"
+            data-view="bufferStorage"
+            role="tab"
+            aria-selected="false"
+            id="btnViewBufferStorage"
+          >
+            Pufferspeicher
+          </button>
+          <button
+            type="button"
+            class="segmented-btn press-btn"
+            data-view="waterQuality"
+            role="tab"
+            aria-selected="false"
+            id="btnViewWaterQuality"
+          >
+            Heizungswasser
+          </button>
+          <button
+            type="button"
+            class="segmented-btn press-btn"
+            data-view="heatingCurve"
+            role="tab"
+            aria-selected="false"
+            id="btnViewHeatingCurve"
+          >
+            Heizkurve
+          </button>
+          <button
+            type="button"
+            class="segmented-btn press-btn"
+            data-view="installation"
+            role="tab"
+            aria-selected="false"
+            id="btnViewInstallation"
+          >
+            Aufstellung &amp; Schall
+          </button>
+          <button
+            type="button"
+            class="segmented-btn press-btn"
             data-view="faults"
             role="tab"
             aria-selected="false"
@@ -140,6 +201,16 @@
             id="btnViewNiceToKnow"
           >
             Nice to Know
+          </button>
+          <button
+            type="button"
+            class="segmented-btn press-btn"
+            data-view="quiz"
+            role="tab"
+            aria-selected="false"
+            id="btnViewQuiz"
+          >
+            Prüfungstraining
           </button>
         </div>
 
@@ -602,11 +673,34 @@
 
                 <path class="pipe-base" stroke="var(--c-nassdampf)" d="M 494 412 L 554 412 L 554 296 L 590 296" />
                 <path class="pipe-flow" stroke="var(--c-nassdampf)" marker-end="url(#hvacArrowNass)" d="M 494 412 L 554 412 L 554 296 L 584 296" />
-                <text x="554" y="428" text-anchor="middle" fill="var(--c-nassdampf)" font-size="9.5" font-weight="650">Einspritzleitung (ND)</text>
+                <text x="566" y="416" text-anchor="start" fill="var(--c-nassdampf)" font-size="9.5" font-weight="650">Einspritzleitung (ND)</text>
 
                 <path class="pipe-base" stroke="var(--c-sauggas)" d="M 590 164 L 356 164" />
                 <path class="pipe-flow" stroke="var(--c-sauggas)" marker-end="url(#hvacArrowSaug)" d="M 590 164 L 363 164" />
                 <text x="456" y="152" text-anchor="middle" fill="var(--c-sauggas)" font-size="10" font-weight="650">Sauggas (ND)</text>
+              </g>
+
+              <!-- Multi-Split Zweig (Cooling): 8 -> EEV-Batterie (4) -> 3 getrennte Einspritzleitungen -> 3 Räume -> Gas-Sammelbrücke -> 5 -->
+              <g id="hvacMultisplitPipesCooling" class="svg-layer-hidden">
+                <path class="pipe-base" stroke="var(--c-fluessig)" d="M 398 412 L 414 412" />
+                <path class="pipe-flow slow" stroke="var(--c-fluessig)" d="M 398 412 L 414 412" />
+
+                <!-- 3 separate Einspritzleitungen (Sternverteilung ab Außeneinheit) -->
+                <path class="pipe-base" stroke="var(--c-nassdampf)" d="M 496 382 L 574 382 L 574 134 L 668 134" />
+                <path class="pipe-flow" stroke="var(--c-nassdampf)" marker-end="url(#hvacArrowNass)" d="M 496 382 L 574 382 L 574 134 L 662 134" />
+                <path class="pipe-base" stroke="var(--c-nassdampf)" d="M 496 412 L 592 412 L 592 266 L 668 266" />
+                <path class="pipe-flow" stroke="var(--c-nassdampf)" marker-end="url(#hvacArrowNass)" d="M 496 412 L 592 412 L 592 266 L 662 266" />
+                <path class="pipe-base" stroke="var(--c-nassdampf)" d="M 496 440 L 620 440 L 620 400 L 668 400" />
+                <path class="pipe-flow" stroke="var(--c-nassdampf)" marker-end="url(#hvacArrowNass)" d="M 496 440 L 620 440 L 620 400 L 662 400" />
+
+                <!-- 3 separate Sauggasleitungen zurück zur Sammelbrücke vor dem 4-Wege-Ventil -->
+                <path class="pipe-base" stroke="var(--c-sauggas)" d="M 668 92 L 474 92 L 474 164 L 356 164" />
+                <path class="pipe-flow" stroke="var(--c-sauggas)" marker-end="url(#hvacArrowSaug)" d="M 668 92 L 474 92 L 474 164 L 363 164" />
+                <path class="pipe-base" stroke="var(--c-sauggas)" d="M 668 224 L 474 224 L 474 164" />
+                <path class="pipe-flow" stroke="var(--c-sauggas)" d="M 668 224 L 474 224 L 474 164" />
+                <path class="pipe-base" stroke="var(--c-sauggas)" d="M 668 358 L 474 358 L 474 224" />
+                <path class="pipe-flow" stroke="var(--c-sauggas)" d="M 668 358 L 474 358 L 474 224" />
+                <text x="414" y="152" text-anchor="middle" fill="var(--c-sauggas)" font-size="9.8" font-weight="650">Sauggas (ND)</text>
               </g>
 
               <!-- VRV/VRF Zweig (Cooling): 8 -> HD Flüssig durch Wand -> Refnet -> 3x EEV (4) -> 3x Verdampfer (3) -> Refnet Sauggas -> 5 -->
@@ -663,10 +757,31 @@
 
                 <path class="pipe-base" stroke="var(--c-fluessig)" d="M 590 296 L 554 296 L 554 412 L 494 412" />
                 <path class="pipe-flow slow" stroke="var(--c-fluessig)" marker-end="url(#hvacArrowFluessig)" d="M 590 296 L 554 296 L 554 412 L 500 412" />
-                <text x="554" y="428" text-anchor="middle" fill="var(--c-fluessig)" font-size="9.5" font-weight="650">Flüssig (HD)</text>
+                <text x="566" y="416" text-anchor="start" fill="var(--c-fluessig)" font-size="9.5" font-weight="650">Flüssig (HD)</text>
 
                 <path class="pipe-base" stroke="var(--c-nassdampf)" d="M 416 412 L 398 412" />
                 <path class="pipe-flow" stroke="var(--c-nassdampf)" d="M 416 412 L 398 412" />
+              </g>
+
+              <!-- Multi-Split Zweig (Heating): 5 -> Gas-Verteiler außen -> 3 Räume -> Flüssig zurück zur EEV-Batterie (4) -->
+              <g id="hvacMultisplitPipesHeating" class="svg-layer-hidden">
+                <path class="pipe-base" stroke="var(--c-heissgas)" d="M 356 164 L 474 164 L 474 92 L 668 92" />
+                <path class="pipe-flow" stroke="var(--c-heissgas)" marker-end="url(#hvacArrowHeissgas)" d="M 356 164 L 474 164 L 474 92 L 662 92" />
+                <path class="pipe-base" stroke="var(--c-heissgas)" d="M 474 164 L 474 224 L 668 224" />
+                <path class="pipe-flow" stroke="var(--c-heissgas)" marker-end="url(#hvacArrowHeissgas)" d="M 474 164 L 474 224 L 662 224" />
+                <path class="pipe-base" stroke="var(--c-heissgas)" d="M 474 224 L 474 358 L 668 358" />
+                <path class="pipe-flow" stroke="var(--c-heissgas)" marker-end="url(#hvacArrowHeissgas)" d="M 474 224 L 474 358 L 662 358" />
+                <text x="414" y="152" text-anchor="middle" fill="var(--c-heissgas)" font-size="9.8" font-weight="650">Heißgas (HD)</text>
+
+                <path class="pipe-base" stroke="var(--c-fluessig)" d="M 668 134 L 574 134 L 574 382 L 496 382" />
+                <path class="pipe-flow slow" stroke="var(--c-fluessig)" marker-end="url(#hvacArrowFluessig)" d="M 668 134 L 574 134 L 574 382 L 502 382" />
+                <path class="pipe-base" stroke="var(--c-fluessig)" d="M 668 266 L 592 266 L 592 412 L 496 412" />
+                <path class="pipe-flow slow" stroke="var(--c-fluessig)" marker-end="url(#hvacArrowFluessig)" d="M 668 266 L 592 266 L 592 412 L 502 412" />
+                <path class="pipe-base" stroke="var(--c-fluessig)" d="M 668 400 L 620 400 L 620 440 L 496 440" />
+                <path class="pipe-flow slow" stroke="var(--c-fluessig)" marker-end="url(#hvacArrowFluessig)" d="M 668 400 L 620 400 L 620 440 L 502 440" />
+
+                <path class="pipe-base" stroke="var(--c-nassdampf)" d="M 414 412 L 398 412" />
+                <path class="pipe-flow" stroke="var(--c-nassdampf)" d="M 414 412 L 398 412" />
               </g>
 
               <!-- VRV/VRF Zweig (Heating): 5 -> Refnet Heißgas -> 3x Verflüssiger (3) -> 3x EEV -> Flüssig/Nassdampf -> 8 -->
@@ -813,6 +928,17 @@
               <text class="svg-sub-text" x="455" y="435" text-anchor="middle" font-size="7.8">Außen-Drossel</text>
             </g>
 
+            <!-- 4b. Multi-Split EEV-Batterie in der Außeneinheit (nur bei Multi-Split sichtbar) -->
+            <g id="hvacMultisplitEevComp" class="svg-comp svg-layer-hidden" data-comp="4" tabindex="0" role="button" aria-label="Komponente 4: Multi-Split EEV-Batterie">
+              <rect class="comp-box" x="414" y="368" width="82" height="84" rx="12" stroke-width="1.5" />
+              <circle class="comp-num-bg" cx="428" cy="383" r="8.5" />
+              <text class="comp-num-txt" x="428" y="387" text-anchor="middle" font-size="10" font-weight="700">4</text>
+              <text class="svg-title-text" x="463" y="387" text-anchor="middle" font-size="9.2" font-weight="700">EEV 1–5</text>
+              <text class="svg-sub-text" x="455" y="405" text-anchor="middle" font-size="7.6">Strang A (EEV)</text>
+              <text class="svg-sub-text" x="455" y="421" text-anchor="middle" font-size="7.6">Strang B (EEV)</text>
+              <text class="svg-sub-text" x="455" y="437" text-anchor="middle" font-size="7.6">Strang C (EEV)</text>
+            </g>
+
             <!-- 9. HD / ND Pressostate & Sensoren -->
             <g class="svg-comp" data-comp="9" tabindex="0" role="button" aria-label="Komponente 9: Hochdruck- und Niederdruckpressostate">
               <polyline points="284,248 220,248 220,89 234,89" fill="none" stroke="var(--c-nassdampf)" stroke-width="1.5" stroke-dasharray="3 3" />
@@ -833,7 +959,7 @@
               <g class="svg-comp" data-comp="3" tabindex="0" role="button" aria-label="Komponente 3: Innengerät Direktverdampfer">
                 <rect class="comp-box" x="590" y="114" width="276" height="218" rx="16" stroke-width="1.6" />
                 <!-- Schräge Verdampfer-Lamellen + Querstromlüfter-Walze -->
-                <g stroke="var(--svg-detail-stroke)" stroke-width="1.6" opacity="0.65">
+                <g stroke="var(--brand-accent)" stroke-width="1.8" opacity="0.72">
                   <line x1="628" y1="158" x2="660" y2="226" />
                   <line x1="646" y1="158" x2="678" y2="226" />
                   <line x1="664" y1="158" x2="696" y2="226" />
@@ -941,6 +1067,41 @@
               <rect x="698" y="438" width="188" height="24" rx="999" fill="var(--badge-vrv-bg)" stroke="var(--badge-vrv-border)" stroke-width="1" />
               <text x="792" y="453.5" text-anchor="middle" fill="var(--badge-vrv-ink)" font-size="8.8" font-weight="700">2-Draht-Bus · bis 64 Innengeräte</text>
             </g>
+
+            <!-- ============================================================
+                 INNENBEREICH C: MULTI-SPLIT (2–5 GETRENNTE RAUMSTRÄNGE)
+                 ============================================================ -->
+            <g id="hvacMultisplitIndoorLayer" class="svg-layer-hidden">
+              <g class="svg-comp" data-comp="3" tabindex="0" role="button" aria-label="Komponente 3: Multi-Split Innengerät Raum 1">
+                <rect class="comp-box" x="668" y="68" width="218" height="86" rx="13" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="684" cy="85" r="8.5" />
+                <text class="comp-num-txt" x="684" y="89" text-anchor="middle" font-size="9.5" font-weight="700">3</text>
+                <text class="svg-title-text" x="782" y="89" text-anchor="middle" font-size="10.5" font-weight="700">Raum 1 · Wohnzimmer</text>
+                <text class="hvac-ms-unit-role svg-sub-text" x="777" y="112" text-anchor="middle" font-size="8.8">Direktverdampfer (Kühlen)</text>
+                <text class="hvac-ms-unit-air" x="777" y="134" text-anchor="middle" fill="var(--c-nassdampf)" font-size="8.6" font-weight="650">Raumluft → Zuluft aktiv</text>
+              </g>
+
+              <g class="svg-comp" data-comp="3" tabindex="0" role="button" aria-label="Komponente 3: Multi-Split Innengerät Raum 2">
+                <rect class="comp-box" x="668" y="200" width="218" height="86" rx="13" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="684" cy="217" r="8.5" />
+                <text class="comp-num-txt" x="684" y="221" text-anchor="middle" font-size="9.5" font-weight="700">3</text>
+                <text class="svg-title-text" x="782" y="221" text-anchor="middle" font-size="10.5" font-weight="700">Raum 2 · Schlafzimmer</text>
+                <text class="hvac-ms-unit-role svg-sub-text" x="777" y="244" text-anchor="middle" font-size="8.8">Direktverdampfer (Kühlen)</text>
+                <text class="hvac-ms-unit-air" x="777" y="266" text-anchor="middle" fill="var(--c-nassdampf)" font-size="8.6" font-weight="650">Raumluft → Zuluft aktiv</text>
+              </g>
+
+              <g class="svg-comp" data-comp="3" tabindex="0" role="button" aria-label="Komponente 3: Multi-Split Innengerät Raum 3 bis 5">
+                <rect class="comp-box" x="668" y="332" width="218" height="86" rx="13" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="684" cy="349" r="8.5" />
+                <text class="comp-num-txt" x="684" y="353" text-anchor="middle" font-size="9.5" font-weight="700">3</text>
+                <text class="svg-title-text" x="782" y="349" text-anchor="middle" font-size="10.5" font-weight="700">Raum 3…5 · Arbeitszimmer</text>
+                <text class="hvac-ms-unit-role svg-sub-text" x="777" y="376" text-anchor="middle" font-size="8.8">Direktverdampfer (Kühlen)</text>
+                <text class="hvac-ms-unit-air" x="777" y="398" text-anchor="middle" fill="var(--c-nassdampf)" font-size="8.6" font-weight="650">Raumluft → Zuluft aktiv</text>
+              </g>
+
+              <rect x="668" y="438" width="218" height="24" rx="999" fill="var(--badge-r32-bg)" stroke="var(--badge-r32-border)" stroke-width="1" />
+              <text x="777" y="453.5" text-anchor="middle" fill="var(--badge-r32-ink)" font-size="8.6" font-weight="700">Sternnetz · 1 Leitungspaar je Raum</text>
+            </g>
           </svg>
           </div>
         </div>
@@ -981,6 +1142,659 @@
       </div>
 
       <div id="niceGrid" class="nice-grid"></div>
+    </section>
+
+    <!-- ANSICHT 4: HYDRAULIK & HEIZUNGSWASSERKREIS (AZUBI-DASHBOARD) -->
+    <section id="viewHydraulics" class="workspace-grid hidden" aria-label="Hydraulik und Heizungswasserkreis">
+      <section class="schema-card liquid-glass-card">
+        <div class="refrigerant-banner is-r290" id="hydBanner">
+          <div>
+            <div class="banner-title" id="hydBannerTitle">Reihenschaltung (Rücklaufpuffer) · Effizientester Standard</div>
+            <p class="banner-desc" id="hydBannerDesc">
+              Direkte Anbindung an den Heizkreis mit Reihenpuffer im Rücklauf und Überströmventil für Abtau-Sicherheit.
+            </p>
+          </div>
+          <span class="badge-tag r290" id="hydBannerBadge">Reihenpuffer · Beste JAZ</span>
+        </div>
+
+        <div class="mode-switch-bar">
+          <span class="mode-switch-label">Hydraulik-Schaltung:</span>
+          <div class="segmented" role="tablist" aria-label="Hydraulik-Variante wählen">
+            <button
+              type="button"
+              class="segmented-btn press-btn"
+              role="tab"
+              aria-selected="true"
+              id="btnHydSeries"
+            >
+              Reihenpuffer + Überströmventil
+            </button>
+            <button
+              type="button"
+              class="segmented-btn press-btn"
+              role="tab"
+              aria-selected="false"
+              id="btnHydParallel"
+            >
+              Parallelpuffer (Entkoppelt)
+            </button>
+          </div>
+        </div>
+
+        <div class="svg-stage-wrap" id="hydSvgStageWrap">
+          <div id="hydSvgStage" class="svg-stage">
+            <svg id="hydraulicsSvg" viewBox="0 0 920 530" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktives Hydraulik-Schema für Wärmepumpen">
+              <defs>
+                <marker id="hydArrowVorlauf" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="var(--c-vorlauf)" />
+                </marker>
+                <marker id="hydArrowRuecklauf" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="var(--c-ruecklauf)" />
+                </marker>
+                <marker id="hydArrowWw" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="var(--c-heissgas)" />
+                </marker>
+              </defs>
+
+              <!-- Zonen -->
+              <rect x="16" y="18" width="444" height="492" rx="16" class="hyd-zone-box" />
+              <rect x="476" y="18" width="428" height="492" rx="16" class="hyd-zone-box" />
+              <text x="32" y="42" font-size="11.5" font-weight="700" letter-spacing="0.06em" fill="var(--svg-text-secondary)">HYDRAULIKZENTRALE / WÄRMEPUMPEN-ANSCHLUSS</text>
+              <text x="492" y="42" font-size="11.5" font-weight="700" letter-spacing="0.06em" fill="var(--brand-accent)">PUFFER · WARMWASSER · HEIZKREIS</text>
+
+              <!-- Wärmepumpe (Platten-WT Übergabe) -->
+              <rect class="comp-box" x="28" y="126" width="132" height="260" rx="14" stroke-width="1.6" />
+              <text class="svg-title-text" x="94" y="156" text-anchor="middle" font-size="11.5" font-weight="700">Wärmepumpe</text>
+              <text class="svg-sub-text" x="94" y="176" text-anchor="middle" font-size="9">Platten-WT (Hydraulik)</text>
+              <g stroke="var(--svg-detail-stroke)" stroke-width="1.6" opacity="0.6">
+                <line x1="58" y1="202" x2="58" y2="328" />
+                <line x1="76" y1="202" x2="76" y2="328" />
+                <line x1="94" y1="202" x2="94" y2="328" />
+                <line x1="112" y1="202" x2="112" y2="328" />
+                <line x1="130" y1="202" x2="130" y2="328" />
+              </g>
+              <text class="svg-sub-text" x="94" y="352" text-anchor="middle" font-size="8.6">ΔT = 5 K · hoher Durchfluss</text>
+
+              <!-- Trinkwarmwasserspeicher -->
+              <rect class="comp-box" x="688" y="64" width="198" height="134" rx="14" stroke-width="1.5" />
+              <text class="svg-title-text" x="787" y="88" text-anchor="middle" font-size="11" font-weight="700">Warmwasserspeicher</text>
+              <text class="svg-sub-text" x="787" y="106" text-anchor="middle" font-size="8.8">Trinkwasser-Register (WW)</text>
+              <path d="M 730 124 L 840 124 L 730 144 L 840 144 L 730 164 L 840 164" fill="none" stroke="var(--c-heissgas)" stroke-width="2" opacity="0.7" />
+              <text class="svg-sub-text" x="787" y="184" text-anchor="middle" font-size="8.4">Vorrangschaltung (48–55 °C)</text>
+
+              <!-- Heizkreis (FBH / Heizkörper) -->
+              <rect class="comp-box" x="688" y="256" width="198" height="176" rx="14" stroke-width="1.5" />
+              <text class="svg-title-text" x="787" y="282" text-anchor="middle" font-size="11" font-weight="700">Heizkreis (Gebäude)</text>
+              <text class="svg-sub-text" x="787" y="300" text-anchor="middle" font-size="8.8">Fußbodenheizung / Heizkörper</text>
+              <g stroke="var(--c-vorlauf)" stroke-width="1.6" opacity="0.6">
+                <line x1="726" y1="322" x2="848" y2="322" />
+                <line x1="726" y1="344" x2="848" y2="344" />
+                <line x1="726" y1="366" x2="848" y2="366" />
+                <line x1="726" y1="388" x2="848" y2="388" />
+              </g>
+              <text class="svg-sub-text" x="787" y="416" text-anchor="middle" font-size="8.4">Abgleich &amp; ERR beachten</text>
+
+              <!-- LEITUNGEN: REIHENPUFFER (STANDARD) -->
+              <g id="hydPipesSeries">
+                <!-- Vorlauf WP -> Mikroblasen (8) -> 3-Wege (2) -> Heizkreis -->
+                <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 160 156 L 688 156" />
+                <path class="pipe-flow" stroke="var(--c-vorlauf)" marker-end="url(#hydArrowVorlauf)" d="M 160 156 L 682 156" />
+                <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 656 156 L 656 294 L 688 294" />
+                <path class="pipe-flow" stroke="var(--c-vorlauf)" marker-end="url(#hydArrowVorlauf)" d="M 656 156 L 656 294 L 682 294" />
+                <text x="530" y="144" text-anchor="middle" fill="var(--c-vorlauf)" font-size="9.8" font-weight="650">Heizung Vorlauf (direkt)</text>
+
+                <!-- WW-Abzweig vom 3-Wege-Ventil (2) -->
+                <path class="pipe-base" stroke="var(--c-heissgas)" d="M 358 126 L 358 96 L 688 96" />
+                <path class="pipe-flow slow" stroke="var(--c-heissgas)" marker-end="url(#hydArrowWw)" d="M 358 126 L 358 96 L 682 96" />
+
+                <!-- Rücklauf Heizkreis -> Reihenpuffer (3) -> Pumpe (1) -> Schlamm (7) -> WP -->
+                <path class="pipe-base" stroke="var(--c-ruecklauf)" d="M 688 378 L 574 378" />
+                <path class="pipe-flow" stroke="var(--c-ruecklauf)" marker-end="url(#hydArrowRuecklauf)" d="M 688 378 L 580 378" />
+                <path class="pipe-base" stroke="var(--c-ruecklauf)" d="M 488 378 L 160 378" />
+                <path class="pipe-flow" stroke="var(--c-ruecklauf)" marker-end="url(#hydArrowRuecklauf)" d="M 488 378 L 166 378" />
+                <text x="530" y="400" text-anchor="middle" fill="var(--c-ruecklauf)" font-size="9.5" font-weight="650">Rücklauf durch Puffer</text>
+              </g>
+
+              <!-- LEITUNGEN: PARALLELPUFFER (ENTKOPPELT) -->
+              <g id="hydPipesParallel" class="svg-layer-hidden">
+                <!-- Primär Vorlauf WP -> Puffer (3) oben -->
+                <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 160 156 L 496 156 L 496 244" />
+                <path class="pipe-flow" stroke="var(--c-vorlauf)" marker-end="url(#hydArrowVorlauf)" d="M 160 156 L 496 156 L 496 238" />
+                <!-- Sekundär Vorlauf Puffer -> Sekundärpumpe -> Heizkreis -->
+                <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 574 268 L 656 268 L 656 294 L 688 294" />
+                <path class="pipe-flow" stroke="var(--c-vorlauf)" marker-end="url(#hydArrowVorlauf)" d="M 574 268 L 656 268 L 656 294 L 682 294" />
+
+                <!-- WW-Abzweig -->
+                <path class="pipe-base" stroke="var(--c-heissgas)" d="M 358 126 L 358 96 L 688 96" />
+                <path class="pipe-flow slow" stroke="var(--c-heissgas)" marker-end="url(#hydArrowWw)" d="M 358 126 L 358 96 L 682 96" />
+
+                <!-- Sekundär Rücklauf Heizkreis -> Puffer -->
+                <path class="pipe-base" stroke="var(--c-ruecklauf)" d="M 688 378 L 574 378" />
+                <path class="pipe-flow" stroke="var(--c-ruecklauf)" marker-end="url(#hydArrowRuecklauf)" d="M 688 378 L 580 378" />
+                <!-- Primär Rücklauf Puffer -> Primärpumpe -> Schlamm -> WP -->
+                <path class="pipe-base" stroke="var(--c-ruecklauf)" d="M 488 378 L 160 378" />
+                <path class="pipe-flow" stroke="var(--c-ruecklauf)" marker-end="url(#hydArrowRuecklauf)" d="M 488 378 L 166 378" />
+              </g>
+
+              <!-- 6. Sicherheitsgruppe (Vorlauf oben) -->
+              <g class="svg-comp" data-comp="6" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 6: Sicherheitsgruppe">
+                <line x1="204" y1="156" x2="204" y2="108" stroke="var(--c-heissgas)" stroke-width="2" />
+                <rect class="comp-box" x="148" y="56" width="118" height="52" rx="11" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="163" cy="73" r="8.5" />
+                <text class="comp-num-txt" x="163" y="77" text-anchor="middle" font-size="10" font-weight="700">6</text>
+                <text class="svg-title-text" x="216" y="77" text-anchor="middle" font-size="9.5" font-weight="700">Sicherheitsgr.</text>
+                <text class="svg-sub-text" x="207" y="96" text-anchor="middle" font-size="8.2">SV 2,5/3 bar · Manom.</text>
+              </g>
+
+              <!-- 8. Mikroblasenabscheider -->
+              <g class="svg-comp" data-comp="8" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 8: Mikroblasenabscheider">
+                <rect class="comp-box" x="214" y="132" width="84" height="48" rx="11" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="228" cy="147" r="8.5" />
+                <text class="comp-num-txt" x="228" y="151" text-anchor="middle" font-size="10" font-weight="700">8</text>
+                <text class="svg-title-text" x="264" y="151" text-anchor="middle" font-size="9.2" font-weight="700">Mikrobl.</text>
+                <text class="svg-sub-text" x="256" y="170" text-anchor="middle" font-size="8">Entlüfter</text>
+              </g>
+
+              <!-- 2. 3-Wege-Umschaltventil -->
+              <g class="svg-comp" data-comp="2" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 2: 3-Wege-Umschaltventil">
+                <rect class="comp-box" x="314" y="132" width="90" height="48" rx="11" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="328" cy="147" r="8.5" />
+                <text class="comp-num-txt" x="328" y="151" text-anchor="middle" font-size="10" font-weight="700">2</text>
+                <text class="svg-title-text" x="366" y="151" text-anchor="middle" font-size="9.2" font-weight="700">3-Wege</text>
+                <text class="svg-sub-text" x="359" y="170" text-anchor="middle" font-size="8">Heizen ↔ WW</text>
+              </g>
+
+              <!-- 9. Volumenstromsensor & Rückschlagarmatur -->
+              <g class="svg-comp" data-comp="9" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 9: Volumenstromsensor und Schwerkraftbremse">
+                <rect class="comp-box" x="192" y="236" width="112" height="50" rx="11" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="206" cy="252" r="8.5" />
+                <text class="comp-num-txt" x="206" y="256" text-anchor="middle" font-size="10" font-weight="700">9</text>
+                <text class="svg-title-text" x="256" y="256" text-anchor="middle" font-size="9.2" font-weight="700">Durchfluss</text>
+                <text class="svg-sub-text" x="248" y="274" text-anchor="middle" font-size="8">Sensor &amp; Schwerkraftbr.</text>
+              </g>
+
+              <!-- 4. Überströmventil (nur Reihenpuffer) -->
+              <g id="hydBypassSeries" class="svg-comp" data-comp="4" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 4: Überströmventil">
+                <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 428 156 L 428 378" stroke-dasharray="4 3" />
+                <rect class="comp-box" x="382" y="236" width="92" height="50" rx="11" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="396" cy="252" r="8.5" />
+                <text class="comp-num-txt" x="396" y="256" text-anchor="middle" font-size="10" font-weight="700">4</text>
+                <text class="svg-title-text" x="436" y="256" text-anchor="middle" font-size="9.2" font-weight="700">Überström.</text>
+                <text class="svg-sub-text" x="428" y="274" text-anchor="middle" font-size="8">Bypass 250 mbar</text>
+              </g>
+
+              <!-- 3. Pufferspeicher -->
+              <g class="svg-comp" data-comp="3" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 3: Pufferspeicher">
+                <rect class="comp-box" x="488" y="238" width="88" height="156" rx="16" stroke-width="1.6" />
+                <circle class="comp-num-bg" cx="506" cy="258" r="9.5" />
+                <text class="comp-num-txt" x="506" y="262" text-anchor="middle" font-size="10.5" font-weight="700">3</text>
+                <text id="hydBufferTitle" class="svg-title-text" x="532" y="310" text-anchor="middle" font-size="10.5" font-weight="700">Reihenpuffer</text>
+                <text id="hydBufferSub" class="svg-sub-text" x="532" y="330" text-anchor="middle" font-size="8.2">Rücklauf (50–100 l)</text>
+              </g>
+
+              <!-- Sekundärpumpe (nur bei Parallelpuffer sichtbar) -->
+              <g id="hydPumpSecParallel" class="svg-comp svg-layer-hidden" data-comp="1" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 1: Sekundär-Heizkreispumpe">
+                <rect class="comp-box" x="588" y="218" width="76" height="50" rx="11" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="602" cy="233" r="8.5" />
+                <text class="comp-num-txt" x="602" y="237" text-anchor="middle" font-size="9.5" font-weight="700">1b</text>
+                <text class="svg-title-text" x="635" y="237" text-anchor="middle" font-size="8.8" font-weight="700">Sek.-Pumpe</text>
+                <text class="svg-sub-text" x="626" y="256" text-anchor="middle" font-size="7.8">Heizkreis</text>
+              </g>
+
+              <!-- 7. Schlamm- & Magnetitabscheider -->
+              <g class="svg-comp" data-comp="7" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 7: Schlamm- und Magnetitabscheider">
+                <rect class="comp-box" x="192" y="352" width="96" height="50" rx="11" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="206" cy="368" r="8.5" />
+                <text class="comp-num-txt" x="206" y="372" text-anchor="middle" font-size="10" font-weight="700">7</text>
+                <text class="svg-title-text" x="248" y="372" text-anchor="middle" font-size="9" font-weight="700">Schlamm</text>
+                <text class="svg-sub-text" x="240" y="390" text-anchor="middle" font-size="8">&amp; Magnetit</text>
+              </g>
+
+              <!-- 1. Hocheffizienz-Umwälzpumpe -->
+              <g class="svg-comp" data-comp="1" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 1: Hocheffizienz-Umwälzpumpe">
+                <rect class="comp-box" x="310" y="352" width="96" height="50" rx="11" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="324" cy="368" r="8.5" />
+                <text class="comp-num-txt" x="324" y="372" text-anchor="middle" font-size="10" font-weight="700">1</text>
+                <text class="svg-title-text" x="366" y="372" text-anchor="middle" font-size="9.2" font-weight="700">Pumpe</text>
+                <text class="svg-sub-text" x="358" y="390" text-anchor="middle" font-size="8">Primärkreis</text>
+              </g>
+
+              <!-- 5. Membran-Ausdehnungsgefäß (MAG) -->
+              <g class="svg-comp" data-comp="5" tabindex="0" role="button" aria-label="Hydraulik-Bauteil 5: Membran-Ausdehnungsgefäß">
+                <line x1="358" y1="402" x2="358" y2="432" stroke="var(--c-ruecklauf)" stroke-width="2" />
+                <rect class="comp-box" x="296" y="432" width="124" height="58" rx="14" stroke-width="1.5" />
+                <circle class="comp-num-bg" cx="312" cy="449" r="9" />
+                <text class="comp-num-txt" x="312" y="453" text-anchor="middle" font-size="10" font-weight="700">5</text>
+                <text class="svg-title-text" x="366" y="453" text-anchor="middle" font-size="10" font-weight="700">MAG</text>
+                <text class="svg-sub-text" x="358" y="474" text-anchor="middle" font-size="8.2">Vordruck + Kappenventil</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="legend-bar" aria-label="Farblegende Hydraulik">
+          <div class="legend-item"><span class="legend-swatch is-vorlauf"></span>Heizung Vorlauf (warm)</div>
+          <div class="legend-item"><span class="legend-swatch is-ruecklauf"></span>Heizung Rücklauf (abgekühlt)</div>
+          <div class="legend-item"><span class="legend-swatch is-heissgas"></span>Trinkwarmwasser-Ladekreis (WW)</div>
+        </div>
+      </section>
+
+      <aside class="detail-card" aria-label="Hydraulik-Bauteile">
+        <div id="hydraulicsAccordionList" class="comp-list"></div>
+      </aside>
+    </section>
+
+    <!-- ANSICHT 5: HEIZUNGSWASSER NACH VDI 2035 (AZUBI-DASHBOARD) -->
+    <section id="viewWaterQuality" class="water-layout hidden" aria-label="Heizungswasser nach VDI 2035">
+      <div class="nice-header-banner liquid-glass-card">
+        <div class="nice-header-copy">
+          <p class="detail-kicker">Luft/Wasser-Wärmepumpe · VDI 2035 &amp; DIN EN 1717</p>
+          <h2 class="detail-title">Wie muss unser Heizungswasser sein?</h2>
+          <p class="section-text" style="margin-top:4px;">
+            Wähle die verbauten Werkstoffe und die Aufbereitungsart, um die verbindlichen Sollwerte,
+            Aufbereitungsbauteile und die Schritt-für-Schritt-Befüllung für die Praxis anzuzeigen.
+          </p>
+        </div>
+      </div>
+
+      <div class="water-controls-card liquid-glass-card">
+        <div class="water-filter-group">
+          <span class="mode-switch-label">Werkstoffe im Heizkreis:</span>
+          <div class="segmented" role="tablist" aria-label="Werkstoffe wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnMatNoAlu">
+              Ohne Aluminium (Kupfer / Stahl / Edelstahl)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnMatWithAlu">
+              Mit Aluminium / AlSi-Wärmetauscher
+            </button>
+          </div>
+        </div>
+        <div class="water-filter-group">
+          <span class="mode-switch-label">Aufbereitungsart:</span>
+          <div class="segmented" role="tablist" aria-label="Aufbereitungsart wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnTreatLowSalt">
+              Salzarm (Vollentsalzung · Standard WP)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnTreatSaline">
+              Salzhaltig (Nur Enthärtung)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="waterMetricsGrid" class="water-metrics-grid"></div>
+
+      <div class="water-section-head">
+        <h3 class="detail-title">Bauteile für Befüllung, Schutz &amp; Messung</h3>
+      </div>
+      <div id="waterEquipmentGrid" class="nice-grid"></div>
+
+      <div class="water-section-head">
+        <h3 class="detail-title">Praxis-Checkliste: Spülen, Befüllen &amp; typische Schäden</h3>
+      </div>
+      <div id="waterPracticeGrid" class="nice-grid"></div>
+    </section>
+
+    <!-- ANSICHT 6: PUFFERSPEICHER-EINBINDUNGEN (AZUBI-DASHBOARD) -->
+    <section id="viewBufferStorage" class="water-layout hidden" aria-label="Pufferspeicher-Einbindungen">
+      <div class="refrigerant-banner is-r290" id="bufBanner">
+        <div class="banner-copy">
+          <p class="banner-title" id="bufBannerTitle">Reihenpuffer im Rücklauf + Überströmventil</p>
+          <p class="banner-desc" id="bufBannerDesc">
+            Höchste Effizienz · Direkte Vorlauf-Versorgung ohne Mischverlust
+          </p>
+        </div>
+        <span class="badge-tag" id="bufBannerBadge" data-color="mint">JAZ-Optimum · 1 Pumpe</span>
+      </div>
+
+      <div class="water-controls-card liquid-glass-card">
+        <div class="water-filter-group">
+          <span class="mode-switch-label">Einbindungsvariante wählen:</span>
+          <div class="segmented" role="tablist" aria-label="Pufferspeicher-Schaltung wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnBufSeriesReturn">
+              Reihenpuffer (Rücklauf)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufTeeBranch">
+              Stichanbindung (T-Stück)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufParallel4Pipe">
+              Parallelpuffer (4-Leiter)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnBufCombiTank">
+              Kombispeicher (Heizung + TWW)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-grid">
+        <section class="schema-card" aria-label="Pufferspeicher-Schema">
+          <div class="svg-swipe-hint">
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">swipe</span>
+            <span>Schema horizontal wischen für Details</span>
+          </div>
+          <div class="svg-stage-wrap">
+            <div class="svg-stage">
+              <svg id="bufferSvg" viewBox="0 0 920 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schema verschiedener Pufferspeicher-Einbindungen an Luft/Wasser-Wärmepumpen">
+                <!-- Wärmepumpe links -->
+                <rect class="hyd-zone-box" x="20" y="130" width="150" height="200" rx="18" stroke-width="1.5" />
+                <text class="svg-title-text" x="95" y="164" text-anchor="middle" font-size="12" font-weight="700">Luft/Wasser-WP</text>
+                <text class="svg-sub-text" x="95" y="184" text-anchor="middle" font-size="9.5">Wärmeerzeuger</text>
+                <rect class="comp-box" x="45" y="205" width="100" height="44" rx="10" stroke-width="1.4" />
+                <text class="svg-title-text" x="95" y="227" text-anchor="middle" font-size="9.5" font-weight="700">Primärpumpe</text>
+                <text class="svg-sub-text" x="95" y="241" text-anchor="middle" font-size="8">Vorlauf / Rücklauf</text>
+
+                <!-- Pufferspeicher Mitte -->
+                <rect class="comp-box" x="390" y="64" width="150" height="320" rx="26" stroke-width="2" />
+                <text class="svg-title-text" x="465" y="96" text-anchor="middle" font-size="12" font-weight="700">Pufferspeicher</text>
+
+                <!-- Heizkreis rechts -->
+                <rect class="hyd-zone-box" x="740" y="130" width="160" height="200" rx="18" stroke-width="1.5" />
+                <text class="svg-title-text" x="820" y="164" text-anchor="middle" font-size="12" font-weight="700">Heizkreis</text>
+                <text class="svg-sub-text" x="820" y="184" text-anchor="middle" font-size="9.5">FBH / Heizkörper</text>
+                <rect class="comp-box" x="765" y="205" width="110" height="44" rx="10" stroke-width="1.4" />
+                <text class="svg-title-text" x="820" y="227" text-anchor="middle" font-size="9.5" font-weight="700">Wärmeabgabe</text>
+                <text class="svg-sub-text" x="820" y="241" text-anchor="middle" font-size="8">Verteiler / ERR</text>
+
+                <!-- LAYER 1: REIHENPUFFER IM RÜCKLAUF -->
+                <g id="bufLayerSeriesReturn">
+                  <text class="svg-sub-text" x="465" y="114" text-anchor="middle" font-size="9">Rücklaufpuffer (in Reihe)</text>
+                  <!-- Vorlauf direkt WP -> Heizkreis -->
+                  <path d="M 170 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
+                  <text class="svg-sub-text" x="465" y="42" text-anchor="middle" font-size="9.5" font-weight="700">Vorlauf direkt zum Heizkreis (kein Mischverlust)</text>
+                  <!-- Überströmventil -->
+                  <line x1="270" y1="156" x2="270" y2="300" stroke="var(--c-vorlauf)" stroke-width="2.5" stroke-dasharray="5 4" />
+                  <rect class="comp-box" x="218" y="212" width="104" height="34" rx="9" stroke-width="1.4" />
+                  <text class="svg-title-text" x="270" y="233" text-anchor="middle" font-size="9" font-weight="700">Überströmventil</text>
+                  <!-- Rücklauf Heizkreis -> Puffer -> WP -->
+                  <path d="M 740 300 L 540 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 465 300 L 465 180 L 390 180 L 350 180 L 350 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                </g>
+
+                <!-- LAYER 2: STICHANBINDUNG (T-STÜCK) -->
+                <g id="bufLayerTeeBranch" class="is-svg-hidden">
+                  <text class="svg-sub-text" x="465" y="114" text-anchor="middle" font-size="9">Parallel am Stich (Differenzmenge)</text>
+                  <!-- Vorlauf durchgehend mit T-Stich nach unten in Puffer -->
+                  <path d="M 170 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
+                  <line x1="465" y1="156" x2="465" y2="180" stroke="var(--c-vorlauf)" stroke-width="4" />
+                  <circle cx="465" cy="156" r="6" fill="var(--c-vorlauf)" />
+                  <text class="svg-sub-text" x="465" y="42" text-anchor="middle" font-size="9.5" font-weight="700">T-Stück-Stich + Systemfühler</text>
+                  <!-- Rücklauf mit T-Stich -->
+                  <path d="M 740 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <line x1="465" y1="300" x2="465" y2="340" stroke="var(--c-ruecklauf)" stroke-width="4" />
+                  <circle cx="465" cy="300" r="6" fill="var(--c-ruecklauf)" />
+                  <!-- Sekundärpumpe rechts -->
+                  <rect class="comp-box" x="600" y="138" width="96" height="36" rx="9" stroke-width="1.4" />
+                  <text class="svg-title-text" x="648" y="160" text-anchor="middle" font-size="9" font-weight="700">Sek.-Pumpe</text>
+                </g>
+
+                <!-- LAYER 3: PARALLELPUFFER (4-LEITER) -->
+                <g id="bufLayerParallel4Pipe" class="is-svg-hidden">
+                  <text class="svg-sub-text" x="465" y="114" text-anchor="middle" font-size="9">4-Leiter-Trennspeicher</text>
+                  <!-- Primärkreis links in Puffer -->
+                  <path d="M 170 156 L 390 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 390 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <!-- Sekundärkreis rechts aus Puffer -->
+                  <path d="M 540 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 740 300 L 540 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <!-- Sekundärpumpe rechts -->
+                  <rect class="comp-box" x="600" y="138" width="96" height="36" rx="9" stroke-width="1.4" />
+                  <text class="svg-title-text" x="648" y="160" text-anchor="middle" font-size="9" font-weight="700">Sek.-Pumpe</text>
+                  <!-- Fühler Oben / Unten -->
+                  <circle cx="465" cy="156" r="5" fill="var(--c-heissgas)" />
+                  <text class="svg-sub-text" x="465" y="144" text-anchor="middle" font-size="8.5">Fühler Oben</text>
+                  <circle cx="465" cy="300" r="5" fill="var(--c-ruecklauf)" />
+                  <text class="svg-sub-text" x="465" y="322" text-anchor="middle" font-size="8.5">Fühler Unten</text>
+                </g>
+
+                <!-- LAYER 4: KOMBISPEICHER (HEIZUNG + TWW) -->
+                <g id="bufLayerCombiTank" class="is-svg-hidden">
+                  <text class="svg-sub-text" x="465" y="114" text-anchor="middle" font-size="9">Schichtspeicher (TWW + Heizung)</text>
+                  <!-- Schichtleitblech -->
+                  <line x1="398" y1="210" x2="532" y2="210" stroke="var(--c-heissgas)" stroke-width="2" stroke-dasharray="6 4" />
+                  <text class="svg-sub-text" x="465" y="142" text-anchor="middle" font-size="8.5" font-weight="700">TWW-Zone (55 °C)</text>
+                  <text class="svg-sub-text" x="465" y="234" text-anchor="middle" font-size="8.5" font-weight="700">Heizungszone (35–45 °C)</text>
+                  <!-- Wellrohr / TWW Abgang oben -->
+                  <path d="M 465 64 L 465 36 L 740 36" fill="none" stroke="var(--c-heissgas)" stroke-width="4" stroke-linecap="round" />
+                  <text class="svg-sub-text" x="625" y="26" text-anchor="middle" font-size="9" font-weight="700">Trinkwarmwasser (Wellrohr / FriWa)</text>
+                  <!-- WP Ladekreis -->
+                  <path d="M 170 156 L 390 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 390 320 L 170 320" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <!-- Heizkreis Entnahme unterhalb der Trennzone -->
+                  <path d="M 540 245 L 740 245" fill="none" stroke="var(--c-vorlauf)" stroke-width="4.5" stroke-linecap="round" />
+                  <path d="M 740 320 L 540 320" fill="none" stroke="var(--c-ruecklauf)" stroke-width="4.5" stroke-linecap="round" />
+                  <rect class="comp-box" x="600" y="227" width="96" height="36" rx="9" stroke-width="1.4" />
+                  <text class="svg-title-text" x="648" y="249" text-anchor="middle" font-size="9" font-weight="700">Sek.-Pumpe</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <div class="legend-bar" aria-label="Farblegende Pufferspeicher">
+            <div class="legend-item"><span class="legend-swatch is-vorlauf"></span>Heizung Vorlauf (warm)</div>
+            <div class="legend-item"><span class="legend-swatch is-ruecklauf"></span>Heizung Rücklauf (abgekühlt)</div>
+            <div class="legend-item"><span class="legend-swatch is-heissgas"></span>TWW-Zone / Fühler</div>
+          </div>
+        </section>
+
+        <aside class="detail-card" id="bufferDetailPanel" aria-label="Analyse der Pufferspeicher-Einbindung"></aside>
+      </div>
+
+      <div class="water-section-head">
+        <h3 class="detail-title">Praxisregeln: Auslegung, Schichtung &amp; Fühler</h3>
+      </div>
+      <div id="bufferPracticeGrid" class="nice-grid"></div>
+    </section>
+
+    <!-- ANSICHT 7: AZUBI-PRÜFUNGSTRAINING (GESELLENPRÜFUNG TEIL 1 & 2) -->
+    <section id="viewQuiz" class="water-layout hidden" aria-label="Azubi-Prüfungstraining">
+      <div class="nice-header-banner liquid-glass-card">
+        <div class="nice-header-copy">
+          <p class="detail-kicker">Gesellenprüfung Teil 1 &amp; 2 · Luft/Wasser &amp; Luft/Luft</p>
+          <h2 class="detail-title">Azubi-Prüfungstraining</h2>
+          <p class="section-text" style="margin-top:4px;">
+            Teste dein Praxiswissen zu Kältekreis, Hydraulik, Pufferspeicher, VDI 2035 und Split/VRF mit sofortiger Erklärung.
+          </p>
+        </div>
+        <button type="button" class="quiz-nav-btn press-btn" id="btnQuizReset">
+          <span class="ag-icon ag-icon--xs" aria-hidden="true">refresh</span>
+          <span>Zurücksetzen</span>
+        </button>
+      </div>
+
+      <div class="water-controls-card liquid-glass-card">
+        <div class="water-filter-group">
+          <span class="mode-switch-label">Themenbereich:</span>
+          <div class="segmented" role="tablist" aria-label="Prüfungsthema wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnQuizTopicAll">
+              Alle Themen (16)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnQuizTopicHeatpump">
+              Luft/Wasser-WP (8)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnQuizTopicHvac">
+              Luft/Luft-WP (8)
+            </button>
+          </div>
+        </div>
+        <div class="quiz-status-pills">
+          <span class="ref-pill tabular" id="quizProgressText">Frage 1 von 16</span>
+          <span class="ref-pill tabular" id="quizScoreText">Richtig: 0 / 0 (0 %)</span>
+        </div>
+      </div>
+
+      <div id="quizQuestionHost"></div>
+    </section>
+
+    <!-- ANSICHT 8: HEIZKURVE & HYDRAULISCHER ABGLEICH -->
+    <section id="viewHeatingCurve" class="water-layout hidden" aria-label="Heizkurve und hydraulischer Abgleich">
+      <div class="nice-header-banner liquid-glass-card">
+        <div class="nice-header-copy">
+          <p class="detail-kicker">Luft/Wasser-Wärmepumpe · Effizienz &amp; § 14a EnWG</p>
+          <h2 class="detail-title">Heizkurve &amp; Thermischer Abgleich</h2>
+          <p class="section-text" style="margin-top:4px;">
+            Verstelle Steilheit und Parallelverschiebung, um direkt zu sehen, wie sich die Vorlauftemperatur bei +10 °C, 0 °C und -12 °C auf die Wärmepumpen-Effizienz auswirkt.
+          </p>
+        </div>
+      </div>
+
+      <div class="water-controls-card liquid-glass-card">
+        <div class="water-filter-group">
+          <span class="mode-switch-label">Anlagen-Preset wählen:</span>
+          <div class="segmented" role="tablist" aria-label="Heizkurven-Preset wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnHcPresetFbh">
+              Fußbodenheizung (0,35)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnHcPresetLowHk">
+              Niedertemp.-Heizkörper (0,75)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnHcPresetOldHk">
+              Altbau-Heizkörper (1,15)
+            </button>
+          </div>
+        </div>
+
+        <div class="hc-sliders-row">
+          <label class="hc-slider-label" for="hcSlopeSlider">
+            <span>Steilheit (Neigung): <strong class="tabular" id="hcSlopeValue">0,35</strong></span>
+            <input type="range" id="hcSlopeSlider" min="0.2" max="1.6" step="0.05" value="0.35" />
+          </label>
+          <label class="hc-slider-label" for="hcShiftSlider">
+            <span>Parallelverschiebung: <strong class="tabular" id="hcShiftValue">0,0 K</strong></span>
+            <input type="range" id="hcShiftSlider" min="-5" max="5" step="0.5" value="0" />
+          </label>
+        </div>
+      </div>
+
+      <div class="schema-card">
+        <div class="svg-stage-wrap">
+          <div class="svg-stage">
+            <svg id="heatingCurveSvg" viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktives Heizkurven-Diagramm">
+              <!-- Achsen & Hilfslinien -->
+              <line x1="68" y1="44" x2="68" y2="270" stroke="var(--border)" stroke-width="1.5" />
+              <line x1="68" y1="270" x2="600" y2="270" stroke="var(--border)" stroke-width="1.5" />
+              <!-- 55 °C Effizienzgrenze (Y = 270 - (35/50)*226 = 111.8) -->
+              <line x1="68" y1="112" x2="600" y2="112" stroke="var(--c-heissgas)" stroke-width="1.4" stroke-dasharray="6 4" />
+              <text x="596" y="104" text-anchor="end" class="svg-sub-text" font-size="9">55 °C WP-Grenze (darüber sinkt COP)</text>
+              <!-- Y-Achse Beschriftung -->
+              <text x="58" y="274" text-anchor="end" class="svg-sub-text" font-size="9.5">20 °C</text>
+              <text x="58" y="206" text-anchor="end" class="svg-sub-text" font-size="9.5">35 °C</text>
+              <text x="58" y="138" text-anchor="end" class="svg-sub-text" font-size="9.5">50 °C</text>
+              <text x="58" y="48" text-anchor="end" class="svg-sub-text" font-size="9.5">70 °C</text>
+              <!-- X-Achse Beschriftung -->
+              <text x="68" y="292" text-anchor="middle" class="svg-sub-text" font-size="9.5">+20 °C</text>
+              <text x="216" y="292" text-anchor="middle" class="svg-sub-text" font-size="9.5">+10 °C</text>
+              <text x="364" y="292" text-anchor="middle" class="svg-sub-text" font-size="9.5">0 °C</text>
+              <text x="541" y="292" text-anchor="middle" class="svg-sub-text" font-size="9.5">-12 °C</text>
+              <text x="334" y="310" text-anchor="middle" class="svg-sub-text" font-size="9.5">Außentemperatur (kälter nach rechts →)</text>
+
+              <!-- Dynamische Kurve & Live-Punkte -->
+              <path id="hcCurvePath" d="" fill="none" stroke="var(--c-vorlauf)" stroke-width="4" stroke-linecap="round" />
+              <circle id="hcDot10" cx="216" cy="220" r="6" fill="var(--c-vorlauf)" />
+              <text id="hcLabel10" x="216" y="206" text-anchor="middle" class="svg-title-text" font-size="10.5" font-weight="700">27,0 °C</text>
+              <circle id="hcDot0" cx="364" cy="200" r="6" fill="var(--c-vorlauf)" />
+              <text id="hcLabel0" x="364" y="186" text-anchor="middle" class="svg-title-text" font-size="10.5" font-weight="700">31,0 °C</text>
+              <circle id="hcDotMinus12" cx="541" cy="175" r="6" fill="var(--c-heissgas)" />
+              <text id="hcLabelMinus12" x="541" y="161" text-anchor="middle" class="svg-title-text" font-size="10.5" font-weight="700">35,0 °C</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div id="hcMetricsGrid" class="water-metrics-grid"></div>
+      <div id="hcRulesGrid" class="nice-grid"></div>
+    </section>
+
+    <!-- ANSICHT 9: AUFSTELLUNG, R290-SCHUTZZONEN & SCHALLSCHUTZ -->
+    <section id="viewInstallation" class="water-layout hidden" aria-label="Aufstellung, R290-Schutzzonen und Schallschutz">
+      <div class="refrigerant-banner is-r290" id="instBanner">
+        <div class="banner-copy">
+          <p class="banner-title" id="instBannerTitle">Aufstellung R290-Monoblock · Schutzzone &amp; Kondensat beachten</p>
+          <p class="banner-desc" id="instBannerDesc">
+            R290 (Propan, Gruppe A3) ist schwerer als Luft und sinkt bei einer Leckage zu Boden. Schutzzone rund um die Außeneinheit frei von Öffnungen und Zündquellen halten!
+          </p>
+        </div>
+        <span class="badge-tag" id="instBannerBadge" data-color="mint">R290 · A3 · Schutzzone 1 m</span>
+      </div>
+
+      <div class="water-controls-card liquid-glass-card">
+        <div class="water-filter-group">
+          <span class="mode-switch-label">Anlagentyp für Aufstellung:</span>
+          <div class="segmented" role="tablist" aria-label="Aufstellungs-Anlagentyp wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnInstR290">
+              Luft/Wasser Monoblock (R290 · A3)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnInstR32">
+              Luft/Luft Außeneinheit (R32 · A2L)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="schema-card">
+        <div class="svg-swipe-hint">
+          <span class="ag-icon ag-icon--xs" aria-hidden="true">swipe</span>
+          <span>Aufstellungs-Skizze horizontal wischen für Abstände</span>
+        </div>
+        <div class="svg-stage-wrap">
+          <div class="svg-stage">
+            <svg id="installSvg" viewBox="0 0 920 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Aufstellungsschema für Außeneinheiten mit R290-Schutzzone und Schallschutz">
+              <!-- Hauswand links -->
+              <rect class="hyd-zone-box" x="20" y="30" width="160" height="310" rx="12" stroke-width="1.5" />
+              <text class="svg-title-text" x="100" y="62" text-anchor="middle" font-size="11.5" font-weight="700">Hauswand</text>
+              <!-- Fenster oben außerhalb Schutzzone -->
+              <rect class="comp-box" x="52" y="88" width="96" height="58" rx="8" stroke-width="1.4" />
+              <text class="svg-sub-text" x="100" y="121" text-anchor="middle" font-size="9">Fenster (höher)</text>
+              <!-- Kellerlichtschacht / Abfluss (Abstand!) -->
+              <rect class="comp-box" x="48" y="256" width="104" height="54" rx="8" stroke-width="1.4" />
+              <text class="svg-sub-text" x="100" y="280" text-anchor="middle" font-size="8.8">Lichtschacht /</text>
+              <text class="svg-sub-text" x="100" y="294" text-anchor="middle" font-size="8.8">Abfluss (Tabu!)</text>
+
+              <!-- Bodenlinie & Kiesbett -->
+              <line x1="180" y1="300" x2="900" y2="300" stroke="var(--border)" stroke-width="2" />
+              <rect class="comp-box" x="340" y="300" width="160" height="54" rx="8" stroke-width="1.2" />
+              <text class="svg-sub-text" x="420" y="324" text-anchor="middle" font-size="8.8">Frostfreies Kiesbett</text>
+              <text class="svg-sub-text" x="420" y="340" text-anchor="middle" font-size="8.2">(Kondensat &gt; 80 cm tief)</text>
+
+              <!-- LAYER R290 SCHUTZZONE -->
+              <g id="instLayerR290">
+                <rect x="260" y="130" width="320" height="170" rx="22" fill="rgba(255, 179, 186, 0.14)" stroke="var(--c-heissgas)" stroke-width="2" stroke-dasharray="7 5" />
+                <text class="svg-title-text" x="420" y="154" text-anchor="middle" font-size="10.5" font-weight="700">R290-Schutzzone (mind. 1,0 m rundum)</text>
+                <text class="svg-sub-text" x="420" y="170" text-anchor="middle" font-size="8.5">Keine Fenster, Steckdosen, Lichtschächte oder Gullys!</text>
+              </g>
+
+              <!-- LAYER R32 LUFTEINHEIT -->
+              <g id="instLayerR32" class="is-svg-hidden">
+                <rect x="300" y="150" width="240" height="150" rx="18" fill="rgba(168, 212, 255, 0.12)" stroke="var(--c-ruecklauf)" stroke-width="1.8" stroke-dasharray="6 4" />
+                <text class="svg-title-text" x="420" y="172" text-anchor="middle" font-size="10" font-weight="700">Arbeits- &amp; Wartungsraum (R32 · A2L)</text>
+              </g>
+
+              <!-- Außeneinheit auf Gummipuffern -->
+              <rect class="comp-box" x="355" y="190" width="130" height="92" rx="14" stroke-width="2" />
+              <text class="svg-title-text" x="420" y="226" text-anchor="middle" font-size="11.5" font-weight="700">Außeneinheit</text>
+              <text class="svg-sub-text" x="420" y="246" text-anchor="middle" font-size="9">Schwingungsdämpfer</text>
+              <rect x="370" y="282" width="24" height="18" rx="4" fill="var(--muted)" />
+              <rect x="446" y="282" width="24" height="18" rx="4" fill="var(--muted)" />
+
+              <!-- Wandabstand & Ausblasrichtung -->
+              <line x1="180" y1="236" x2="355" y2="236" stroke="var(--c-ruecklauf)" stroke-width="2" stroke-dasharray="4 4" />
+              <text class="svg-sub-text" x="268" y="228" text-anchor="middle" font-size="9" font-weight="700">≥ 30–50 cm</text>
+
+              <path d="M 495 236 L 730 236" fill="none" stroke="var(--c-vorlauf)" stroke-width="3" stroke-linecap="round" />
+              <text class="svg-title-text" x="625" y="222" text-anchor="middle" font-size="10" font-weight="700">Ausblasrichtung ≥ 3,0 m frei</text>
+              <text class="svg-sub-text" x="625" y="256" text-anchor="middle" font-size="8.8">Weg vom Nachbarfenster (TA Lärm)</text>
+
+              <!-- Nachbargrenze rechts -->
+              <line x1="780" y1="50" x2="780" y2="300" stroke="var(--c-heissgas)" stroke-width="2" stroke-dasharray="6 4" />
+              <text class="svg-title-text" x="840" y="130" text-anchor="middle" font-size="10.5" font-weight="700">Nachbar-</text>
+              <text class="svg-title-text" x="840" y="146" text-anchor="middle" font-size="10.5" font-weight="700">grundstück</text>
+              <text class="svg-sub-text" x="840" y="168" text-anchor="middle" font-size="8.5">Nacht: 35–40 dB(A)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div id="installCardsGrid" class="nice-grid"></div>
     </section>
   </div>
 

@@ -204,7 +204,9 @@ body {
   isolation: isolate;
 }
 
-#categoryTabs {
+#categoryTabs,
+#systemTabs,
+#modeTabs {
   grid-auto-columns: auto;
 }
 
@@ -236,6 +238,11 @@ body {
 .segmented-pill-indicator.is-r32 {
   background: var(--badge-r32-bg);
   border-color: var(--badge-r32-border);
+}
+
+.segmented-pill-indicator.is-multisplit {
+  background: color-mix(in srgb, var(--pastel-aqua) 20%, transparent);
+  border-color: color-mix(in srgb, var(--pastel-aqua) 42%, transparent);
 }
 
 .segmented-pill-indicator.is-vrv,
@@ -309,6 +316,12 @@ body {
   color: var(--badge-r32-ink);
 }
 
+.segmented-btn.is-system[aria-selected="true"][data-system="multisplit"] {
+  background: color-mix(in srgb, var(--pastel-aqua) 20%, transparent);
+  border-color: color-mix(in srgb, var(--pastel-aqua) 42%, transparent);
+  color: var(--accent-text-aqua);
+}
+
 .segmented-btn.is-system[aria-selected="true"][data-system="vrv"],
 .segmented-btn.is-category[aria-selected="true"][data-category="hvac"] {
   background: var(--badge-vrv-bg);
@@ -319,6 +332,7 @@ body {
 .segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="monoblock"],
 .segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="split"],
 .segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="klimasplit"],
+.segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="multisplit"],
 .segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="vrv"],
 .segmented.has-pill .segmented-btn.is-category[aria-selected="true"][data-category="hvac"] {
   background: transparent;
@@ -343,6 +357,10 @@ body {
 .dot-indicator.is-split,
 .dot-indicator.is-klimasplit {
   background: var(--pastel-sky);
+}
+
+.dot-indicator.is-multisplit {
+  background: var(--pastel-aqua);
 }
 
 .dot-indicator.is-vrv {
@@ -414,6 +432,12 @@ body {
   background: var(--surface-field);
 }
 
+.refrigerant-banner.is-multisplit {
+  border-color: color-mix(in srgb, var(--pastel-aqua) 42%, transparent);
+  border-left: 4px solid var(--accent-text-aqua);
+  background: var(--surface-field);
+}
+
 .refrigerant-banner.is-vrv {
   border-color: var(--badge-vrv-border);
   border-left: 4px solid var(--accent-text-lavender);
@@ -445,6 +469,12 @@ body {
   border: 1px solid color-mix(in srgb, var(--pastel-sky) 35%, transparent);
 }
 
+.badge-tag.multisplit {
+  background: color-mix(in srgb, var(--pastel-aqua) 16%, transparent);
+  color: var(--accent-text-aqua);
+  border: 1px solid color-mix(in srgb, var(--pastel-aqua) 35%, transparent);
+}
+
 .badge-tag.vrv {
   background: color-mix(in srgb, var(--pastel-lavender) 16%, transparent);
   color: var(--accent-text-lavender);
@@ -459,6 +489,12 @@ body {
 
 :root[data-theme="light"] .badge-tag.r32 {
   background: var(--pastel-sky);
+  color: var(--text-on-accent);
+  border-color: transparent;
+}
+
+:root[data-theme="light"] .badge-tag.multisplit {
+  background: var(--pastel-aqua);
   color: var(--text-on-accent);
   border-color: transparent;
 }
@@ -523,7 +559,11 @@ body {
 }
 
 svg#circuitSvg,
-svg#hvacCircuitSvg {
+svg#hvacCircuitSvg,
+svg#hydraulicsSvg,
+svg#bufferSvg,
+svg#heatingCurveSvg,
+svg#installSvg {
   width: 100%;
   height: auto;
   display: block;
@@ -577,18 +617,162 @@ svg#hvacCircuitSvg {
 #hvacPipesCooling,
 #hvacPipesHeating,
 #hvacSplitPipesCooling,
+#hvacMultisplitPipesCooling,
 #hvacVrvPipesCooling,
 #hvacSplitPipesHeating,
+#hvacMultisplitPipesHeating,
 #hvacVrvPipesHeating,
 #hvacValvePathsCooling,
 #hvacValvePathsHeating,
 #hvacSplitIndoorLayer,
+#hvacMultisplitIndoorLayer,
 #hvacVrvIndoorLayer,
 #hvacSplitEevComp,
-#hvacOelBadge {
+#hvacMultisplitEevComp,
+#hvacOelBadge,
+#hydPipesSeries,
+#hydPipesParallel,
+#hydBypassSeries,
+#hydPumpSecParallel,
+#bufLayerSeriesReturn,
+#bufLayerTeeBranch,
+#bufLayerParallel4Pipe,
+#bufLayerCombiTank,
+#instLayerR290,
+#instLayerR32 {
   transition:
     opacity 220ms var(--ease-out-quart),
     visibility 220ms var(--ease-out-quart);
+}
+
+.hc-sliders-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  align-items: center;
+  min-width: 0;
+  flex: 1 1 320px;
+}
+
+.hc-slider-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 200px;
+  min-width: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.hc-slider-label strong {
+  color: var(--ink);
+}
+
+.hc-slider-label input[type="range"] {
+  width: 100%;
+  accent-color: var(--pastel-mint);
+  min-height: 28px;
+}
+
+.is-svg-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.buffer-detail-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.tip-box.is-warn {
+  border-color: rgba(255, 204, 153, 0.45);
+}
+
+.hyd-zone-box {
+  fill: var(--svg-zone-outdoor-fill);
+  stroke: var(--svg-zone-outdoor-stroke);
+}
+
+/* ==========================================================================
+   Heizungswasser (VDI 2035) Dashboard
+   ========================================================================== */
+.water-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.water-controls-card {
+  padding: 16px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.water-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.water-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 14px;
+  min-width: 0;
+}
+
+.water-metric-card {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.water-metric-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.water-metric-name {
+  margin: 0;
+  font-size: 0.96rem;
+  font-weight: 650;
+  color: var(--ink);
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.water-metric-value {
+  font-size: 1.45rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.water-metric-unit {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.water-section-head {
+  margin-top: 4px;
+  padding: 0 2px;
 }
 
 .vrv-refnet-node {
@@ -1764,7 +1948,8 @@ svg#hvacCircuitSvg {
   .detail-card,
   .fault-detail-card,
   .nice-card,
-  .nice-header-banner {
+  .nice-header-banner,
+  .water-controls-card {
     padding: 14px;
   }
   .detail-header,
@@ -1781,7 +1966,11 @@ svg#hvacCircuitSvg {
     -webkit-overflow-scrolling: touch;
   }
   svg#circuitSvg,
-  svg#hvacCircuitSvg {
+  svg#hvacCircuitSvg,
+  svg#hydraulicsSvg,
+  svg#bufferSvg,
+  svg#heatingCurveSvg,
+  svg#installSvg {
     min-width: 560px;
   }
   .fault-card-btn {
@@ -1793,6 +1982,173 @@ svg#hvacCircuitSvg {
   .thermo-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ==========================================================================
+   Azubi-Prüfungstraining (Quiz)
+   ========================================================================== */
+.quiz-status-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.quiz-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.quiz-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.quiz-question-title {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.38;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
+.quiz-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.quiz-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  text-align: left;
+  border-radius: var(--radius-well);
+  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-out-quart),
+    border-color var(--dur-fast) var(--ease-out-quart),
+    opacity var(--dur-fast) var(--ease-out-quart);
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  border-color: var(--ink-muted, var(--muted));
+}
+
+.quiz-option-btn.is-correct {
+  background: rgba(168, 228, 200, 0.16);
+  border-color: var(--pastel-mint);
+}
+
+.quiz-option-btn.is-wrong {
+  background: rgba(255, 179, 186, 0.16);
+  border-color: var(--pastel-rose);
+}
+
+.quiz-option-btn.is-dimmed {
+  opacity: 0.58;
+}
+
+.quiz-option-letter {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: var(--well-bg, rgba(128, 128, 128, 0.16));
+  color: var(--ink);
+}
+
+.quiz-option-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.quiz-option-icon {
+  flex: 0 0 auto;
+}
+
+.quiz-feedback-box {
+  padding: 14px 16px;
+  border-radius: var(--radius-well);
+  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-feedback-box.is-correct {
+  border-color: var(--pastel-mint);
+}
+
+.quiz-feedback-box.is-wrong {
+  border-color: var(--pastel-rose);
+}
+
+.quiz-feedback-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.quiz-nav-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.quiz-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: var(--radius-btn, 12px);
+  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.quiz-nav-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.quiz-nav-btn.is-primary {
+  background: var(--pastel-mint);
+  color: var(--text-on-accent);
+  border-color: transparent;
 }
 
 @media (forced-colors: active) {

@@ -15,6 +15,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Außenluft-Wärmetauscher (Verflüssiger / Verdampfer)",
     location: {
       klimasplit: "Außeneinheit (Lamellenregister, Außenluftseite)",
+      multisplit: "Multi-Split-Außeneinheit (zentrales Lamellenregister)",
       vrv: "VRF-Außenzentrale (Hochleistungs-Lamellenregister)"
     },
     task:
@@ -29,6 +30,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "peach",
         outMetric: "ca. 26,7 bar ü · +40 °C",
         outSub: "Flüssig, ca. 5 K unterkühlt (R32)"
+      },
+      multisplit: {
+        inState: "Heißgas",
+        inColor: "rose",
+        inMetric: "ca. 26,9 bar ü · +82 °C",
+        inSub: "Druckgas vom Verdichter (Summe der Zonen)",
+        outState: "Flüssig",
+        outColor: "peach",
+        outMetric: "ca. 26,7 bar ü · +40 °C",
+        outSub: "Flüssig zum EEV-Verteilerblock (ca. 5 K UK)"
       },
       vrv: {
         inState: "Heißgas",
@@ -55,6 +66,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Inverter-Verdichter (Rollkolben / VRF-Scroll)",
     location: {
       klimasplit: "Außeneinheit (schallgedämmter Verdichterraum)",
+      multisplit: "Multi-Split-Außeneinheit (Twin-Rotary Inverter-Verdichter)",
       vrv: "VRF-Außenzentrale (Inverter-Scroll + Ölabscheider)"
     },
     task:
@@ -69,6 +81,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "rose",
         outMetric: "ca. 26,9 bar ü · +82 °C",
         outSub: "Hochdruck, heißes Druckgas"
+      },
+      multisplit: {
+        inState: "Sauggas",
+        inColor: "sky",
+        inMetric: "ca. 9,0 bar ü · +13 °C",
+        inSub: "Misch-Sauggas aus aktiven Raumsträngen",
+        outState: "Heißgas",
+        outColor: "rose",
+        outMetric: "ca. 26,9 bar ü · +82 °C",
+        outSub: "Drehzahlanpassung an aktive Zonen"
       },
       vrv: {
         inState: "Sauggas",
@@ -95,6 +117,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Innengerät-Wärmetauscher (Direktverdampfer)",
     location: {
       klimasplit: "Innenraum (Wand-, Truhen- oder Deckenkassette)",
+      multisplit: "2–5 separate Räume (je eigenes Leitungspaar ab Außeneinheit)",
       vrv: "Gebäudezonen (1…64 Innengeräte am Y-Verteilernetz)"
     },
     task:
@@ -109,6 +132,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "sky",
         outMetric: "ca. 9,1 bar ü · +13 °C",
         outSub: "Gasförmig, ca. 6 K überhitzt"
+      },
+      multisplit: {
+        inState: "Nassdampf",
+        inColor: "aqua",
+        inMetric: "ca. 9,1 bar ü · +6,5 °C",
+        inSub: "Separates gedämmtes Leitungspaar je Raum",
+        outState: "Sauggas",
+        outColor: "sky",
+        outMetric: "ca. 9,0 bar ü · +12 °C",
+        outSub: "Rücklauf zur Sammel-Saugbrücke (4–7 K ÜH)"
       },
       vrv: {
         inState: "Nassdampf",
@@ -135,6 +168,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Elektronisches Expansionsventil (EEV / PMV)",
     location: {
       klimasplit: "Außeneinheit (zentral oder je Multi-Split-Abgang)",
+      multisplit: "Außeneinheit (EEV-Batterie: 1 eigenes EEV je Raumstrang)",
       vrv: "Dezentral direkt an jedem VRF-Innengerät (+ Außen-EEV)"
     },
     task:
@@ -149,6 +183,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "aqua",
         outMetric: "ca. 9,2 bar ü · +7 °C",
         outSub: "Einspritzung in gedämmte Leitung"
+      },
+      multisplit: {
+        inState: "Flüssig",
+        inColor: "peach",
+        inMetric: "ca. 26,6 bar ü · +39,5 °C",
+        inSub: "Gemeinsamer Flüssigkeitsverteiler außen",
+        outState: "Nassdampf",
+        outColor: "aqua",
+        outMetric: "ca. 9,1 bar ü · +6,5 °C",
+        outSub: "Individuelle Dosierung je Raumstrang (0 Pulse = Aus)"
       },
       vrv: {
         inState: "Flüssig",
@@ -175,6 +219,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "4-Wege-Umschaltventil",
     location: {
       klimasplit: "Außeneinheit (zwischen Verdichter & Wärmetauschern)",
+      multisplit: "Multi-Split-Außeneinheit (schaltet alle Stränge gemeinsam)",
       vrv: "VRF-Außenzentrale (Hauptumschaltventil)"
     },
     task:
@@ -189,6 +234,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "sky",
         outMetric: "Heizen / Abtauen",
         outSub: "Heißgas -> Innengerät bzw. Außen-WT"
+      },
+      multisplit: {
+        inState: "Kühlen",
+        inColor: "sky",
+        inMetric: "Alle Stränge: Kühlen",
+        inSub: "Kein Mischbetrieb (Kühlen/Heizen gleichzeitig)",
+        outState: "Umkehr",
+        outColor: "lavender",
+        outMetric: "Alle Stränge: Heizen/Abtau",
+        outSub: "Zentrales Umschalten der gesamten Anlage"
       },
       vrv: {
         inState: "HD + ND",
@@ -215,6 +270,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Akkumulator (Flüssigkeitsabscheider) & Sammler",
     location: {
       klimasplit: "Außeneinheit (Saugakkumulator vor Verdichter)",
+      multisplit: "Multi-Split-Außeneinheit (Sammel-Saugakkumulator)",
       vrv: "VRF-Außenzentrale (Saugakkumulator + Hochdrucksammler)"
     },
     task:
@@ -229,6 +285,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "peach",
         outMetric: "ca. 26,6 bar ü · +39,5 °C",
         outSub: "Trockenes Sauggas zum Verdichter"
+      },
+      multisplit: {
+        inState: "Sammler",
+        inColor: "periwinkle",
+        inMetric: "ca. 9,0 bar ü · +12 °C",
+        inSub: "Sammelt Rücklauf aus 2–5 Strängen",
+        outState: "Gasförmig",
+        outColor: "sky",
+        outMetric: "ca. 9,0 bar ü · +13 °C",
+        outSub: "Puffert Teillast & schützt den Verdichter"
       },
       vrv: {
         inState: "Flüssig / Saug",
@@ -255,6 +321,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Bi-Flow-Filtertrockner & EEV-Schmutzfilter (Strainer)",
     location: {
       klimasplit: "Außeneinheit (Flüssigkeitsstrang vor EEV)",
+      multisplit: "Außeneinheit (Hauptstrang + Siebe je EEV-Abgang)",
       vrv: "VRF-Außenzentrale + Mikrosiebe vor jedem Innengerät-EEV"
     },
     task:
@@ -269,6 +336,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "peach",
         outMetric: "ca. 26,6 bar ü · +39,5 °C",
         outSub: "Kein spürbarer Temperaturabfall"
+      },
+      multisplit: {
+        inState: "Flüssig",
+        inColor: "peach",
+        inMetric: "ca. 26,6 bar ü · +39,5 °C",
+        inSub: "Vor EEV-Verteilerblock",
+        outState: "Rein",
+        outColor: "mint",
+        outMetric: "Δp < 0,1 bar",
+        outSub: "Schützt alle 2–5 EEV-Düsen vor Partikeln"
       },
       vrv: {
         inState: "Flüssig",
@@ -295,6 +372,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Schauglas & VRF-Unterkühler (Subcooler)",
     location: {
       klimasplit: "Außeneinheit (Flüssigkeitsleitung vor EEV)",
+      multisplit: "Außeneinheit (Sammelleitung vor der EEV-Verteilung)",
       vrv: "VRF-Außenzentrale (Platten-Subcooler am Flüssigkeitsabgang)"
     },
     task:
@@ -309,6 +387,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "lime",
         outMetric: "Blasenfrei · 5 K",
         outSub: "Ausreichend für typische Split-Längen"
+      },
+      multisplit: {
+        inState: "Flüssig",
+        inColor: "peach",
+        inMetric: "ca. 26,6 bar ü · +39,5 °C",
+        inSub: "Gemeinsamer Flüssigkeitsstrang außen",
+        outState: "Unterkühlt",
+        outColor: "mint",
+        outMetric: "Blasenfrei · 5 K",
+        outSub: "Stabile Flüssigkeitsvorlage für alle EEVs"
       },
       vrv: {
         inState: "Flüssig",
@@ -335,6 +423,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "HD-/ND-Sensoren, Te/Tc-Regelung & EN-378-Schutz",
     location: {
       klimasplit: "Außeneinheit (HD/ND) + Raumtemperaturfühler Innen",
+      multisplit: "Außeneinheit (HD/ND + Abgangsfühler je Strang) + Raumfühler",
       vrv: "VRF-Zentrale + je Innengerät + EN-378-Raumsensorik"
     },
     task:
@@ -349,6 +438,16 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outColor: "rose",
         outMetric: "Druck: ca. 26,9 bar ü",
         outSub: "HD-Abschaltung ca. 41 – 43 bar ü"
+      },
+      multisplit: {
+        inState: "Strang-Fühler",
+        inColor: "periwinkle",
+        inMetric: "2–5 Gas-/Flüssig-NTCs",
+        inSub: "Überwacht Überhitzung je angeschlossenem Raum",
+        outState: "HD / ND",
+        outColor: "rose",
+        outMetric: "Druck: ca. 26,9 bar ü",
+        outSub: "Abschaltung ca. 41,5 bar ü · EN-378-Schutz"
       },
       vrv: {
         inState: "Gleitend Te",
