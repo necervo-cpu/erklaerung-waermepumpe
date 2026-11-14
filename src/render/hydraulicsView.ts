@@ -28,6 +28,7 @@ export interface HydraulicsDomElements {
   readonly hydPumpSecParallel: SVGGElement;
   readonly hydBufferTitle: SVGTextElement;
   readonly hydBufferSub: SVGTextElement;
+  readonly hydBufferVol: SVGTextElement;
   readonly accordionList: HTMLElement;
 }
 
@@ -99,15 +100,16 @@ export function renderHydraulicsView(
   elements.hydBypassSeries.classList.toggle("svg-layer-hidden", !isSeries);
   elements.hydPumpSecParallel.classList.toggle("svg-layer-hidden", isSeries);
 
-  const bufferLabels: Readonly<Record<AppState["bufferVariant"], { readonly title: string; readonly sub: string }>> = {
-    seriesReturn: { title: "Reihenpuffer", sub: "Rücklauf (50–100 l)" },
-    teeBranch: { title: "Pendelspeicher", sub: "Stich-T-Stück (100–300 l)" },
-    parallel4Pipe: { title: "Parallelpuffer", sub: "Hydr. Weiche (100–300 l)" },
-    combiTank: { title: "Kombispeicher", sub: "Heizung + TWW (300–500 l)" }
+  const bufferLabels: Readonly<Record<AppState["bufferVariant"], { readonly title: string; readonly sub: string; readonly vol: string }>> = {
+    seriesReturn: { title: "Reihenpuffer", sub: "Rücklauf", vol: "(50–100 l)" },
+    teeBranch: { title: "Pendelspeicher", sub: "Stich-T-Stück", vol: "(100–300 l)" },
+    parallel4Pipe: { title: "Parallelpuffer", sub: "Hydr. Weiche", vol: "(100–300 l)" },
+    combiTank: { title: "Kombispeicher", sub: "Heizung + TWW", vol: "(300–500 l)" }
   };
   const labelInfo = bufferLabels[state.bufferVariant];
   elements.hydBufferTitle.textContent = labelInfo.title;
   elements.hydBufferSub.textContent = labelInfo.sub;
+  elements.hydBufferVol.textContent = labelInfo.vol;
 
   // Aktives Bauteil im Hydraulik-SVG hervorheben
   const svgNodes = elements.hydraulicsSvg.querySelectorAll<SVGGElement>(".svg-comp");

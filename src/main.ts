@@ -240,6 +240,7 @@ const hydraulicsElements: HydraulicsDomElements = {
   hydPumpSecParallel: requireElement<SVGGElement>("#hydPumpSecParallel"),
   hydBufferTitle: requireElement<SVGTextElement>("#hydBufferTitle"),
   hydBufferSub: requireElement<SVGTextElement>("#hydBufferSub"),
+  hydBufferVol: requireElement<SVGTextElement>("#hydBufferVol"),
   accordionList: requireElement<HTMLElement>("#hydraulicsAccordionList")
 };
 

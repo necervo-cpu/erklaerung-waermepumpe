@@ -624,6 +624,15 @@ svg#installSvg {
   user-select: none;
 }
 
+#circuitSvg text:not(.svg-title-text):not(.svg-sub-text):not(.comp-num-txt),
+#hvacCircuitSvg text:not(.svg-title-text):not(.svg-sub-text):not(.comp-num-txt),
+#hydraulicsSvg text:not(.svg-title-text):not(.svg-sub-text):not(.comp-num-txt) {
+  paint-order: stroke fill;
+  stroke: var(--svg-stage-bg);
+  stroke-width: 4.5px;
+  stroke-linejoin: round;
+}
+
 /* Zonen-Hintergründe & Systemgrenze im SVG (flüssige Übergänge bei Monoblock <-> Split) */
 #buildingBoundary,
 #hvacBuildingBoundary {

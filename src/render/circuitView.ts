@@ -660,7 +660,7 @@ export function renderOperationMode(
       : "Außenluft-Wärmetauscher";
     elements.comp3Title.textContent = isDefrost ? "Verdampfer" : "Verflüssiger";
     elements.comp3Sub.textContent = isDefrost
-      ? "Platten-WT (Wärmeentzug)"
+      ? "Platten-WT (Entzug)"
       : "Plattenwärmetauscher";
   }
 
