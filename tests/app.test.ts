@@ -155,7 +155,7 @@ describe("Systemdaten-Integrität (systems.ts)", () => {
     expect(klimasplit.refCondition.cooling).toContain("A35");
 
     expect(vrv.category).toBe("hvac");
-    expect(vrv.refrigerant).toContain("VRV");
+    expect(vrv.refrigerant).toContain("VRF");
     expect(vrv.badgeText).toContain("EN 378");
     expect(vrv.boundaryX).toBeGreaterThan(0);
     expect(vrv.outdoorWidth).toBeGreaterThan(0);
@@ -462,11 +462,46 @@ describe("DOM-Integrität (index.html)", () => {
       "legendVrvItem",
       "niceHeaderKicker",
       "niceHeaderTitle",
-      "niceHeaderDesc"
+      "niceHeaderDesc",
+      "hvacCircuitSvg",
+      "hvacLabelOutdoor",
+      "hvacLabelIndoor",
+      "hvacPipesCooling",
+      "hvacPipesHeating",
+      "hvacSplitPipesCooling",
+      "hvacVrvPipesCooling",
+      "hvacSplitPipesHeating",
+      "hvacVrvPipesHeating",
+      "hvacLblCoolingHeissgas",
+      "hvacValvePathsCooling",
+      "hvacValvePathsHeating",
+      "hvacComp1Title",
+      "hvacComp1Sub",
+      "hvacComp3Title",
+      "hvacComp3Sub",
+      "hvacComp3Foot",
+      "hvacComp8Title",
+      "hvacComp8Sub",
+      "hvacOelBadge",
+      "hvacSplitEevComp",
+      "hvacSplitIndoorLayer",
+      "hvacVrvIndoorLayer",
+      "hvacAirSupplyBase",
+      "hvacAirSupplyFlow",
+      "hvacAirStatusTitle",
+      "hvacAirStatusSub"
     ];
 
     for (const id of requiredMainIds) {
       expect(html, `DOM-ID #${id} fehlt in index.html`).toContain(`id="${id}"`);
+    }
+
+    const hvacSvgSlice = html.slice(html.indexOf('id="hvacCircuitSvg"'));
+    for (let compId = 1; compId <= 9; compId += 1) {
+      expect(
+        hvacSvgSlice,
+        `Komponente data-comp="${compId}" fehlt in #hvacCircuitSvg`
+      ).toContain(`data-comp="${compId}"`);
     }
 
     // Abgleich der im Review-Report referenzierten Rollen-IDs auf die realen DOM-IDs

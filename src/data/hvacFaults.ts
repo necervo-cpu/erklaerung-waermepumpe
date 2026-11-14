@@ -1,6 +1,6 @@
 /**
- * Modul: Fachdaten der Fehleranalyse für Split-Klima & VRV (hvacFaults.ts)
- * Zweck: Praxiserprobte Fehlerdiagnose für Direktverdampfer-, Multi-Split- und VRV/VRF-Systeme
+ * Modul: Fachdaten der Fehleranalyse für Split-Klima & VRF (hvacFaults.ts)
+ * Zweck: Praxiserprobte Fehlerdiagnose für Direktverdampfer-, Multi-Split- und VRF-Systeme
  *   (Kondensatstörung, Innengerät-Vereisung, Ölrückführung, EEV-Verteilung, Bus-Fehler, HD-Sommer, Hygiene).
  * Verantwortlichkeit: Enthält Ursachen, Symptome, Prüfschritte und Zuordnungen zu Komponenten (1..9).
  * Sicherheitsrelevanz: Fachlich geprüfte Diagnosepfade gegen Wasserschäden, Verdichterfresser und Fehladressierung.
@@ -53,22 +53,22 @@ export const HVAC_FAULTS: readonly FaultData[] = [
   },
   {
     id: "vrv_oil",
-    code: "VRV-Öl / Komp.",
-    title: "Mangelnde Ölrückführung & Öl-/Flüssigkeitsmangel (VRV)",
+    code: "VRF-Öl / Komp.",
+    title: "Mangelnde Ölrückführung & Öl-/Flüssigkeitsmangel (VRF)",
     severity: "Hohes Verdichterschaden-Risiko",
     preview: "Verdichter überhitzt oder fällt im langen Teillastbetrieb wegen Ölmangel aus.",
     symptoms:
-      "VRV-Außeneinheit meldet Ölausgleichs-Fehler, hohe Heißgastemperatur oder Verdichter-Überstrom nach längerem Betrieb mit nur wenigen aktiven Innengeräten.",
+      "VRF-Außeneinheit meldet Ölausgleichs-Fehler, hohe Heißgastemperatur oder Verdichter-Überstrom nach längerem Betrieb mit nur wenigen aktiven Innengeräten.",
     causes: [
       "Zu lange Teillastphasen mit niedriger Gasgeschwindigkeit in groß dimensionierten Steigleitungen (Öl bleibt im Rohrnetz liegen).",
-      "Rohrdimensionierung, Ölsäcke / Steigleitungsbögen oder Refnet-Einbaulage (waagerecht/senkrecht) nicht nach Herstellervorgabe.",
+      "Rohrdimensionierung, Ölsäcke / Steigleitungsbögen oder Y-Verteiler-Einbaulage (waagerecht/senkrecht) nicht nach Herstellervorgabe.",
       "Ölrückführungszyklus durch zu kleine Luftmengen oder geschlossene EEVs blockiert.",
       "Defekter Ölabscheider oder verstopfte Rückführbohrung im Saugakkumulator."
     ],
     checks: [
       "Manuelle Ölrückführung im Servicemenü anstoßen und Ölstands- bzw. Druckverlauf beobachten.",
       "Heißgastemperatur und Verdichter-Stromaufnahme sowie Saugüberhitzung protokollieren.",
-      "Refnet-Einbaulagen und Höhenunterschiede (> 50 m) anhand der Anlagenplanung gegenprüfen."
+      "Y-Verteiler-Einbaulagen und Höhenunterschiede (> 50 m) anhand der Anlagenplanung gegenprüfen."
     ],
     relatedComponents: [2, 6, 9]
   },
@@ -95,18 +95,18 @@ export const HVAC_FAULTS: readonly FaultData[] = [
   {
     id: "comm_bus",
     code: "Bus-Störung",
-    title: "Kommunikationsfehler F1/F2-Bus & Adressierung",
+    title: "Kommunikationsfehler 2-Draht-Kommunikationsbus & Adressierung",
     severity: "Systemstopp / Teilausfall",
     preview: "Außen- und Innengeräte finden sich nicht oder melden Bus-Timeout.",
     symptoms:
       "Fehlercode für Übertragungsfehler zwischen Außeneinheit, Innengeräten oder Zentralsteuerung. Einzelne oder alle Zonen reagieren nicht mehr auf die Fernbedienung.",
     causes: [
       "Abgeschirmte Busleitung nicht korrekt geerdet oder zusammen mit 230/400-V-Lastkabeln parallel verlegt (EMV-Störungen).",
-      "Sternförmige statt lineare Verkabelung bzw. doppelte Bus-Adressen bei VRV-Innengeräten.",
+      "Sternförmige statt lineare Verkabelung bzw. doppelte Bus-Adressen bei VRF-Innengeräten.",
       "Einzelnes Innengerät im Strang stromlos geschaltet (Sicherungsautomat aus), wodurch die Bus-Topologie unterbrochen wird."
     ],
     checks: [
-      "Spannungsversorgung aller Innengeräte (gleicher Stromkreis / FI) und Busspannung an F1/F2 prüfen.",
+      "Spannungsversorgung aller Innengeräte (gleicher Stromkreis / FI) und Busspannung am 2-Draht-Bus prüfen.",
       "Automatische Adressierung / Systemscan an der Außenzentrale prüfen (Anzahl erkannter vs. verbauter Geräte).",
       "Schirmung, Aderquerschnitt (mind. 0,75–1,5 mm² verdrillt) und getrennte Leitungsführung zu Starkstrom kontrollieren."
     ],
@@ -124,7 +124,7 @@ export const HVAC_FAULTS: readonly FaultData[] = [
       "Luftkurzschluss am Aufstellort (Außengerät in enger Nische, Hinterlüftung unter Lamellenhaube oder hinter Sichtschutzwand).",
       "Lamellen des Außenverflüssigers durch Baustellenstaub, Pappelsamen oder Küchenabluft dicht zugesetzt.",
       "Kältemittelüberfüllung bei der Inbetriebnahme (zu viel Zusatzfüllmenge eingewogen).",
-      "Subcooler-Zweig in der VRV-Zentrale regelt nicht oder EC-Außenlüfter reduziert nicht mehr sauber."
+      "Subcooler-Zweig in der VRF-Zentrale regelt nicht oder EC-Außenlüfter reduziert nicht mehr sauber."
     ],
     checks: [
       "Außenregister gründlich von innen nach außen reinigen und Ansaugtemperatur direkt vor den Lamellen messen.",

@@ -77,6 +77,33 @@ export interface CircuitDomElements {
   readonly legendRuecklaufText: HTMLElement;
   readonly legendVrvItem: HTMLElement;
   readonly svgElement: SVGSVGElement;
+  readonly hvacSvgElement: SVGSVGElement;
+  readonly hvacLabelOutdoor: SVGTextElement;
+  readonly hvacLabelIndoor: SVGTextElement;
+  readonly hvacPipesCooling: SVGGElement;
+  readonly hvacPipesHeating: SVGGElement;
+  readonly hvacSplitPipesCooling: SVGGElement;
+  readonly hvacVrvPipesCooling: SVGGElement;
+  readonly hvacSplitPipesHeating: SVGGElement;
+  readonly hvacVrvPipesHeating: SVGGElement;
+  readonly hvacLblCoolingHeissgas: SVGTextElement;
+  readonly hvacValvePathsCooling: SVGGElement;
+  readonly hvacValvePathsHeating: SVGGElement;
+  readonly hvacComp1Title: SVGTextElement;
+  readonly hvacComp1Sub: SVGTextElement;
+  readonly hvacComp3Title: SVGTextElement;
+  readonly hvacComp3Sub: SVGTextElement;
+  readonly hvacComp3Foot: SVGTextElement;
+  readonly hvacComp8Title: SVGTextElement;
+  readonly hvacComp8Sub: SVGTextElement;
+  readonly hvacOelBadge: SVGGElement;
+  readonly hvacSplitEevComp: SVGGElement;
+  readonly hvacSplitIndoorLayer: SVGGElement;
+  readonly hvacVrvIndoorLayer: SVGGElement;
+  readonly hvacAirSupplyBase: SVGPathElement;
+  readonly hvacAirSupplyFlow: SVGPathElement;
+  readonly hvacAirStatusTitle: SVGTextElement;
+  readonly hvacAirStatusSub: SVGTextElement;
 }
 
 const COMPONENT_BADGE_COLORS: Readonly<Record<number, string>> = {
@@ -265,14 +292,18 @@ export function renderComponentDetail(
       ? "Thermodynamischer Zustand (Kühlbetrieb A35/R27)"
       : "Thermodynamischer Zustand (Heizbetrieb A2/W35)";
 
-  // SVG-Komponentengruppen visuell hervorheben
-  const compNodes = elements.svgElement.querySelectorAll<SVGGElement>(".svg-comp");
-  compNodes.forEach((node) => {
-    const id = Number(node.getAttribute("data-comp"));
-    const active = id === state.componentId;
-    node.classList.toggle("is-active", active);
-    node.setAttribute("aria-pressed", String(active));
-  });
+  // SVG-Komponentengruppen in beiden Schemata visuell hervorheben
+  const syncSvgHighlights = (svg: SVGSVGElement): void => {
+    const compNodes = svg.querySelectorAll<SVGGElement>(".svg-comp");
+    compNodes.forEach((node) => {
+      const id = Number(node.getAttribute("data-comp"));
+      const active = id === state.componentId;
+      node.classList.toggle("is-active", active);
+      node.setAttribute("aria-pressed", String(active));
+    });
+  };
+  syncSvgHighlights(elements.svgElement);
+  syncSvgHighlights(elements.hvacSvgElement);
 
   // In-Place-Update innerhalb derselben Kategorie erhält laufende Accordion-Transitionen (.t-acc-panel)
   if (
@@ -489,40 +520,85 @@ export function renderComponentDetail(
 }
 
 /**
- * Aktualisiert die Sekundärluft-Darstellung für Split-Klima & VRV im SVG-Schema.
+ * Aktualisiert Leitungsfluss, 4-Wege-Ventil und Raumluft-Status im dedizierten Split-Klima/VRV-SVG.
  */
-function syncSecondaryAirLoop(elements: CircuitDomElements, state: AppState): void {
-  const isVrv = state.system === "vrv";
-  elements.airBoxTitle.textContent = isVrv ? "Raumzonen (1…n)" : "Raumzone";
+function syncHvacDedicatedSvgMode(elements: CircuitDomElements, state: AppState): void {
+  const isHeating = state.mode === "heating";
+  const isDefrost = state.mode === "defrost";
+  const isReverseFlow = !isHeating; // Kühlbetrieb und Abtauung nutzen Verdichter -> Außen-WT
 
-  if (state.mode === "heating") {
-    elements.airSupplyBase.setAttribute("stroke", "var(--c-vorlauf)");
-    elements.airSupplyFlow.setAttribute("stroke", "var(--c-vorlauf)");
-    elements.airSupplyFlow.setAttribute("marker-end", "url(#arrowVorlauf)");
-    elements.lblAirSupply.setAttribute("fill", "var(--c-vorlauf)");
-    elements.lblAirSupply.textContent = "Zuluft (warm)";
-    elements.airBoxSub1.textContent = "Heizregister-Betrieb";
-    elements.airBoxSub2.textContent = "Raumluft (R20)";
-    elements.airBoxFoot.textContent = "Warmstart-Regelung";
-  } else if (state.mode === "defrost") {
-    elements.airSupplyBase.setAttribute("stroke", "var(--c-sauggas)");
-    elements.airSupplyFlow.setAttribute("stroke", "var(--c-sauggas)");
-    elements.airSupplyFlow.setAttribute("marker-end", "url(#arrowSaug)");
-    elements.lblAirSupply.setAttribute("fill", "var(--c-sauggas)");
-    elements.lblAirSupply.textContent = "Lüfter Stopp";
-    elements.airBoxSub1.textContent = "Abtauung Außen-WT";
-    elements.airBoxSub2.textContent = "Kein Kaltluftzug";
-    elements.airBoxFoot.textContent = "Innenlüfter Aus";
+  elements.hvacPipesCooling.classList.toggle("svg-layer-hidden", !isReverseFlow);
+  elements.hvacPipesHeating.classList.toggle("svg-layer-hidden", isReverseFlow);
+  elements.hvacValvePathsCooling.classList.toggle("svg-layer-hidden", !isReverseFlow);
+  elements.hvacValvePathsHeating.classList.toggle("svg-layer-hidden", isReverseFlow);
+  elements.hvacLblCoolingHeissgas.textContent = isDefrost ? "Heißgas (Abtauen)" : "Heißgas (HD)";
+
+  if (isHeating) {
+    elements.hvacComp1Title.textContent = "Verdampfer";
+    elements.hvacComp1Sub.textContent = "Außenluft-Wärmetauscher";
+    elements.hvacComp3Title.textContent = "Verflüssiger (Innengerät)";
+    elements.hvacComp3Sub.textContent = "Heizregister · Querstromlüfter";
+    elements.hvacComp3Foot.textContent = "Warmstart-Regelung Raumluft";
+  } else if (isDefrost) {
+    elements.hvacComp1Title.textContent = "Verflüssiger (Abtau)";
+    elements.hvacComp1Sub.textContent = "Außenluft-WT taut ab";
+    elements.hvacComp3Title.textContent = "Verdampfer (Innengerät)";
+    elements.hvacComp3Sub.textContent = "Cold Draft Prevention";
+    elements.hvacComp3Foot.textContent = "Innenlüfter gestoppt";
   } else {
-    elements.airSupplyBase.setAttribute("stroke", "var(--c-nassdampf)");
-    elements.airSupplyFlow.setAttribute("stroke", "var(--c-nassdampf)");
-    elements.airSupplyFlow.setAttribute("marker-end", "url(#arrowNass)");
-    elements.lblAirSupply.setAttribute("fill", "var(--c-nassdampf)");
-    elements.lblAirSupply.textContent = "Zuluft (kalt)";
-    elements.airBoxSub1.textContent = "Direktverdampfung";
-    elements.airBoxSub2.textContent = "Raumluft (R27)";
-    elements.airBoxFoot.textContent = "Kondensat-Ablauf";
+    elements.hvacComp1Title.textContent = "Verflüssiger";
+    elements.hvacComp1Sub.textContent = "Außenluft-Wärmetauscher";
+    elements.hvacComp3Title.textContent = "Verdampfer (Innengerät)";
+    elements.hvacComp3Sub.textContent = "Direktverdampfer · Querstromlüfter";
+    elements.hvacComp3Foot.textContent = "Raumluft-Wärmetauscher + Ablauf";
   }
+
+  // Split-Raumluft-Anzeige (Zuluft)
+  if (isHeating) {
+    elements.hvacAirSupplyBase.setAttribute("stroke", "var(--c-vorlauf)");
+    elements.hvacAirSupplyFlow.setAttribute("stroke", "var(--c-vorlauf)");
+    elements.hvacAirSupplyFlow.setAttribute("marker-end", "url(#hvacArrowVorlauf)");
+    elements.hvacAirStatusTitle.setAttribute("fill", "var(--c-vorlauf)");
+    elements.hvacAirStatusTitle.textContent = "Zuluft (warm · Heizbetrieb)";
+    elements.hvacAirStatusSub.textContent = "Raumluft R20 → Ausblas ~38 °C";
+  } else if (isDefrost) {
+    elements.hvacAirSupplyBase.setAttribute("stroke", "var(--c-sauggas)");
+    elements.hvacAirSupplyFlow.setAttribute("stroke", "var(--c-sauggas)");
+    elements.hvacAirSupplyFlow.setAttribute("marker-end", "url(#hvacArrowSaug)");
+    elements.hvacAirStatusTitle.setAttribute("fill", "var(--c-sauggas)");
+    elements.hvacAirStatusTitle.textContent = "Lüfter Stopp (Abtauphase)";
+    elements.hvacAirStatusSub.textContent = "Kein Kaltluftzug im Raum";
+  } else {
+    elements.hvacAirSupplyBase.setAttribute("stroke", "var(--c-nassdampf)");
+    elements.hvacAirSupplyFlow.setAttribute("stroke", "var(--c-nassdampf)");
+    elements.hvacAirSupplyFlow.setAttribute("marker-end", "url(#hvacArrowNass)");
+    elements.hvacAirStatusTitle.setAttribute("fill", "var(--c-nassdampf)");
+    elements.hvacAirStatusTitle.textContent = "Zuluft (kalt · entfeuchtet)";
+    elements.hvacAirStatusSub.textContent = "Raumluft R27 → Ausblas ~12 °C";
+  }
+
+  // VRV-Zonenkarten im SVG synchronisieren
+  const vrvRoles = elements.hvacSvgElement.querySelectorAll<SVGTextElement>(".hvac-vrv-unit-role");
+  const vrvAirs = elements.hvacSvgElement.querySelectorAll<SVGTextElement>(".hvac-vrv-unit-air");
+  vrvRoles.forEach((el) => {
+    el.textContent = isHeating
+      ? "Verflüssiger (Heizen)"
+      : isDefrost
+        ? "Verdampfer (Abtau)"
+        : "Direktverdampfer (Kühlen)";
+  });
+  vrvAirs.forEach((el) => {
+    if (isHeating) {
+      el.setAttribute("fill", "var(--c-vorlauf)");
+      el.textContent = "Warmluft → Raum aktiv";
+    } else if (isDefrost) {
+      el.setAttribute("fill", "var(--c-sauggas)");
+      el.textContent = "Lüfter Stopp (Kein Kaltzug)";
+    } else {
+      el.setAttribute("fill", "var(--c-nassdampf)");
+      el.textContent = "Kaltluft → Entfeuchtung aktiv";
+    }
+  });
 }
 
 /**
@@ -560,23 +636,7 @@ export function renderOperationMode(
     : "Heißgas (Abtauen)";
 
   if (isHvac) {
-    if (isCooling) {
-      elements.comp1Title.textContent = "Verflüssiger";
-      elements.comp1Sub.textContent = "Außenluft-Wärmetauscher";
-      elements.comp3Title.textContent = "Verdampfer";
-      elements.comp3Sub.textContent = "Direktverdampfer · Raumluft";
-    } else if (isHeating) {
-      elements.comp1Title.textContent = "Verdampfer";
-      elements.comp1Sub.textContent = "Außenluft-Wärmetauscher";
-      elements.comp3Title.textContent = "Verflüssiger";
-      elements.comp3Sub.textContent = "Heizregister · Raumluft";
-    } else {
-      elements.comp1Title.textContent = "Verflüssiger";
-      elements.comp1Sub.textContent = "Außenluft-WT (taut ab)";
-      elements.comp3Title.textContent = "Verdampfer";
-      elements.comp3Sub.textContent = "Innengerät (Lüfter Stopp)";
-    }
-    syncSecondaryAirLoop(elements, state);
+    syncHvacDedicatedSvgMode(elements, state);
   } else {
     elements.comp1Title.textContent = isDefrost ? "Verflüssiger" : "Verdampfer";
     elements.comp1Sub.textContent = isDefrost
@@ -610,7 +670,7 @@ export function renderSystemView(
   elements.btnCatHeatpump.setAttribute("aria-selected", String(!isHvac));
   elements.btnCatHvac.setAttribute("aria-selected", String(isHvac));
   elements.brandMainTitle.textContent = isHvac
-    ? "Kältekreislauf Split-Klima & VRV"
+    ? "Kältekreislauf Split-Klima & VRF"
     : "Kältekreislauf Wärmepumpe";
 
   // Bauart-Tabs je Kategorie ein- bzw. ausblenden
@@ -634,22 +694,45 @@ export function renderSystemView(
   elements.bannerBadge.className = `badge-tag ${sys.badgeClass}`;
   elements.bannerBadge.textContent = sys.badgeText;
 
+  // Zwischen Wärmepumpen-SVG und dediziertem Split-Klima-/VRV-SVG umschalten
+  elements.svgElement.classList.toggle("hidden", isHvac);
+  elements.hvacSvgElement.classList.toggle("hidden", !isHvac);
+
   // SVG-Systemgrenze, Sekundärkreis und VRV-Refnet anpassen
-  elements.buildingBoundary.setAttribute("transform", `translate(${sys.boundaryX}, 16)`);
-  elements.buildingBoundary.style.transform = `translate3d(${sys.boundaryX}px, 16px, 0)`;
-  elements.zoneOutdoor.setAttribute("width", String(sys.outdoorWidth));
-  elements.zoneIndoor.setAttribute("x", String(sys.indoorX));
-  elements.zoneIndoor.setAttribute("width", String(sys.indoorWidth));
-  elements.labelOutdoor.textContent = sys.outdoorLabel;
-  elements.labelIndoor.setAttribute("x", String(sys.indoorX + 14));
-  elements.labelIndoor.textContent = sys.indoorLabel;
+  if (isHvac) {
+    elements.hvacSplitIndoorLayer.classList.toggle("svg-layer-hidden", isVrv);
+    elements.hvacVrvIndoorLayer.classList.toggle("svg-layer-hidden", !isVrv);
+    elements.hvacSplitPipesCooling.classList.toggle("svg-layer-hidden", isVrv);
+    elements.hvacVrvPipesCooling.classList.toggle("svg-layer-hidden", !isVrv);
+    elements.hvacSplitPipesHeating.classList.toggle("svg-layer-hidden", isVrv);
+    elements.hvacVrvPipesHeating.classList.toggle("svg-layer-hidden", !isVrv);
+    elements.hvacSplitEevComp.classList.toggle("svg-layer-hidden", isVrv);
+    elements.hvacOelBadge.classList.toggle("svg-layer-hidden", !isVrv);
 
-  elements.secondaryWaterLoop.classList.toggle("svg-layer-hidden", isHvac);
-  elements.secondaryAirLoop.classList.toggle("svg-layer-hidden", !isHvac);
-  elements.vrvBranchBadge.classList.toggle("svg-layer-hidden", !isVrv);
+    elements.hvacLabelOutdoor.textContent = isVrv
+      ? "VRF-AUSSENEINHEIT (VERFLÜSSIGER / SUBCOOLER)"
+      : "AUSSENEINHEIT (INVERTER / EEV)";
+    elements.hvacLabelIndoor.textContent = isVrv
+      ? "GEBÄUDE / Y-VERTEILER-ZONEN (1…64 INNENGERÄTE)"
+      : "GEBÄUDE / RAUMLUFT (DIREKTVERDAMPFUNG)";
+    elements.hvacComp8Title.textContent = isVrv ? "Subcooler" : "Schauglas";
+    elements.hvacComp8Sub.textContent = isVrv ? "Bypass +12–15 K" : "Feuchte-Indikator";
+  } else {
+    elements.buildingBoundary.setAttribute("transform", `translate(${sys.boundaryX}, 16)`);
+    elements.buildingBoundary.style.transform = `translate3d(${sys.boundaryX}px, 16px, 0)`;
+    elements.zoneOutdoor.setAttribute("width", String(sys.outdoorWidth));
+    elements.zoneIndoor.setAttribute("x", String(sys.indoorX));
+    elements.zoneIndoor.setAttribute("width", String(sys.indoorWidth));
+    elements.labelOutdoor.textContent = sys.outdoorLabel;
+    elements.labelIndoor.setAttribute("x", String(sys.indoorX + 14));
+    elements.labelIndoor.textContent = sys.indoorLabel;
 
-  elements.comp4Title.textContent = isVrv ? "EEV (1…n)" : "EEV";
-  elements.comp4Sub.textContent = isVrv ? "Je Innengerät" : "Expansionsventil";
+    elements.secondaryWaterLoop.classList.toggle("svg-layer-hidden", isHvac);
+    elements.secondaryAirLoop.classList.toggle("svg-layer-hidden", !isHvac);
+    elements.vrvBranchBadge.classList.toggle("svg-layer-hidden", !isVrv);
+    elements.comp4Title.textContent = "EEV";
+    elements.comp4Sub.textContent = "Expansionsventil";
+  }
 
   // Farblegende an Sekundärkreis anpassen
   elements.legendVorlaufText.textContent = isHvac ? "Zuluft (Heizbetrieb)" : "Heizung Vorlauf";

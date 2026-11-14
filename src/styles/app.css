@@ -522,7 +522,8 @@ body {
   transition: background var(--dur-normal) var(--ease-spring);
 }
 
-svg#circuitSvg {
+svg#circuitSvg,
+svg#hvacCircuitSvg {
   width: 100%;
   height: auto;
   display: block;
@@ -530,12 +531,14 @@ svg#circuitSvg {
 }
 
 /* Zonen-Hintergründe & Systemgrenze im SVG (flüssige Übergänge bei Monoblock <-> Split) */
-#buildingBoundary {
+#buildingBoundary,
+#hvacBuildingBoundary {
   transition: transform 280ms var(--ease-spring);
   will-change: transform;
 }
 
-#zoneOutdoor {
+#zoneOutdoor,
+#hvacZoneOutdoor {
   fill: var(--svg-zone-outdoor-fill);
   stroke: var(--svg-zone-outdoor-stroke);
   transition:
@@ -544,7 +547,8 @@ svg#circuitSvg {
     stroke 200ms ease;
 }
 
-#zoneIndoor {
+#zoneIndoor,
+#hvacZoneIndoor {
   fill: var(--svg-zone-indoor-fill);
   stroke: var(--svg-zone-indoor-stroke);
   transition:
@@ -555,7 +559,9 @@ svg#circuitSvg {
 }
 
 #labelIndoor,
-#labelOutdoor {
+#labelOutdoor,
+#hvacLabelIndoor,
+#hvacLabelOutdoor {
   transition: fill 200ms ease;
 }
 
@@ -567,10 +573,28 @@ svg#circuitSvg {
 #eevConesDefrost,
 #secondaryWaterLoop,
 #secondaryAirLoop,
-#vrvBranchBadge {
+#vrvBranchBadge,
+#hvacPipesCooling,
+#hvacPipesHeating,
+#hvacSplitPipesCooling,
+#hvacVrvPipesCooling,
+#hvacSplitPipesHeating,
+#hvacVrvPipesHeating,
+#hvacValvePathsCooling,
+#hvacValvePathsHeating,
+#hvacSplitIndoorLayer,
+#hvacVrvIndoorLayer,
+#hvacSplitEevComp,
+#hvacOelBadge {
   transition:
     opacity 220ms var(--ease-out-quart),
     visibility 220ms var(--ease-out-quart);
+}
+
+.vrv-refnet-node {
+  fill: var(--badge-vrv-bg);
+  stroke: var(--accent-text-lavender);
+  stroke-width: 2;
 }
 
 .vrv-refnet-box {
@@ -686,11 +710,13 @@ svg#circuitSvg {
   opacity: 1;
 }
 
-#labelOutdoor {
+#labelOutdoor,
+#hvacLabelOutdoor {
   fill: var(--svg-text-secondary);
 }
 
-#labelIndoor {
+#labelIndoor,
+#hvacLabelIndoor {
   fill: var(--brand-accent);
 }
 
@@ -1754,7 +1780,8 @@ svg#circuitSvg {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  svg#circuitSvg {
+  svg#circuitSvg,
+  svg#hvacCircuitSvg {
     min-width: 560px;
   }
   .fault-card-btn {

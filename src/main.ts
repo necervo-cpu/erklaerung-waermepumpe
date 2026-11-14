@@ -127,7 +127,34 @@ const circuitElements: CircuitDomElements = {
   legendRuecklaufItem: requireElement<HTMLElement>("#legendRuecklaufItem"),
   legendRuecklaufText: requireElement<HTMLElement>("#legendRuecklaufText"),
   legendVrvItem: requireElement<HTMLElement>("#legendVrvItem"),
-  svgElement: requireElement<SVGSVGElement>("#circuitSvg")
+  svgElement: requireElement<SVGSVGElement>("#circuitSvg"),
+  hvacSvgElement: requireElement<SVGSVGElement>("#hvacCircuitSvg"),
+  hvacLabelOutdoor: requireElement<SVGTextElement>("#hvacLabelOutdoor"),
+  hvacLabelIndoor: requireElement<SVGTextElement>("#hvacLabelIndoor"),
+  hvacPipesCooling: requireElement<SVGGElement>("#hvacPipesCooling"),
+  hvacPipesHeating: requireElement<SVGGElement>("#hvacPipesHeating"),
+  hvacSplitPipesCooling: requireElement<SVGGElement>("#hvacSplitPipesCooling"),
+  hvacVrvPipesCooling: requireElement<SVGGElement>("#hvacVrvPipesCooling"),
+  hvacSplitPipesHeating: requireElement<SVGGElement>("#hvacSplitPipesHeating"),
+  hvacVrvPipesHeating: requireElement<SVGGElement>("#hvacVrvPipesHeating"),
+  hvacLblCoolingHeissgas: requireElement<SVGTextElement>("#hvacLblCoolingHeissgas"),
+  hvacValvePathsCooling: requireElement<SVGGElement>("#hvacValvePathsCooling"),
+  hvacValvePathsHeating: requireElement<SVGGElement>("#hvacValvePathsHeating"),
+  hvacComp1Title: requireElement<SVGTextElement>("#hvacComp1Title"),
+  hvacComp1Sub: requireElement<SVGTextElement>("#hvacComp1Sub"),
+  hvacComp3Title: requireElement<SVGTextElement>("#hvacComp3Title"),
+  hvacComp3Sub: requireElement<SVGTextElement>("#hvacComp3Sub"),
+  hvacComp3Foot: requireElement<SVGTextElement>("#hvacComp3Foot"),
+  hvacComp8Title: requireElement<SVGTextElement>("#hvacComp8Title"),
+  hvacComp8Sub: requireElement<SVGTextElement>("#hvacComp8Sub"),
+  hvacOelBadge: requireElement<SVGGElement>("#hvacOelBadge"),
+  hvacSplitEevComp: requireElement<SVGGElement>("#hvacSplitEevComp"),
+  hvacSplitIndoorLayer: requireElement<SVGGElement>("#hvacSplitIndoorLayer"),
+  hvacVrvIndoorLayer: requireElement<SVGGElement>("#hvacVrvIndoorLayer"),
+  hvacAirSupplyBase: requireElement<SVGPathElement>("#hvacAirSupplyBase"),
+  hvacAirSupplyFlow: requireElement<SVGPathElement>("#hvacAirSupplyFlow"),
+  hvacAirStatusTitle: requireElement<SVGTextElement>("#hvacAirStatusTitle"),
+  hvacAirStatusSub: requireElement<SVGTextElement>("#hvacAirStatusSub")
 };
 
 // DOM-Elemente für die Fehleranalyse
@@ -395,7 +422,7 @@ function handleSetCategory(category: CategoryType): void {
 
     document.title =
       category === "hvac"
-        ? "Kältekreislauf Split-Klima & VRV – Interaktives Fachschema & Fehleranalyse"
+        ? "Kältekreislauf Split-Klima & VRF – Interaktives Fachschema & Fehleranalyse"
         : "Kältekreislauf Wärmepumpe – Interaktives Fachschema & Fehleranalyse";
 
     renderSystemView(circuitElements, state, handleSelectComponent);
@@ -520,18 +547,23 @@ btnThemeToggle.addEventListener("click", () => {
 svgStage.addEventListener("scroll", updateSvgScrollIndicators, { passive: true });
 window.addEventListener("resize", handleViewportResize, { passive: true });
 
-// SVG-Komponenten: Klick- und barrierefreie Tastaturbedienung (Enter / Leertaste)
-const compNodes = circuitElements.svgElement.querySelectorAll<SVGGElement>(".svg-comp");
-compNodes.forEach((node) => {
-  const id = Number(node.getAttribute("data-comp"));
-  node.addEventListener("click", () => handleOpenComponent(id));
-  node.addEventListener("keydown", (evt: KeyboardEvent) => {
-    if (evt.key === "Enter" || evt.key === " ") {
-      evt.preventDefault();
-      handleOpenComponent(id);
-    }
+// SVG-Komponenten in beiden Schemata: Klick- und barrierefreie Tastaturbedienung (Enter / Leertaste)
+const attachSvgComponentListeners = (svg: SVGSVGElement): void => {
+  const compNodes = svg.querySelectorAll<SVGGElement>(".svg-comp");
+  compNodes.forEach((node) => {
+    const id = Number(node.getAttribute("data-comp"));
+    node.addEventListener("click", () => handleOpenComponent(id));
+    node.addEventListener("keydown", (evt: KeyboardEvent) => {
+      if (evt.key === "Enter" || evt.key === " ") {
+        evt.preventDefault();
+        handleOpenComponent(id);
+      }
+    });
   });
-});
+};
+
+attachSvgComponentListeners(circuitElements.svgElement);
+attachSvgComponentListeners(circuitElements.hvacSvgElement);
 
 attachTablistKeyboardNavigation();
 

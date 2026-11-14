@@ -1,6 +1,6 @@
 /**
- * Modul: Fachdaten aller 9 Split-Klima- & VRV-Komponenten (hvacComponents.ts)
- * Zweck: Thermodynamische Kenndaten für den Referenz-Kühlbetrieb A35/R27 (R32 & VRV/VRF)
+ * Modul: Fachdaten aller 9 Split-Klima- & VRF-Komponenten (hvacComponents.ts)
+ * Zweck: Thermodynamische Kenndaten für den Referenz-Kühlbetrieb A35/R27 (R32 & VRF)
  *   sowie Rollen im Heiz- und Abtaubetrieb.
  * Verantwortlichkeit: Liefert Komponentendetails, Einbauorte, Zustandsgrößen und Service-Messwerte.
  * Sicherheitsrelevanz: Fachgerechte Druckgrenzen, Ölrückführung, Stickstoff-Löten und EN-378-Füllgrenzen.
@@ -15,7 +15,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Außenluft-Wärmetauscher (Verflüssiger / Verdampfer)",
     location: {
       klimasplit: "Außeneinheit (Lamellenregister, Außenluftseite)",
-      vrv: "VRV-Außenzentrale (Hochleistungs-Lamellenregister)"
+      vrv: "VRF-Außenzentrale (Hochleistungs-Lamellenregister)"
     },
     task:
       "Gibt im Kühlbetrieb (Regelbetrieb) die aus dem Gebäude aufgenommene Wärme plus Verdichterarbeit an die Außenluft ab. Im Heizbetrieb kehrt sich die Aufgabe um und das Register entzieht der Außenluft Umweltwärme.",
@@ -38,7 +38,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         outState: "Flüssig",
         outColor: "peach",
         outMetric: "ca. 26,7 bar ü · +39 °C",
-        outSub: "Vorlauf zum VRV-Unterkühler (Subcooler)"
+        outSub: "Vorlauf zum VRF-Unterkühler (Subcooler)"
       }
     },
     service:
@@ -52,13 +52,13 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
   {
     id: 2,
     shortName: "Verdichter",
-    name: "Inverter-Verdichter (Rollkolben / VRV-Scroll)",
+    name: "Inverter-Verdichter (Rollkolben / VRF-Scroll)",
     location: {
       klimasplit: "Außeneinheit (schallgedämmter Verdichterraum)",
-      vrv: "VRV-Außenzentrale (Inverter-Scroll + Ölabscheider)"
+      vrv: "VRF-Außenzentrale (Inverter-Scroll + Ölabscheider)"
     },
     task:
-      "Saugt das kalte Sauggas aus den Innengeräten an und verdichtet es drehzahlgeregelt auf Hochdruckniveau. In VRV-Anlagen passt die Inverter-Steuerung den Massenstrom stufenlos an die Summe aller aktiven Innengeräte an und führt abgeschiedenes Kältemaschinenöl zurück.",
+      "Saugt das kalte Sauggas aus den Innengeräten an und verdichtet es drehzahlgeregelt auf Hochdruckniveau. In VRF-Anlagen passt die Inverter-Steuerung den Massenstrom stufenlos an die Summe aller aktiven Innengeräte an und führt abgeschiedenes Kältemaschinenöl zurück.",
     thermo: {
       klimasplit: {
         inState: "Sauggas",
@@ -74,7 +74,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         inState: "Sauggas",
         inColor: "sky",
         inMetric: "ca. 9,0 bar ü · +13 °C",
-        inSub: "Niederdruck aus Sammelstrang (VRV)",
+        inSub: "Niederdruck aus Sammelstrang (VRF)",
         outState: "Heißgas",
         outColor: "rose",
         outMetric: "ca. 26,9 bar ü · +84 °C",
@@ -82,7 +82,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
       }
     },
     service:
-      "Inverterfrequenz, Stromaufnahme, Heißgas-Endtemperatur sowie Ölausgleichs- und Ölrückführzyklen bei VRV-Anlagen prüfen.",
+      "Inverterfrequenz, Stromaufnahme, Heißgas-Endtemperatur sowie Ölausgleichs- und Ölrückführzyklen bei VRF-Anlagen prüfen.",
     serviceMetric: "Max. Heißgas-Schutz: ~105 – 115 °C · Ölrückführung alle 6–8 h",
     modeNoteHeating:
       "Verdichtet im Heizbetrieb das kühlere Sauggas vom Außenverdampfer auf das höhere Temperaturniveau für die Innengeräte.",
@@ -95,7 +95,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Innengerät-Wärmetauscher (Direktverdampfer)",
     location: {
       klimasplit: "Innenraum (Wand-, Truhen- oder Deckenkassette)",
-      vrv: "Gebäudezonen (1…64 Innengeräte am Refnet-Netz)"
+      vrv: "Gebäudezonen (1…64 Innengeräte am Y-Verteilernetz)"
     },
     task:
       "Verdampft im Kühlbetrieb direkt in der Raumluft (Luft/Kältemittel ohne Wasser-Zwischenkreis), senkt die Raumtemperatur und entfeuchtet die Luft am Taupunkt. Das anfallende Kondensat wird über Wanne und Kondensatpumpe abgeleitet.",
@@ -114,7 +114,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         inState: "Nassdampf",
         inColor: "aqua",
         inMetric: "ca. 9,2 bar ü · +7…+11 °C",
-        inSub: "Gleitende Verdampfung Te (VRV-Komfortregelung)",
+        inSub: "Gleitende Verdampfung Te (VRF-Komfortregelung)",
         outState: "Sauggas",
         outColor: "sky",
         outMetric: "ca. 9,0 bar ü · +13…+17 °C",
@@ -135,10 +135,10 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Elektronisches Expansionsventil (EEV / PMV)",
     location: {
       klimasplit: "Außeneinheit (zentral oder je Multi-Split-Abgang)",
-      vrv: "Dezentral direkt an jedem VRV-Innengerät (+ Außen-EEV)"
+      vrv: "Dezentral direkt an jedem VRF-Innengerät (+ Außen-EEV)"
     },
     task:
-      "Entspannt die unterkühlte Hochdruckflüssigkeit präzise auf Verdampfungsdruck. Bei Split-Klima sitzt das EEV meist in der Außeneinheit (gedämmte Einspritzleitung); bei VRV dosiert ein eigenes EEV an jedem Innengerät exakt nach Raumbedarf.",
+      "Entspannt die unterkühlte Hochdruckflüssigkeit präzise auf Verdampfungsdruck. Bei Split-Klima sitzt das EEV meist in der Außeneinheit (gedämmte Einspritzleitung); bei VRF dosiert ein eigenes EEV an jedem Innengerät exakt nach Raumbedarf.",
     thermo: {
       klimasplit: {
         inState: "Flüssig",
@@ -154,7 +154,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
         inState: "Flüssig",
         inColor: "peach",
         inMetric: "ca. 26,4 bar ü · +28 °C",
-        inSub: "Stark unterkühlt nach VRV-Subcooler",
+        inSub: "Stark unterkühlt nach VRF-Subcooler",
         outState: "Nassdampf",
         outColor: "aqua",
         outMetric: "ca. 9,2 bar ü · +7 °C",
@@ -175,7 +175,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "4-Wege-Umschaltventil",
     location: {
       klimasplit: "Außeneinheit (zwischen Verdichter & Wärmetauschern)",
-      vrv: "VRV-Außenzentrale (Hauptumschaltventil)"
+      vrv: "VRF-Außenzentrale (Hauptumschaltventil)"
     },
     task:
       "Schaltet den gesamten Kältekreislauf zwischen Sommer-Kühlbetrieb und Winter-Heizbetrieb um und leitet bei Bedarf kurzzeitig Heißgas zur Enteisung in das Außenregister.",
@@ -215,10 +215,10 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Akkumulator (Flüssigkeitsabscheider) & Sammler",
     location: {
       klimasplit: "Außeneinheit (Saugakkumulator vor Verdichter)",
-      vrv: "VRV-Außenzentrale (Saugakkumulator + Hochdrucksammler)"
+      vrv: "VRF-Außenzentrale (Saugakkumulator + Hochdrucksammler)"
     },
     task:
-      "Trennt flüssige Kältemittelreste zuverlässig vor dem Verdichtereintritt ab und puffert bei VRV-Anlagen große Füllmengenschwankungen zwischen Kühl-, Heiz- und Teillastbetrieb.",
+      "Trennt flüssige Kältemittelreste zuverlässig vor dem Verdichtereintritt ab und puffert bei VRF-Anlagen große Füllmengenschwankungen zwischen Kühl-, Heiz- und Teillastbetrieb.",
     thermo: {
       klimasplit: {
         inState: "Flüssig / Saug",
@@ -255,7 +255,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "Bi-Flow-Filtertrockner & EEV-Schmutzfilter (Strainer)",
     location: {
       klimasplit: "Außeneinheit (Flüssigkeitsstrang vor EEV)",
-      vrv: "VRV-Außenzentrale + Mikrosiebe vor jedem Innengerät-EEV"
+      vrv: "VRF-Außenzentrale + Mikrosiebe vor jedem Innengerät-EEV"
     },
     task:
       "Entzieht Restfeuchte mittels Molekularsieb und hält Kupferzunder sowie Schmutzpartikel von den hochpräzisen Schrittmotor-Nadeln der EEVs fern.",
@@ -292,13 +292,13 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
   {
     id: 8,
     shortName: "Subcooler",
-    name: "Schauglas & VRV-Unterkühler (Subcooler)",
+    name: "Schauglas & VRF-Unterkühler (Subcooler)",
     location: {
       klimasplit: "Außeneinheit (Flüssigkeitsleitung vor EEV)",
-      vrv: "VRV-Außenzentrale (Platten-Subcooler am Flüssigkeitsabgang)"
+      vrv: "VRF-Außenzentrale (Platten-Subcooler am Flüssigkeitsabgang)"
     },
     task:
-      "Gewährleistet eine blasenfreie Flüssigkeitsvorlage. Bei VRV-Anlagen kühlt ein eigener Bypass-Plattenwärmetauscher die Flüssigkeit tief unter den Kondensationspunkt, damit trotz langer Steigleitungen kein Flashgas vor den EEVs entsteht.",
+      "Gewährleistet eine blasenfreie Flüssigkeitsvorlage. Bei VRF-Anlagen kühlt ein eigener Bypass-Plattenwärmetauscher die Flüssigkeit tief unter den Kondensationspunkt, damit trotz langer Steigleitungen kein Flashgas vor den EEVs entsteht.",
     thermo: {
       klimasplit: {
         inState: "Flüssig",
@@ -322,10 +322,10 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
       }
     },
     service:
-      "Unterkühlung am Flüssigkeitsaustritt und Funktion des Subcooler-EEVs bei großen VRV-Höhenunterschieden kontrollieren.",
-    serviceMetric: "Soll-Unterkühlung: 4–6 K (Split) · 12–15 K (VRV-Subcooler)",
+      "Unterkühlung am Flüssigkeitsaustritt und Funktion des Subcooler-EEVs bei großen VRF-Höhenunterschieden kontrollieren.",
+    serviceMetric: "Soll-Unterkühlung: 4–6 K (Split) · 12–15 K (VRF-Subcooler)",
     modeNoteHeating:
-      "Im Heizbetrieb ist der VRV-Subcooler meist reduziert oder überbrückt; geregelt wird direkt über die Unterkühlung am Innengerät.",
+      "Im Heizbetrieb ist der VRF-Subcooler meist reduziert oder überbrückt; geregelt wird direkt über die Unterkühlung am Innengerät.",
     defrostNote:
       "Während der Abtauphase treten vorübergehend Blasen auf; Bewertung immer erst im stabilen Kühlbetrieb vornehmen."
   },
@@ -335,10 +335,10 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
     name: "HD-/ND-Sensoren, Te/Tc-Regelung & EN-378-Schutz",
     location: {
       klimasplit: "Außeneinheit (HD/ND) + Raumtemperaturfühler Innen",
-      vrv: "VRV-Zentrale + je Innengerät + EN-378-Raumsensorik"
+      vrv: "VRF-Zentrale + je Innengerät + EN-378-Raumsensorik"
     },
     task:
-      "Überwachen Druck- und Temperaturgrenzen, steuern bei VRV die gleitende Verdampfungstemperatur (Te-Optimierung für hohe Teillasteffizienz) und sichern bei A2L-Kältemitteln (R32) die Einhaltung der EN-378-Füllmengengrenzen ab.",
+      "Überwachen Druck- und Temperaturgrenzen, steuern bei VRF die gleitende Verdampfungstemperatur (Te-Optimierung für hohe Teillasteffizienz) und sichern bei A2L-Kältemitteln (R32) die Einhaltung der EN-378-Füllmengengrenzen ab.",
     thermo: {
       klimasplit: {
         inState: "ND-Sensor",
@@ -362,7 +362,7 @@ export const HVAC_COMPONENTS: readonly ComponentData<HvacSystemType>[] = [
       }
     },
     service:
-      "Drucktransmitter gegen Monteurhilfe plausibilisieren und bei R32-Multisplit/VRV das kleinste Raumvolumen gemäß EN 378 (mit/ohne Leckagesensor & Sicherheitsabsperrung) prüfen.",
+      "Drucktransmitter gegen Monteurhilfe plausibilisieren und bei R32-Multisplit/VRF das kleinste Raumvolumen gemäß EN 378 (mit/ohne Leckagesensor & Sicherheitsabsperrung) prüfen.",
     serviceMetric: "Plausibilität: ±0,3 bar · R32 Mindestraumfläche nach EN 378",
     modeNoteHeating:
       "Steuert im Heizbetrieb die gleitende Verflüssigungstemperatur (Tc) je nach Raumsollwert und schützt vor Hochdruck bei Teilabschaltung.",

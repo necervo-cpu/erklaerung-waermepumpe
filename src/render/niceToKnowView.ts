@@ -128,10 +128,10 @@ export function renderNiceToKnowView(
 ): void {
   const isHvac = category === "hvac";
   elements.headerKicker.textContent = isHvac
-    ? "Fachwissen & Praxis-Tipps · Klima & VRV"
+    ? "Fachwissen & Praxis-Tipps · Klima & VRF"
     : "Fachwissen & Praxis-Tipps";
   elements.headerTitle.textContent = isHvac
-    ? "Wissenswertes rund um Split-Klima & VRV/VRF"
+    ? "Wissenswertes rund um Split-Klima & VRF"
     : "Wissenswertes rund um Kältekreis & Wärmepumpe";
   elements.headerDesc.textContent = isHvac
     ? "Direktverdampfung, Unterkühlung (Subcooler), Stickstoff-Löttechnik, Ölrückführung, EN 378 und Lufthygiene praxisnah aufbereitet."
