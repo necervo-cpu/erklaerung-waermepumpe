@@ -52,7 +52,7 @@ function createInfoBlock(
   labelEl.textContent = label;
 
   const textEl = document.createElement("p");
-  textEl.className = "detail-text";
+  textEl.className = "section-text";
   textEl.textContent = text;
 
   section.appendChild(labelEl);
@@ -140,19 +140,26 @@ export function renderHydraulicsView(
     trigger.setAttribute("aria-controls", `hyd-panel-${comp.id}`);
     trigger.addEventListener("click", () => onSelectComponent(comp.id));
 
-    const badge = document.createElement("div");
-    badge.className = "comp-icon-badge";
+    const topRow = document.createElement("div");
+    topRow.className = "comp-card-top";
+
+    const lead = document.createElement("div");
+    lead.className = "comp-card-lead";
+
+    const badge = document.createElement("span");
+    badge.className = "comp-icon-badge tabular";
     badge.style.background = badgeBg;
+    badge.setAttribute("aria-hidden", "true");
     badge.textContent = String(comp.id);
 
     const textWrap = document.createElement("div");
-    textWrap.className = "comp-card-text";
+    textWrap.className = "comp-card-textcol";
 
-    const title = document.createElement("span");
+    const title = document.createElement("h3");
     title.className = "comp-card-title";
     title.textContent = comp.name;
 
-    const preview = document.createElement("span");
+    const preview = document.createElement("p");
     preview.className = "comp-card-preview";
     preview.textContent = location;
 
@@ -164,28 +171,31 @@ export function renderHydraulicsView(
     textWrap.appendChild(preview);
     textWrap.appendChild(metricPill);
 
+    lead.appendChild(badge);
+    lead.appendChild(textWrap);
+
     const chevron = document.createElement("span");
     chevron.className = "comp-chevron";
     chevron.setAttribute("aria-hidden", "true");
     chevron.appendChild(createChevronIcon());
 
-    trigger.appendChild(badge);
-    trigger.appendChild(textWrap);
-    trigger.appendChild(chevron);
+    topRow.appendChild(lead);
+    topRow.appendChild(chevron);
+    trigger.appendChild(topRow);
 
     const panel = document.createElement("div");
-    panel.className = `comp-acc-panel t-acc-panel${isOpen ? " is-open" : ""}`;
+    panel.className = `t-acc-panel${isOpen ? " is-open" : ""}`;
     panel.id = `hyd-panel-${comp.id}`;
     panel.setAttribute("data-open", String(isOpen));
 
     const inner = document.createElement("div");
-    inner.className = "t-acc-inner";
+    inner.className = "t-acc-panel-inner";
 
     const body = document.createElement("div");
     body.className = "comp-acc-body";
 
     const metaRow = document.createElement("div");
-    metaRow.className = "detail-meta-row";
+    metaRow.className = "comp-acc-meta-row";
 
     const kicker = document.createElement("p");
     kicker.className = "detail-kicker";

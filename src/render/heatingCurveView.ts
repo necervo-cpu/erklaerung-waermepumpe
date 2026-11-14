@@ -88,7 +88,7 @@ function createRuleCard(rule: HeatingCurveRuleCard): HTMLElement {
   card.className = "nice-card liquid-glass-card";
 
   const head = document.createElement("div");
-  head.className = "nice-card-head";
+  head.className = "nice-card-top";
   const cat = document.createElement("span");
   cat.className = "nice-category";
   cat.appendChild(createMaterialIcon(rule.icon, "xs"));
@@ -106,9 +106,10 @@ function createRuleCard(rule: HeatingCurveRuleCard): HTMLElement {
   summary.textContent = rule.summary;
 
   const list = document.createElement("ul");
-  list.className = "nice-facts";
+  list.className = "nice-facts-ul";
   for (const b of rule.bullets) {
     const li = document.createElement("li");
+    li.className = "nice-fact-item";
     li.textContent = b;
     list.appendChild(li);
   }

@@ -31,9 +31,10 @@ function createBulletListCard(title: string, items: readonly string[], iconName:
   head.appendChild(label);
 
   const list = document.createElement("ul");
-  list.className = "nice-facts";
+  list.className = "nice-facts-ul";
   for (const item of items) {
     const li = document.createElement("li");
+    li.className = "nice-fact-item";
     li.textContent = item;
     list.appendChild(li);
   }
@@ -133,7 +134,7 @@ function createPracticeCard(rule: BufferPracticeRule): HTMLElement {
   card.className = "nice-card liquid-glass-card";
 
   const head = document.createElement("div");
-  head.className = "nice-card-head";
+  head.className = "nice-card-top";
 
   const category = document.createElement("span");
   category.className = "nice-category";
@@ -153,9 +154,10 @@ function createPracticeCard(rule: BufferPracticeRule): HTMLElement {
   summary.textContent = rule.summary;
 
   const list = document.createElement("ul");
-  list.className = "nice-facts";
+  list.className = "nice-facts-ul";
   for (const bullet of rule.bullets) {
     const li = document.createElement("li");
+    li.className = "nice-fact-item";
     li.textContent = bullet;
     list.appendChild(li);
   }

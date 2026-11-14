@@ -83,17 +83,21 @@ export function renderWaterQualityView(
     descEl.textContent = metric.explanation;
 
     const tipBox = document.createElement("div");
-    tipBox.className = "nice-protip";
+    tipBox.className = "nice-tip";
+
+    const tipHeader = document.createElement("div");
+    tipHeader.className = "nice-tip-header";
 
     const tipLabel = document.createElement("span");
-    tipLabel.className = "nice-protip-label";
+    tipLabel.className = "nice-tip-label";
     tipLabel.textContent = "Azubi-Merksatz";
+    tipHeader.appendChild(tipLabel);
 
     const tipText = document.createElement("p");
-    tipText.className = "nice-protip-text";
+    tipText.className = "nice-tip-text";
     tipText.textContent = metric.azubiTip;
 
-    tipBox.appendChild(tipLabel);
+    tipBox.appendChild(tipHeader);
     tipBox.appendChild(tipText);
 
     card.appendChild(topRow);
@@ -112,7 +116,7 @@ export function renderWaterQualityView(
       card.className = "nice-card liquid-glass-card";
 
       const head = document.createElement("div");
-      head.className = "nice-card-head";
+      head.className = "nice-card-top";
 
       const iconWrap = document.createElement("div");
       iconWrap.className = "nice-icon-badge";
@@ -148,24 +152,29 @@ export function renderWaterQualityView(
       purpose.textContent = item.purpose;
 
       const list = document.createElement("ul");
-      list.className = "nice-facts";
+      list.className = "nice-facts-ul";
 
       const liInstall = document.createElement("li");
+      liInstall.className = "nice-fact-item";
       liInstall.textContent = `Einbau & Praxis: ${item.installRule}`;
       list.appendChild(liInstall);
 
       const tipBox = document.createElement("div");
-      tipBox.className = "nice-protip";
+      tipBox.className = "nice-tip";
+
+      const tipHeader = document.createElement("div");
+      tipHeader.className = "nice-tip-header";
 
       const tipLabel = document.createElement("span");
-      tipLabel.className = "nice-protip-label";
+      tipLabel.className = "nice-tip-label";
       tipLabel.textContent = "Kontrolle auf der Baustelle";
+      tipHeader.appendChild(tipLabel);
 
       const tipText = document.createElement("p");
-      tipText.className = "nice-protip-text";
+      tipText.className = "nice-tip-text";
       tipText.textContent = item.azubiCheck;
 
-      tipBox.appendChild(tipLabel);
+      tipBox.appendChild(tipHeader);
       tipBox.appendChild(tipText);
 
       card.appendChild(head);
@@ -184,7 +193,7 @@ export function renderWaterQualityView(
       card.className = "nice-card liquid-glass-card";
 
       const head = document.createElement("div");
-      head.className = "nice-card-head";
+      head.className = "nice-card-top";
 
       const titleWrap = document.createElement("div");
       titleWrap.className = "nice-title-wrap";
@@ -206,9 +215,10 @@ export function renderWaterQualityView(
       summary.textContent = step.summary;
 
       const bullets = document.createElement("ul");
-      bullets.className = "nice-facts";
+      bullets.className = "nice-facts-ul";
       step.bullets.forEach((b) => {
         const li = document.createElement("li");
+        li.className = "nice-fact-item";
         li.textContent = b;
         bullets.appendChild(li);
       });
@@ -221,7 +231,7 @@ export function renderWaterQualityView(
       warnLabel.textContent = "Achtung · Fehler vermeiden";
 
       const warnText = document.createElement("p");
-      warnText.className = "detail-text";
+      warnText.className = "section-text";
       warnText.textContent = step.warning;
 
       warnBox.appendChild(warnLabel);

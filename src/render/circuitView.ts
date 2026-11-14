@@ -293,9 +293,13 @@ export function renderComponentDetail(
   const isDefrost = state.mode === "defrost";
   const isHvacHeating = state.category === "hvac" && state.mode === "heating";
   const thermoHeadingText =
-    state.category === "hvac"
-      ? "Thermodynamischer Zustand (Kühlbetrieb A35/R27)"
-      : "Thermodynamischer Zustand (Heizbetrieb A2/W35)";
+    state.mode === "defrost"
+      ? "Thermodynamischer Zustand (Abtauphase)"
+      : state.category === "hvac"
+        ? isHvacHeating
+          ? "Thermodynamischer Zustand (Heizbetrieb A7/R20)"
+          : "Thermodynamischer Zustand (Kühlbetrieb A35/R27)"
+        : "Thermodynamischer Zustand (Heizbetrieb A2/W35)";
 
   // SVG-Komponentengruppen in beiden Schemata visuell hervorheben
   const syncSvgHighlights = (svg: SVGSVGElement): void => {
@@ -354,6 +358,9 @@ export function renderComponentDetail(
 
         const locPill = card.querySelector<HTMLElement>(".location-pill");
         if (locPill) locPill.textContent = `Einbauort: ${location}`;
+
+        const thermoHeadingEl = card.querySelector<HTMLElement>(".thermo-heading-label");
+        if (thermoHeadingEl) thermoHeadingEl.textContent = thermoHeadingText;
 
         const thermoGrid = card.querySelector<HTMLElement>(".thermo-grid");
         if (thermoGrid) {
@@ -464,7 +471,7 @@ export function renderComponentDetail(
     thermoSection.className = "detail-section";
 
     const thermoLabel = document.createElement("p");
-    thermoLabel.className = "section-label";
+    thermoLabel.className = "section-label thermo-heading-label";
     thermoLabel.style.marginBottom = "10px";
     thermoLabel.textContent = thermoHeadingText;
 
