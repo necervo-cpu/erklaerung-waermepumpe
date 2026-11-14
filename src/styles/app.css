@@ -40,6 +40,10 @@
   --badge-r32-bg: color-mix(in srgb, var(--pastel-sky) 16%, transparent);
   --badge-r32-ink: var(--accent-text-sky);
   --badge-r32-border: color-mix(in srgb, var(--pastel-sky) 35%, transparent);
+
+  --badge-vrv-bg: color-mix(in srgb, var(--pastel-lavender) 16%, transparent);
+  --badge-vrv-ink: var(--accent-text-lavender);
+  --badge-vrv-border: color-mix(in srgb, var(--pastel-lavender) 35%, transparent);
 }
 
 /* ==========================================================================
@@ -230,6 +234,17 @@ body {
   border-color: var(--badge-r32-border);
 }
 
+.segmented-pill-indicator.is-vrv,
+.segmented-pill-indicator.is-category-hvac {
+  background: var(--badge-vrv-bg);
+  border-color: var(--badge-vrv-border);
+}
+
+.segmented-pill-indicator.is-cooling {
+  background: color-mix(in srgb, var(--pastel-sky) 20%, transparent);
+  border-color: color-mix(in srgb, var(--pastel-sky) 42%, transparent);
+}
+
 .segmented-pill-indicator.is-defrost {
   background: color-mix(in srgb, var(--pastel-aqua) 20%, transparent);
   border-color: color-mix(in srgb, var(--pastel-aqua) 42%, transparent);
@@ -283,16 +298,31 @@ body {
   color: var(--badge-r290-ink);
 }
 
-.segmented-btn.is-system[aria-selected="true"][data-system="split"] {
+.segmented-btn.is-system[aria-selected="true"][data-system="split"],
+.segmented-btn.is-system[aria-selected="true"][data-system="klimasplit"] {
   background: var(--badge-r32-bg);
   border-color: var(--badge-r32-border);
   color: var(--badge-r32-ink);
 }
 
+.segmented-btn.is-system[aria-selected="true"][data-system="vrv"],
+.segmented-btn.is-category[aria-selected="true"][data-category="hvac"] {
+  background: var(--badge-vrv-bg);
+  border-color: var(--badge-vrv-border);
+  color: var(--badge-vrv-ink);
+}
+
 .segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="monoblock"],
-.segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="split"] {
+.segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="split"],
+.segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="klimasplit"],
+.segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="vrv"],
+.segmented.has-pill .segmented-btn.is-category[aria-selected="true"][data-category="hvac"] {
   background: transparent;
   border-color: transparent;
+}
+
+.segmented-btn.is-category .ag-icon {
+  color: inherit;
 }
 
 .dot-indicator {
@@ -306,8 +336,13 @@ body {
   background: var(--pastel-lime);
 }
 
-.dot-indicator.is-split {
+.dot-indicator.is-split,
+.dot-indicator.is-klimasplit {
   background: var(--pastel-sky);
+}
+
+.dot-indicator.is-vrv {
+  background: var(--pastel-lavender);
 }
 
 /* 3-Stufen-Theme-Button */
@@ -375,6 +410,12 @@ body {
   background: var(--surface-field);
 }
 
+.refrigerant-banner.is-vrv {
+  border-color: var(--badge-vrv-border);
+  border-left: 4px solid var(--accent-text-lavender);
+  background: var(--surface-field);
+}
+
 .badge-tag {
   display: inline-flex;
   align-items: center;
@@ -400,6 +441,12 @@ body {
   border: 1px solid color-mix(in srgb, var(--pastel-sky) 35%, transparent);
 }
 
+.badge-tag.vrv {
+  background: color-mix(in srgb, var(--pastel-lavender) 16%, transparent);
+  color: var(--accent-text-lavender);
+  border: 1px solid color-mix(in srgb, var(--pastel-lavender) 35%, transparent);
+}
+
 :root[data-theme="light"] .badge-tag.r290 {
   background: var(--pastel-lime);
   color: var(--text-on-accent);
@@ -412,6 +459,12 @@ body {
   border-color: transparent;
 }
 
+:root[data-theme="light"] .badge-tag.vrv {
+  background: var(--pastel-lavender);
+  color: var(--text-on-accent);
+  border-color: transparent;
+}
+
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) .badge-tag.r290 {
     background: var(--pastel-lime);
@@ -420,6 +473,11 @@ body {
   }
   :root:not([data-theme="light"]):not([data-theme="dark"]) .badge-tag.r32 {
     background: var(--pastel-sky);
+    color: var(--text-on-accent);
+    border-color: transparent;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .badge-tag.vrv {
+    background: var(--pastel-lavender);
     color: var(--text-on-accent);
     border-color: transparent;
   }
@@ -499,10 +557,17 @@ svg#circuitSvg {
 #valvePathsHeating,
 #valvePathsDefrost,
 #eevConesHeating,
-#eevConesDefrost {
+#eevConesDefrost,
+#secondaryWaterLoop,
+#secondaryAirLoop,
+#vrvBranchBadge {
   transition:
     opacity 220ms var(--ease-out-quart),
     visibility 220ms var(--ease-out-quart);
+}
+
+.vrv-refnet-box {
+  stroke: var(--accent-text-lavender);
 }
 
 .mode-switch-bar {
@@ -522,15 +587,32 @@ svg#circuitSvg {
   color: var(--muted);
 }
 
+.segmented-btn.is-cooling-btn[aria-selected="true"] {
+  background: color-mix(in srgb, var(--pastel-sky) 20%, transparent);
+  color: var(--accent-text-sky);
+  border-color: color-mix(in srgb, var(--pastel-sky) 42%, transparent);
+}
+
 .segmented-btn.is-defrost-btn[aria-selected="true"] {
   background: color-mix(in srgb, var(--pastel-aqua) 20%, transparent);
   color: var(--accent-text-aqua);
   border-color: color-mix(in srgb, var(--pastel-aqua) 42%, transparent);
 }
 
+.segmented.has-pill .segmented-btn.is-cooling-btn[aria-selected="true"],
 .segmented.has-pill .segmented-btn.is-defrost-btn[aria-selected="true"] {
   background: transparent;
   border-color: transparent;
+}
+
+.heating-note-box {
+  border: 1px solid color-mix(in srgb, var(--accent-text-butter) 35%, var(--border));
+  border-left: 4px solid var(--accent-text-butter);
+  background: var(--surface-field);
+}
+
+.heating-note-box .section-label {
+  color: var(--accent-text-butter);
 }
 
 .defrost-note-box {
@@ -719,6 +801,7 @@ svg#circuitSvg {
 .legend-swatch.is-sauggas { background: var(--c-sauggas); }
 .legend-swatch.is-vorlauf { background: var(--c-vorlauf); }
 .legend-swatch.is-ruecklauf { background: var(--c-ruecklauf); }
+.legend-swatch.is-vrv { background: var(--accent-text-lavender); }
 
 /* ==========================================================================
    Rechtes Detailpanel
@@ -1662,5 +1745,22 @@ svg#circuitSvg {
   }
   .thermo-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (forced-colors: active) {
+  .segmented-btn[role="tab"][aria-selected="true"]::after {
+    content: "";
+    position: absolute;
+    inset: auto 8px 3px;
+    border-block-end: 2px solid Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #secondaryWaterLoop,
+  #secondaryAirLoop,
+  #vrvBranchBadge {
+    transition-duration: 0s !important;
   }
 }

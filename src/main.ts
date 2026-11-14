@@ -1,6 +1,7 @@
 /**
  * Modul: Einstiegspunkt der Anwendung (main.ts)
- * Zweck: Initialisiert State, DOM-Events, 3-Stufen-Theme-Umschaltung und koordinierte Render-Zyklen.
+ * Zweck: Initialisiert State, DOM-Events, Kategorie-Wechsel (Wärmepumpe / Split-Klima & VRV),
+ *   3-Stufen-Theme-Umschaltung und koordinierte Render-Zyklen.
  * Verantwortlichkeit: Verbindet Fachdaten, Benutzereingaben und DOM-Renderer typsicher ohne any.
  * Sicherheitsrelevanz: Strikte Validierung der DOM-Elemente über requireElement zur Vermeidung von Null-Pointer-Exceptions.
  */
@@ -16,7 +17,13 @@ import {
   getThemeModeLabel,
   type ThemeMode
 } from "./theme-init";
-import type { AppState, OperationMode, SystemType, ViewType } from "./types/circuit";
+import type {
+  AppState,
+  CategoryType,
+  OperationMode,
+  SystemType,
+  ViewType
+} from "./types/circuit";
 import {
   renderComponentDetail,
   renderOperationMode,
@@ -27,7 +34,10 @@ import {
   renderFaultsView,
   type FaultsDomElements
 } from "./render/faultsView";
-import { renderNiceToKnowView } from "./render/niceToKnowView";
+import {
+  renderNiceToKnowView,
+  type NiceToKnowDomElements
+} from "./render/niceToKnowView";
 
 /**
  * Typsicherer DOM-Helper, der ein Element anfordert oder einen aussagekräftigen Fehler wirft.
@@ -41,9 +51,21 @@ function requireElement<T extends Element>(selector: string): T {
 }
 
 /**
+ * Merkt sich zuletzt aktive Bauart, Betriebsmodus und Störungs-ID je Hauptkategorie.
+ */
+const categoryMemory: Record<
+  CategoryType,
+  { system: SystemType; mode: OperationMode; faultId: string }
+> = {
+  heatpump: { system: "monoblock", mode: "heating", faultId: "hd" },
+  hvac: { system: "klimasplit", mode: "cooling", faultId: "condensate" }
+};
+
+/**
  * Reaktiv gehaltener Zustand der Fachanwendung.
  */
 const state: AppState = {
+  category: "heatpump",
   system: "monoblock",
   mode: "heating",
   view: "circuit",
@@ -55,9 +77,15 @@ let currentTheme: ThemeMode = getStoredThemeMode();
 
 // DOM-Elemente für den Kältekreis
 const circuitElements: CircuitDomElements = {
+  brandMainTitle: requireElement<HTMLElement>("#brandMainTitle"),
   headerSystemText: requireElement<HTMLElement>("#headerSystemText"),
+  headerRefPill: requireElement<HTMLElement>("#headerRefPill"),
+  btnCatHeatpump: requireElement<HTMLButtonElement>("#btnCatHeatpump"),
+  btnCatHvac: requireElement<HTMLButtonElement>("#btnCatHvac"),
   btnMonoblock: requireElement<HTMLButtonElement>("#btnMonoblock"),
   btnSplit: requireElement<HTMLButtonElement>("#btnSplit"),
+  btnKlimasplit: requireElement<HTMLButtonElement>("#btnKlimasplit"),
+  btnVrv: requireElement<HTMLButtonElement>("#btnVrv"),
   refrigerantBanner: requireElement<HTMLElement>("#refrigerantBanner"),
   bannerTitle: requireElement<HTMLElement>("#bannerTitle"),
   bannerDesc: requireElement<HTMLElement>("#bannerDesc"),
@@ -68,10 +96,12 @@ const circuitElements: CircuitDomElements = {
   labelOutdoor: requireElement<SVGElement>("#labelOutdoor"),
   labelIndoor: requireElement<SVGElement>("#labelIndoor"),
   componentList: requireElement<HTMLElement>("#componentAccordionList"),
+  btnModeCooling: requireElement<HTMLButtonElement>("#btnModeCooling"),
   btnModeHeating: requireElement<HTMLButtonElement>("#btnModeHeating"),
   btnModeDefrost: requireElement<HTMLButtonElement>("#btnModeDefrost"),
   pipesHeating: requireElement<SVGGElement>("#pipesHeating"),
   pipesDefrost: requireElement<SVGGElement>("#pipesDefrost"),
+  lblReverseHeissgas: requireElement<SVGTextElement>("#lblReverseHeissgas"),
   valvePathsHeating: requireElement<SVGGElement>("#valvePathsHeating"),
   valvePathsDefrost: requireElement<SVGGElement>("#valvePathsDefrost"),
   eevConesHeating: requireElement<SVGGElement>("#eevConesHeating"),
@@ -80,12 +110,37 @@ const circuitElements: CircuitDomElements = {
   comp1Sub: requireElement<SVGTextElement>("#comp1Sub"),
   comp3Title: requireElement<SVGTextElement>("#comp3Title"),
   comp3Sub: requireElement<SVGTextElement>("#comp3Sub"),
+  comp4Title: requireElement<SVGTextElement>("#comp4Title"),
+  comp4Sub: requireElement<SVGTextElement>("#comp4Sub"),
+  secondaryWaterLoop: requireElement<SVGGElement>("#secondaryWaterLoop"),
+  secondaryAirLoop: requireElement<SVGGElement>("#secondaryAirLoop"),
+  vrvBranchBadge: requireElement<SVGGElement>("#vrvBranchBadge"),
+  airSupplyBase: requireElement<SVGPathElement>("#airSupplyBase"),
+  airSupplyFlow: requireElement<SVGPathElement>("#airSupplyFlow"),
+  lblAirSupply: requireElement<SVGTextElement>("#lblAirSupply"),
+  airBoxTitle: requireElement<SVGTextElement>("#airBoxTitle"),
+  airBoxSub1: requireElement<SVGTextElement>("#airBoxSub1"),
+  airBoxSub2: requireElement<SVGTextElement>("#airBoxSub2"),
+  airBoxFoot: requireElement<SVGTextElement>("#airBoxFoot"),
+  legendVorlaufItem: requireElement<HTMLElement>("#legendVorlaufItem"),
+  legendVorlaufText: requireElement<HTMLElement>("#legendVorlaufText"),
+  legendRuecklaufItem: requireElement<HTMLElement>("#legendRuecklaufItem"),
+  legendRuecklaufText: requireElement<HTMLElement>("#legendRuecklaufText"),
+  legendVrvItem: requireElement<HTMLElement>("#legendVrvItem"),
   svgElement: requireElement<SVGSVGElement>("#circuitSvg")
 };
 
 // DOM-Elemente für die Fehleranalyse
 const faultsElements: FaultsDomElements = {
   faultList: requireElement<HTMLElement>("#faultList")
+};
+
+// DOM-Elemente für „Nice to Know“
+const niceElements: NiceToKnowDomElements = {
+  grid: requireElement<HTMLElement>("#niceGrid"),
+  headerKicker: requireElement<HTMLElement>("#niceHeaderKicker"),
+  headerTitle: requireElement<HTMLElement>("#niceHeaderTitle"),
+  headerDesc: requireElement<HTMLElement>("#niceHeaderDesc")
 };
 
 // Globale Layout-Elemente
@@ -95,7 +150,6 @@ const viewNiceToKnow = requireElement<HTMLElement>("#viewNiceToKnow");
 const btnViewCircuit = requireElement<HTMLButtonElement>("#btnViewCircuit");
 const btnViewFaults = requireElement<HTMLButtonElement>("#btnViewFaults");
 const btnViewNiceToKnow = requireElement<HTMLButtonElement>("#btnViewNiceToKnow");
-const niceGrid = requireElement<HTMLElement>("#niceGrid");
 const btnThemeToggle = requireElement<HTMLButtonElement>("#btnThemeToggle");
 const themeIconLabel = requireElement<HTMLElement>("#themeIconLabel");
 const themeToggleIcon = requireElement<HTMLElement>("#themeToggleIcon");
@@ -118,7 +172,7 @@ function syncAllSegmentedPills(): void {
     }
 
     const activeBtn = container.querySelector<HTMLButtonElement>(
-      '.segmented-btn[aria-selected="true"]'
+      '.segmented-btn[aria-selected="true"]:not(.hidden)'
     );
     if (!activeBtn || activeBtn.offsetWidth === 0) {
       container.classList.remove("has-pill");
@@ -133,8 +187,14 @@ function syncAllSegmentedPills(): void {
     pill.style.transform = `translate3d(${activeBtn.offsetLeft}px, ${activeBtn.offsetTop}px, 0)`;
 
     pill.classList.toggle("is-r290", activeBtn.dataset.system === "monoblock");
-    pill.classList.toggle("is-r32", activeBtn.dataset.system === "split");
+    pill.classList.toggle(
+      "is-r32",
+      activeBtn.dataset.system === "split" || activeBtn.dataset.system === "klimasplit"
+    );
+    pill.classList.toggle("is-vrv", activeBtn.dataset.system === "vrv");
+    pill.classList.toggle("is-cooling", activeBtn.dataset.mode === "cooling");
     pill.classList.toggle("is-defrost", activeBtn.dataset.mode === "defrost");
+    pill.classList.toggle("is-category-hvac", activeBtn.dataset.category === "hvac");
   });
 }
 
@@ -311,7 +371,42 @@ function handleJumpToComponent(componentId: number): void {
 }
 
 /**
- * Schaltet das Wärmepumpensystem um (Monoblock vs. Split).
+ * Schaltet die übergeordnete Anlagenkategorie (Wärmepumpe vs. Split-Klima & VRV) um.
+ */
+function handleSetCategory(category: CategoryType): void {
+  if (state.category === category) return;
+
+  categoryMemory[state.category] = {
+    system: state.system,
+    mode: state.mode,
+    faultId: state.faultId
+  };
+
+  const restored = categoryMemory[category];
+  const triggerBtn =
+    category === "hvac" ? circuitElements.btnCatHvac : circuitElements.btnCatHeatpump;
+
+  runViewTransition(() => {
+    state.category = category;
+    state.system = restored.system;
+    state.mode = restored.mode;
+    state.faultId = restored.faultId;
+    state.componentId = 0;
+
+    document.title =
+      category === "hvac"
+        ? "Kältekreislauf Split-Klima & VRV – Interaktives Fachschema & Fehleranalyse"
+        : "Kältekreislauf Wärmepumpe – Interaktives Fachschema & Fehleranalyse";
+
+    renderSystemView(circuitElements, state, handleSelectComponent);
+    renderFaultsView(faultsElements, state, handleSelectFault, handleJumpToComponent);
+    renderNiceToKnowView(niceElements, state.category);
+    syncAllSegmentedPills();
+  }, triggerBtn);
+}
+
+/**
+ * Schaltet die System-Bauart innerhalb der aktiven Kategorie um.
  */
 function handleSetSystem(system: SystemType): void {
   if (state.system === system) return;
@@ -321,7 +416,7 @@ function handleSetSystem(system: SystemType): void {
 }
 
 /**
- * Schaltet den Betriebsmodus um (Heizbetrieb vs. Abtauphase).
+ * Schaltet den Betriebsmodus um (Kühlbetrieb / Heizbetrieb / Abtauphase).
  */
 function handleSetMode(mode: OperationMode): void {
   if (state.mode === mode) return;
@@ -352,20 +447,61 @@ function handleSetView(view: ViewType): void {
         handleJumpToComponent
       );
     } else if (view === "niceToKnow") {
-      renderNiceToKnowView(niceGrid);
+      renderNiceToKnowView(niceElements, state.category);
     }
   }, activeContainer);
+}
+
+/**
+ * Aktiviert Pfeiltasten-Navigation (Links/Rechts/Pos1/Ende) auf ARIA-Tablists gemäß WCAG.
+ */
+function attachTablistKeyboardNavigation(): void {
+  const tablists = document.querySelectorAll<HTMLElement>('[role="tablist"]');
+  tablists.forEach((tablist) => {
+    tablist.addEventListener("keydown", (evt: KeyboardEvent) => {
+      const visibleTabs = Array.from(
+        tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]:not(.hidden)')
+      );
+      if (visibleTabs.length === 0) return;
+
+      const currentIdx = visibleTabs.indexOf(document.activeElement as HTMLButtonElement);
+      if (currentIdx === -1) return;
+
+      let nextIdx = -1;
+      if (evt.key === "ArrowRight") nextIdx = (currentIdx + 1) % visibleTabs.length;
+      else if (evt.key === "ArrowLeft")
+        nextIdx = (currentIdx - 1 + visibleTabs.length) % visibleTabs.length;
+      else if (evt.key === "Home") nextIdx = 0;
+      else if (evt.key === "End") nextIdx = visibleTabs.length - 1;
+
+      if (nextIdx !== -1) {
+        evt.preventDefault();
+        const targetTab = visibleTabs[nextIdx];
+        if (targetTab) {
+          targetTab.focus();
+          targetTab.click();
+        }
+      }
+    });
+  });
 }
 
 // -----------------------------------------------------------------------------
 // Event-Registrierung
 // -----------------------------------------------------------------------------
 
+// Haupt-Kategorie-Reiter (Wärmepumpe vs. Split-Klima & VRV)
+circuitElements.btnCatHeatpump.addEventListener("click", () => handleSetCategory("heatpump"));
+circuitElements.btnCatHvac.addEventListener("click", () => handleSetCategory("hvac"));
+
 // System-Tabs
 circuitElements.btnMonoblock.addEventListener("click", () => handleSetSystem("monoblock"));
 circuitElements.btnSplit.addEventListener("click", () => handleSetSystem("split"));
+circuitElements.btnKlimasplit.addEventListener("click", () => handleSetSystem("klimasplit"));
+circuitElements.btnVrv.addEventListener("click", () => handleSetSystem("vrv"));
 
-// Betriebsmodus-Tabs (Heizbetrieb vs. Abtauphase)
+// Betriebsmodus-Tabs (Kühlbetrieb / Heizbetrieb / Abtauphase)
+circuitElements.btnModeCooling.addEventListener("click", () => handleSetMode("cooling"));
 circuitElements.btnModeHeating.addEventListener("click", () => handleSetMode("heating"));
 circuitElements.btnModeDefrost.addEventListener("click", () => handleSetMode("defrost"));
 
@@ -397,12 +533,13 @@ compNodes.forEach((node) => {
   });
 });
 
+attachTablistKeyboardNavigation();
+
 // -----------------------------------------------------------------------------
 // Initiale Ausführung
 // -----------------------------------------------------------------------------
 updateThemeButton(currentTheme);
 renderSystemView(circuitElements, state, handleSelectComponent);
-renderOperationMode(circuitElements, state, handleSelectComponent);
 renderViewSwitcher();
 updateSvgScrollIndicators();
 renderFaultsView(
@@ -411,5 +548,5 @@ renderFaultsView(
   handleSelectFault,
   handleJumpToComponent
 );
-renderNiceToKnowView(niceGrid);
+renderNiceToKnowView(niceElements, state.category);
 window.requestAnimationFrame(syncAllSegmentedPills);

@@ -26,17 +26,43 @@
           <span class="ag-icon ag-icon--active">ac_unit</span>
         </div>
         <div class="brand-text">
-          <h1 class="brand-title">Kältekreislauf Wärmepumpe</h1>
+          <h1 class="brand-title" id="brandMainTitle">Kältekreislauf Wärmepumpe</h1>
           <div class="brand-sub">
             <span id="headerSystemText">Monoblock-Bauart · R290 (Propan)</span>
-            <span class="ref-pill tabular">Referenz: Heizbetrieb A2 / W35</span>
+            <span class="ref-pill tabular" id="headerRefPill">Referenz: Heizbetrieb A2 / W35</span>
           </div>
         </div>
       </div>
 
       <div class="controls-row">
+        <!-- Übergeordneter Haupt-Reiter: Wärmepumpe vs. Split-Klima & VRV -->
+        <div class="segmented is-category-segmented" role="tablist" aria-label="Anlagenkategorie wählen" id="categoryTabs">
+          <button
+            type="button"
+            class="segmented-btn is-category press-btn"
+            data-category="heatpump"
+            role="tab"
+            aria-selected="true"
+            id="btnCatHeatpump"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">heat_pump</span>
+            <span>Wärmepumpe</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn is-category press-btn"
+            data-category="hvac"
+            role="tab"
+            aria-selected="false"
+            id="btnCatHvac"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">air</span>
+            <span>Split-Klima &amp; VRV</span>
+          </button>
+        </div>
+
         <!-- System-Umschalter -->
-        <div class="segmented" role="tablist" aria-label="Wärmepumpen-Bauart">
+        <div class="segmented" role="tablist" aria-label="System-Bauart wählen" id="systemTabs">
           <button
             type="button"
             class="segmented-btn is-system press-btn"
@@ -58,6 +84,28 @@
           >
             <span class="dot-indicator is-split"></span>
             Split (R32 / R410A)
+          </button>
+          <button
+            type="button"
+            class="segmented-btn is-system press-btn hidden"
+            data-system="klimasplit"
+            role="tab"
+            aria-selected="false"
+            id="btnKlimasplit"
+          >
+            <span class="dot-indicator is-klimasplit"></span>
+            Split-Klima (R32)
+          </button>
+          <button
+            type="button"
+            class="segmented-btn is-system press-btn hidden"
+            data-system="vrv"
+            role="tab"
+            aria-selected="false"
+            id="btnVrv"
+          >
+            <span class="dot-indicator is-vrv"></span>
+            VRV / VRF-Anlage
           </button>
         </div>
 
@@ -123,10 +171,20 @@
           <span id="bannerBadge" class="badge-tag r290 tabular">GWP 3 · R290</span>
         </div>
 
-        <!-- Betriebsmodus-Umschaltung: Heizbetrieb vs. Abtauphase -->
+        <!-- Betriebsmodus-Umschaltung -->
         <div class="mode-switch-bar">
           <span class="mode-switch-label">Betriebsmodus:</span>
-          <div class="segmented" role="tablist" aria-label="Betriebsmodus wählen">
+          <div class="segmented" role="tablist" aria-label="Betriebsmodus wählen" id="modeTabs">
+            <button
+              type="button"
+              class="segmented-btn is-cooling-btn press-btn hidden"
+              data-mode="cooling"
+              role="tab"
+              aria-selected="false"
+              id="btnModeCooling"
+            >
+              Kühlbetrieb (Regelbetrieb)
+            </button>
             <button
               type="button"
               class="segmented-btn press-btn"
@@ -250,7 +308,7 @@
 
             <path class="pipe-base" stroke="var(--c-heissgas)" d="M 305 172 L 171 172" />
             <path class="pipe-flow" stroke="var(--c-heissgas)" marker-end="url(#arrowHeissgas)" d="M 305 172 L 178 172" />
-            <text x="234" y="160" text-anchor="middle" fill="var(--c-heissgas)" font-size="10.5" font-weight="650">Heißgas (Abtauen)</text>
+            <text id="lblReverseHeissgas" x="234" y="160" text-anchor="middle" fill="var(--c-heissgas)" font-size="10.5" font-weight="650">Heißgas (Abtauen)</text>
 
             <!-- 2. Flüssig (Kondensat): Außen-Wärmetauscher -> EEV -->
             <path class="pipe-base" stroke="var(--c-fluessig)" d="M 108 325 L 108 415 L 118 415" />
@@ -283,23 +341,59 @@
             </g>
 
             <!-- 5. Sekundärkreis Heizungswasser (Verflüssiger <-> Hydraulikmodul) -->
-            <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 701 142 L 778 142" />
-            <path class="pipe-flow" stroke="var(--c-vorlauf)" marker-end="url(#arrowVorlauf)" d="M 701 142 L 772 142" />
-            <text x="740" y="131" text-anchor="middle" fill="var(--c-vorlauf)" font-size="10" font-weight="700">Vorlauf</text>
+            <g id="secondaryWaterLoop">
+              <path class="pipe-base" stroke="var(--c-vorlauf)" d="M 701 142 L 778 142" />
+              <path class="pipe-flow" stroke="var(--c-vorlauf)" marker-end="url(#arrowVorlauf)" d="M 701 142 L 772 142" />
+              <text x="740" y="131" text-anchor="middle" fill="var(--c-vorlauf)" font-size="10" font-weight="700">Vorlauf</text>
 
-            <path class="pipe-base" stroke="var(--c-ruecklauf)" d="M 778 214 L 701 214" />
-            <path class="pipe-flow" stroke="var(--c-ruecklauf)" marker-end="url(#arrowRuecklauf)" d="M 778 214 L 707 214" />
-            <text x="740" y="230" text-anchor="middle" fill="var(--c-ruecklauf)" font-size="10" font-weight="700">Rücklauf</text>
+              <path class="pipe-base" stroke="var(--c-ruecklauf)" d="M 778 214 L 701 214" />
+              <path class="pipe-flow" stroke="var(--c-ruecklauf)" marker-end="url(#arrowRuecklauf)" d="M 778 214 L 707 214" />
+              <text x="740" y="230" text-anchor="middle" fill="var(--c-ruecklauf)" font-size="10" font-weight="700">Rücklauf</text>
 
-            <!-- Hydraulikmodul / Heizkreis -->
-            <g transform="translate(778, 114)">
-              <rect x="0" y="0" width="114" height="128" rx="14" class="comp-box" stroke-dasharray="4 3" />
-              <text x="57" y="26" text-anchor="middle" class="svg-title-text" font-size="11" font-weight="700">Hydraulikmodul</text>
-              <text x="57" y="42" text-anchor="middle" class="svg-sub-text" font-size="9.5">Pufferspeicher /</text>
-              <text x="57" y="54" text-anchor="middle" class="svg-sub-text" font-size="9.5">Heizkreis (W35)</text>
-              <circle cx="57" cy="86" r="17" fill="color-mix(in srgb, var(--c-ruecklauf) 12%, transparent)" stroke="var(--c-ruecklauf)" stroke-width="1.6" />
-              <polygon points="52,77 67,86 52,95" fill="var(--c-ruecklauf)" />
-              <text x="57" y="116" text-anchor="middle" class="svg-sub-text" font-size="9.5">Heizungswasser</text>
+              <!-- Hydraulikmodul / Heizkreis -->
+              <g transform="translate(778, 114)">
+                <rect x="0" y="0" width="114" height="128" rx="14" class="comp-box" stroke-dasharray="4 3" />
+                <text x="57" y="26" text-anchor="middle" class="svg-title-text" font-size="11" font-weight="700">Hydraulikmodul</text>
+                <text x="57" y="42" text-anchor="middle" class="svg-sub-text" font-size="9.5">Pufferspeicher /</text>
+                <text x="57" y="54" text-anchor="middle" class="svg-sub-text" font-size="9.5">Heizkreis (W35)</text>
+                <circle cx="57" cy="86" r="17" fill="color-mix(in srgb, var(--c-ruecklauf) 12%, transparent)" stroke="var(--c-ruecklauf)" stroke-width="1.6" />
+                <polygon points="52,77 67,86 52,95" fill="var(--c-ruecklauf)" />
+                <text x="57" y="116" text-anchor="middle" class="svg-sub-text" font-size="9.5">Heizungswasser</text>
+              </g>
+            </g>
+
+            <!-- 5b. Sekundärkreis Raumluft (Split-Klima & VRV: Direktverdampfer <-> Raumzone) -->
+            <g id="secondaryAirLoop" class="svg-layer-hidden">
+              <path id="airSupplyBase" class="pipe-base" stroke="var(--c-nassdampf)" d="M 701 142 L 778 142" />
+              <path id="airSupplyFlow" class="pipe-flow" stroke="var(--c-nassdampf)" marker-end="url(#arrowNass)" d="M 701 142 L 772 142" />
+              <text id="lblAirSupply" x="740" y="131" text-anchor="middle" fill="var(--c-nassdampf)" font-size="10" font-weight="700">Zuluft (kalt)</text>
+
+              <path class="pipe-base" stroke="var(--c-sauggas)" d="M 778 214 L 701 214" />
+              <path class="pipe-flow" stroke="var(--c-sauggas)" marker-end="url(#arrowSaug)" d="M 778 214 L 707 214" />
+              <text x="740" y="230" text-anchor="middle" fill="var(--c-sauggas)" font-size="10" font-weight="700">Raum-Umluft</text>
+
+              <g transform="translate(778, 114)">
+                <rect x="0" y="0" width="114" height="128" rx="14" class="comp-box" stroke-dasharray="4 3" />
+                <text id="airBoxTitle" x="57" y="26" text-anchor="middle" class="svg-title-text" font-size="11" font-weight="700">Raumzone</text>
+                <text id="airBoxSub1" x="57" y="42" text-anchor="middle" class="svg-sub-text" font-size="9.5">Direktverdampfung</text>
+                <text id="airBoxSub2" x="57" y="54" text-anchor="middle" class="svg-sub-text" font-size="9.5">Raumluft (R27)</text>
+                <circle id="airFanRing" cx="57" cy="86" r="17" fill="color-mix(in srgb, var(--c-sauggas) 12%, transparent)" stroke="var(--c-sauggas)" stroke-width="1.6" />
+                <path id="airFanBlades" d="M57 86 C53 77, 62 74, 60 84 M57 86 C66 82, 69 91, 59 89 M57 86 C61 95, 52 98, 54 88 M57 86 C48 90, 45 81, 55 83" fill="var(--c-sauggas)" />
+                <circle cx="57" cy="86" r="2.5" fill="currentColor" />
+                <text id="airBoxFoot" x="57" y="116" text-anchor="middle" class="svg-sub-text" font-size="9.5">Kondensat-Ablauf</text>
+              </g>
+            </g>
+
+            <!-- 5c. VRV Refnet-Verteilernetz & dezentrale EEVs (nur bei VRV sichtbar) -->
+            <g id="vrvBranchBadge" class="svg-layer-hidden">
+              <circle cx="566" cy="172" r="5" fill="var(--bg)" stroke="var(--accent-text-lavender)" stroke-width="2" />
+              <circle cx="566" cy="415" r="5" fill="var(--bg)" stroke="var(--accent-text-lavender)" stroke-width="2" />
+              <circle cx="643" cy="322" r="5" fill="var(--bg)" stroke="var(--accent-text-lavender)" stroke-width="2" />
+              <line x1="648" y1="322" x2="668" y2="322" stroke="var(--accent-text-lavender)" stroke-width="1.6" stroke-dasharray="3 3" />
+              <rect x="668" y="288" width="218" height="68" rx="12" class="comp-box vrv-refnet-box" stroke-dasharray="4 3" />
+              <text x="777" y="309" text-anchor="middle" fill="var(--accent-text-lavender)" font-size="11" font-weight="700">Refnet-Verteiler + EEV (1…n)</text>
+              <text x="777" y="326" text-anchor="middle" class="svg-sub-text" font-size="9.5">Dezentrale Einspritzung je Zone</text>
+              <text x="777" y="341" text-anchor="middle" class="svg-sub-text" font-size="9">Bis 64 Innengeräte · Subcooler-Netz</text>
             </g>
 
             <!-- ============================================================
@@ -373,8 +467,8 @@
               </g>
               <circle class="comp-num-bg" cx="133" cy="399" r="9" />
               <text class="comp-num-txt" x="133" y="403" text-anchor="middle" font-size="10.5" font-weight="700">4</text>
-              <text class="svg-title-text" x="163" y="402" text-anchor="middle" font-size="11" font-weight="700">EEV</text>
-              <text class="svg-sub-text" x="156" y="438" text-anchor="middle" font-size="8.8">Expansionsventil</text>
+              <text id="comp4Title" class="svg-title-text" x="163" y="402" text-anchor="middle" font-size="11" font-weight="700">EEV</text>
+              <text id="comp4Sub" class="svg-sub-text" x="156" y="438" text-anchor="middle" font-size="8.8">Expansionsventil</text>
             </g>
 
             <!-- 5. 4-Wege-Umschaltventil -->
@@ -448,8 +542,9 @@
           <div class="legend-item"><span class="legend-swatch is-fluessig"></span>Flüssigkeitsleitung (HD, unterkühlt)</div>
           <div class="legend-item"><span class="legend-swatch is-nassdampf"></span>Nassdampf (ND, Gemisch, kalt)</div>
           <div class="legend-item"><span class="legend-swatch is-sauggas"></span>Sauggas (ND, überhitzt)</div>
-          <div class="legend-item"><span class="legend-swatch is-vorlauf"></span>Heizung Vorlauf</div>
-          <div class="legend-item"><span class="legend-swatch is-ruecklauf"></span>Heizung Rücklauf</div>
+          <div class="legend-item" id="legendVorlaufItem"><span class="legend-swatch is-vorlauf"></span><span id="legendVorlaufText">Heizung Vorlauf</span></div>
+          <div class="legend-item" id="legendRuecklaufItem"><span class="legend-swatch is-ruecklauf"></span><span id="legendRuecklaufText">Heizung Rücklauf</span></div>
+          <div class="legend-item hidden" id="legendVrvItem"><span class="legend-swatch is-vrv"></span><span>VRV Refnet-Netz</span></div>
         </div>
       </section>
 
@@ -468,9 +563,9 @@
     <section id="viewNiceToKnow" class="nice-layout hidden" aria-label="Wissenswertes rund um die Wärmepumpe">
       <div class="nice-header-banner liquid-glass-card">
         <div class="nice-header-copy">
-          <p class="detail-kicker">Fachwissen &amp; Praxis-Tipps</p>
-          <h2 class="detail-title">Wissenswertes rund um Kältekreis &amp; Wärmepumpe</h2>
-          <p class="section-text" style="margin-top:4px;">
+          <p class="detail-kicker" id="niceHeaderKicker">Fachwissen &amp; Praxis-Tipps</p>
+          <h2 class="detail-title" id="niceHeaderTitle">Wissenswertes rund um Kältekreis &amp; Wärmepumpe</h2>
+          <p class="section-text" id="niceHeaderDesc" style="margin-top:4px;">
             Thermodynamische Zusammenhänge, effiziente Betriebsführung, Hydraulik-Regeln und Akustik-Hinweise praxisnah aufbereitet.
           </p>
         </div>

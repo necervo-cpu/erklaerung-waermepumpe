@@ -1,19 +1,40 @@
 /**
  * Modul: DOM-Rendering der Kältekreis-Hauptansicht (circuitView.ts)
- * Zweck: Rendert interaktive Schaltschemadaten, SVG-Zonengrenzen und Bauteildetails.
+ * Zweck: Rendert interaktive Schaltschemadaten, SVG-Zonengrenzen, Sekundärkreise und Bauteildetails
+ *   sowohl für Wärmepumpen (Monoblock/Split) als auch für Split-Klima & VRV/VRF.
  * Verantwortlichkeit: Manipuliert das DOM strikt über createElement, textContent und replaceChildren (kein innerHTML).
  * Sicherheitsrelevanz: Vollständige Immunität gegen XSS-Angriffe durch typisierte DOM-APIs ohne String-Injektion.
  */
 
 import { COMPONENTS } from "../data/components";
+import { HVAC_COMPONENTS } from "../data/hvacComponents";
 import { SYSTEMS } from "../data/systems";
-import type { AppState, PaletteColorKey } from "../types/circuit";
+import type {
+  AppState,
+  CategoryType,
+  ComponentData,
+  HeatpumpSystemType,
+  HvacSystemType,
+  PaletteColorKey,
+  SystemType,
+  ThermodynamicState
+} from "../types/circuit";
 import { createChevronIcon } from "./uiIcons";
 
+export type AnyComponentData =
+  | ComponentData<HeatpumpSystemType>
+  | ComponentData<HvacSystemType>;
+
 export interface CircuitDomElements {
+  readonly brandMainTitle: HTMLElement;
   readonly headerSystemText: HTMLElement;
+  readonly headerRefPill: HTMLElement;
+  readonly btnCatHeatpump: HTMLButtonElement;
+  readonly btnCatHvac: HTMLButtonElement;
   readonly btnMonoblock: HTMLButtonElement;
   readonly btnSplit: HTMLButtonElement;
+  readonly btnKlimasplit: HTMLButtonElement;
+  readonly btnVrv: HTMLButtonElement;
   readonly refrigerantBanner: HTMLElement;
   readonly bannerTitle: HTMLElement;
   readonly bannerDesc: HTMLElement;
@@ -24,10 +45,12 @@ export interface CircuitDomElements {
   readonly labelOutdoor: SVGElement;
   readonly labelIndoor: SVGElement;
   readonly componentList: HTMLElement;
+  readonly btnModeCooling: HTMLButtonElement;
   readonly btnModeHeating: HTMLButtonElement;
   readonly btnModeDefrost: HTMLButtonElement;
   readonly pipesHeating: SVGGElement;
   readonly pipesDefrost: SVGGElement;
+  readonly lblReverseHeissgas: SVGTextElement;
   readonly valvePathsHeating: SVGGElement;
   readonly valvePathsDefrost: SVGGElement;
   readonly eevConesHeating: SVGGElement;
@@ -36,6 +59,23 @@ export interface CircuitDomElements {
   readonly comp1Sub: SVGTextElement;
   readonly comp3Title: SVGTextElement;
   readonly comp3Sub: SVGTextElement;
+  readonly comp4Title: SVGTextElement;
+  readonly comp4Sub: SVGTextElement;
+  readonly secondaryWaterLoop: SVGGElement;
+  readonly secondaryAirLoop: SVGGElement;
+  readonly vrvBranchBadge: SVGGElement;
+  readonly airSupplyBase: SVGPathElement;
+  readonly airSupplyFlow: SVGPathElement;
+  readonly lblAirSupply: SVGTextElement;
+  readonly airBoxTitle: SVGTextElement;
+  readonly airBoxSub1: SVGTextElement;
+  readonly airBoxSub2: SVGTextElement;
+  readonly airBoxFoot: SVGTextElement;
+  readonly legendVorlaufItem: HTMLElement;
+  readonly legendVorlaufText: HTMLElement;
+  readonly legendRuecklaufItem: HTMLElement;
+  readonly legendRuecklaufText: HTMLElement;
+  readonly legendVrvItem: HTMLElement;
   readonly svgElement: SVGSVGElement;
 }
 
@@ -50,6 +90,86 @@ const COMPONENT_BADGE_COLORS: Readonly<Record<number, string>> = {
   8: "var(--gradient-lagoon)",
   9: "var(--gradient-dusk)"
 };
+
+/**
+ * Liefert die 9 passenden Bauteile für die gewählte Anlagenkategorie.
+ */
+export function getComponentsForCategory(category: CategoryType): readonly AnyComponentData[] {
+  return category === "hvac" ? HVAC_COMPONENTS : COMPONENTS;
+}
+
+function isHeatpumpSystem(system: SystemType): system is HeatpumpSystemType {
+  return system === "monoblock" || system === "split";
+}
+
+function isHeatpumpComponent(comp: AnyComponentData): comp is ComponentData<HeatpumpSystemType> {
+  return "monoblock" in comp.thermo;
+}
+
+/**
+ * Löst Einbauort und thermodynamischen Zustand typsicher anhand von System und Bauteil auf.
+ */
+function resolveComponentSystemData(
+  comp: AnyComponentData,
+  system: SystemType
+): { readonly location: string; readonly thermo: ThermodynamicState } {
+  if (isHeatpumpSystem(system) && isHeatpumpComponent(comp)) {
+    return {
+      location: comp.location[system],
+      thermo: comp.thermo[system]
+    };
+  }
+  if (!isHeatpumpSystem(system) && !isHeatpumpComponent(comp)) {
+    return {
+      location: comp.location[system],
+      thermo: comp.thermo[system]
+    };
+  }
+  if (isHeatpumpComponent(comp)) {
+    return {
+      location: comp.location.monoblock,
+      thermo: comp.thermo.monoblock
+    };
+  }
+  return {
+    location: comp.location.klimasplit,
+    thermo: comp.thermo.klimasplit
+  };
+}
+
+/**
+ * Bestimmt Titel und Farb-ID einer Bauteil-Karte abhängig von Kategorie und Betriebsmodus.
+ */
+function resolveComponentPresentation(
+  comp: AnyComponentData,
+  state: AppState
+): { readonly displayName: string; readonly badgeColorId: number } {
+  if (state.category === "hvac") {
+    if (state.mode === "cooling") {
+      if (comp.id === 1) return { displayName: "Verflüssiger – Außenluft-WT (Kühlbetrieb)", badgeColorId: 3 };
+      if (comp.id === 3) return { displayName: "Verdampfer – Innengerät (Direktverdampfer)", badgeColorId: 1 };
+    } else if (state.mode === "heating") {
+      if (comp.id === 1) return { displayName: "Verdampfer – Außenluft-WT (Heizbetrieb)", badgeColorId: 1 };
+      if (comp.id === 3) return { displayName: "Verflüssiger – Innengerät (Heizregister)", badgeColorId: 3 };
+    } else {
+      if (comp.id === 1) return { displayName: "Verflüssiger – Außenluft-WT (Abtau)", badgeColorId: 3 };
+      if (comp.id === 3) return { displayName: "Verdampfer – Innengerät (Lüfter Stopp)", badgeColorId: 1 };
+    }
+    return { displayName: comp.name, badgeColorId: comp.id };
+  }
+
+  const isDefrost = state.mode === "defrost";
+  const displayName =
+    isDefrost && comp.id === 1
+      ? "Verflüssiger – Außenluft-WT (Abtau)"
+      : isDefrost && comp.id === 3
+        ? "Verdampfer – Platten-WT (Abtau)"
+        : comp.name;
+  const badgeColorId =
+    isDefrost && comp.id === 1 ? 3 : isDefrost && comp.id === 3 ? 1 : comp.id;
+
+  return { displayName, badgeColorId };
+}
 
 /**
  * Erzeugt eine Thermo-Box (Eintritt oder Austritt) mit semantischem Pastell-Styling nach FARBPALETTE.md.
@@ -98,7 +218,7 @@ function createThermoBox(
 }
 
 /**
- * Erzeugt eine kleine Detailsektion innerhalb einer aufgeklappten Bauteil-Karte.
+ * Erzeugt eine kompakte Detailsektion innerhalb einer aufgeklappten Bauteil-Karte.
  */
 function createDetailSection(label: string, text: string, extraClass = ""): HTMLDivElement {
   const section = document.createElement("div");
@@ -118,6 +238,16 @@ function createDetailSection(label: string, text: string, extraClass = ""): HTML
 }
 
 /**
+ * Liefert das Suffix für den Detail-Kicker im aktuellen Betriebsmodus.
+ */
+function getModeKickerSuffix(state: AppState): string {
+  if (state.mode === "defrost") return " · Abtauphase";
+  if (state.category === "hvac" && state.mode === "heating") return " · Heizbetrieb";
+  if (state.category === "hvac" && state.mode === "cooling") return " · Kühlbetrieb";
+  return "";
+}
+
+/**
  * Rendert alle 9 Kältekreis-Bauteile als aufklappbare iOS-Karten und synchronisiert das SVG-Highlight.
  */
 export function renderComponentDetail(
@@ -127,7 +257,13 @@ export function renderComponentDetail(
 ): void {
   const sysKey = state.system;
   const sysConfig = SYSTEMS[sysKey];
+  const activeComponents = getComponentsForCategory(state.category);
   const isDefrost = state.mode === "defrost";
+  const isHvacHeating = state.category === "hvac" && state.mode === "heating";
+  const thermoHeadingText =
+    state.category === "hvac"
+      ? "Thermodynamischer Zustand (Kühlbetrieb A35/R27)"
+      : "Thermodynamischer Zustand (Heizbetrieb A2/W35)";
 
   // SVG-Komponentengruppen visuell hervorheben
   const compNodes = elements.svgElement.querySelectorAll<SVGGElement>(".svg-comp");
@@ -138,15 +274,16 @@ export function renderComponentDetail(
     node.setAttribute("aria-pressed", String(active));
   });
 
-  // Falls die 9 Bauteil-Karten bereits im DOM liegen, immer in-place aktualisieren:
-  // verhindert teures DOM-Teardown/Rebuild bei System-, Modus- und Accordion-Wechseln
-  // und erhält alle laufenden CSS-Transitionen (insbesondere .t-acc-panel 0fr <-> 1fr).
-  if (elements.componentList.childElementCount === COMPONENTS.length) {
+  // In-Place-Update innerhalb derselben Kategorie erhält laufende Accordion-Transitionen (.t-acc-panel)
+  if (
+    elements.componentList.dataset.renderedCategory === state.category &&
+    elements.componentList.childElementCount === activeComponents.length
+  ) {
     const systemOrModeChanged =
       elements.componentList.dataset.renderedSystem !== sysKey ||
       elements.componentList.dataset.renderedMode !== state.mode;
 
-    COMPONENTS.forEach((comp) => {
+    activeComponents.forEach((comp) => {
       const isOpen = comp.id === state.componentId;
       const card = document.getElementById(`comp-card-${comp.id}`);
       const trigger = card?.querySelector<HTMLButtonElement>(".comp-card-btn");
@@ -158,17 +295,9 @@ export function renderComponentDetail(
       panel?.setAttribute("data-open", String(isOpen));
 
       if (systemOrModeChanged && card) {
-        const thermo = comp.thermo[sysKey];
-        const displayName =
-          isDefrost && comp.id === 1
-            ? "Verflüssiger – Außenluft-WT (Abtau)"
-            : isDefrost && comp.id === 3
-              ? "Verdampfer – Platten-WT (Abtau)"
-              : comp.name;
-        const badgeColorId =
-          isDefrost && comp.id === 1 ? 3 : isDefrost && comp.id === 3 ? 1 : comp.id;
-        const badgeBg =
-          COMPONENT_BADGE_COLORS[badgeColorId] ?? "var(--gradient-dusk)";
+        const { location, thermo } = resolveComponentSystemData(comp, sysKey);
+        const { displayName, badgeColorId } = resolveComponentPresentation(comp, state);
+        const badgeBg = COMPONENT_BADGE_COLORS[badgeColorId] ?? "var(--gradient-dusk)";
 
         const badgeEl = card.querySelector<HTMLElement>(".comp-icon-badge");
         if (badgeEl) badgeEl.style.background = badgeBg;
@@ -177,20 +306,18 @@ export function renderComponentDetail(
         if (titleEl) titleEl.textContent = displayName;
 
         const previewEl = card.querySelector<HTMLElement>(".comp-card-preview");
-        if (previewEl) previewEl.textContent = comp.location[sysKey];
+        if (previewEl) previewEl.textContent = location;
 
         const metricPill = card.querySelector<HTMLElement>(".comp-metric-pill");
         if (metricPill) metricPill.textContent = thermo.outMetric;
 
         const kickerEl = card.querySelector<HTMLElement>(".detail-kicker");
         if (kickerEl) {
-          kickerEl.textContent = `Komponente ${comp.id} von 9 · ${sysConfig.refrigerant}${isDefrost ? " · Abtauphase" : ""}`;
+          kickerEl.textContent = `Komponente ${comp.id} von 9 · ${sysConfig.refrigerant}${getModeKickerSuffix(state)}`;
         }
 
         const locPill = card.querySelector<HTMLElement>(".location-pill");
-        if (locPill) {
-          locPill.textContent = `Einbauort: ${comp.location[sysKey]}`;
-        }
+        if (locPill) locPill.textContent = `Einbauort: ${location}`;
 
         const thermoGrid = card.querySelector<HTMLElement>(".thermo-grid");
         if (thermoGrid) {
@@ -200,10 +327,8 @@ export function renderComponentDetail(
           );
         }
 
-        const defrostBox = card.querySelector<HTMLElement>(".defrost-note-box");
-        if (defrostBox) {
-          defrostBox.classList.toggle("hidden", !isDefrost);
-        }
+        card.querySelector<HTMLElement>(".heating-note-box")?.classList.toggle("hidden", !isHvacHeating);
+        card.querySelector<HTMLElement>(".defrost-note-box")?.classList.toggle("hidden", !isDefrost);
       }
     });
 
@@ -212,22 +337,11 @@ export function renderComponentDetail(
     return;
   }
 
-  const cards: HTMLDivElement[] = COMPONENTS.map((comp) => {
+  const cards: HTMLDivElement[] = activeComponents.map((comp) => {
     const isOpen = comp.id === state.componentId;
-    const thermo = comp.thermo[sysKey];
-
-    const displayName =
-      isDefrost && comp.id === 1
-        ? "Verflüssiger – Außenluft-WT (Abtau)"
-        : isDefrost && comp.id === 3
-          ? "Verdampfer – Platten-WT (Abtau)"
-          : comp.name;
-
-    // Im Abtaubetrieb tauschen Komponente 1 und 3 auch ihre Farbcodierung
-    const badgeColorId =
-      isDefrost && comp.id === 1 ? 3 : isDefrost && comp.id === 3 ? 1 : comp.id;
-    const badgeBg =
-      COMPONENT_BADGE_COLORS[badgeColorId] ?? "var(--gradient-dusk)";
+    const { location, thermo } = resolveComponentSystemData(comp, sysKey);
+    const { displayName, badgeColorId } = resolveComponentPresentation(comp, state);
+    const badgeBg = COMPONENT_BADGE_COLORS[badgeColorId] ?? "var(--gradient-dusk)";
 
     const card = document.createElement("div");
     card.id = `comp-card-${comp.id}`;
@@ -260,7 +374,7 @@ export function renderComponentDetail(
 
     const previewEl = document.createElement("p");
     previewEl.className = "comp-card-preview";
-    previewEl.textContent = comp.location[sysKey];
+    previewEl.textContent = location;
 
     const metricPill = document.createElement("span");
     metricPill.className = "comp-metric-pill tabular";
@@ -282,7 +396,6 @@ export function renderComponentDetail(
     trigger.appendChild(topRow);
     trigger.addEventListener("click", () => onSelectComponent(comp.id));
 
-    // Aufklappbarer Detailbereich (.t-acc-panel)
     const panel = document.createElement("div");
     panel.id = `comp-panel-${comp.id}`;
     panel.className = `t-acc-panel${isOpen ? " is-open" : ""}`;
@@ -299,27 +412,25 @@ export function renderComponentDetail(
 
     const kicker = document.createElement("span");
     kicker.className = "detail-kicker";
-    kicker.textContent = `Komponente ${comp.id} von 9 · ${sysConfig.refrigerant}${isDefrost ? " · Abtauphase" : ""}`;
+    kicker.textContent = `Komponente ${comp.id} von 9 · ${sysConfig.refrigerant}${getModeKickerSuffix(state)}`;
 
     const locPill = document.createElement("span");
     locPill.className = "location-pill";
-    locPill.textContent = `Einbauort: ${comp.location[sysKey]}`;
+    locPill.textContent = `Einbauort: ${location}`;
 
     metaRow.appendChild(kicker);
     metaRow.appendChild(locPill);
     body.appendChild(metaRow);
 
-    // Hauptaufgabe
     body.appendChild(createDetailSection("Hauptaufgabe im Kältekreis", comp.task));
 
-    // Thermodynamischer Zustand (Eintritt / Austritt)
     const thermoSection = document.createElement("div");
     thermoSection.className = "detail-section";
 
     const thermoLabel = document.createElement("p");
     thermoLabel.className = "section-label";
     thermoLabel.style.marginBottom = "10px";
-    thermoLabel.textContent = "Thermodynamischer Zustand (Heizbetrieb A2/W35)";
+    thermoLabel.textContent = thermoHeadingText;
 
     const thermoGrid = document.createElement("div");
     thermoGrid.className = "thermo-grid";
@@ -334,15 +445,24 @@ export function renderComponentDetail(
     thermoSection.appendChild(thermoGrid);
     body.appendChild(thermoSection);
 
-    // Abtauphasen-Hinweis (immer im DOM vorhalten und per .hidden steuern für reibungslose In-Place-Updates)
-    const defrostSection = createDetailSection(
-      "Rolle in der Abtauphase (Kreislaufumkehr)",
-      comp.defrostNote,
-      `defrost-note-box${isDefrost ? "" : " hidden"}`
-    );
-    body.appendChild(defrostSection);
+    if (comp.modeNoteHeating) {
+      body.appendChild(
+        createDetailSection(
+          "Rolle im Heizbetrieb (Kreislaufumkehr)",
+          comp.modeNoteHeating,
+          `heating-note-box${isHvacHeating ? "" : " hidden"}`
+        )
+      );
+    }
 
-    // Service-Messgröße
+    body.appendChild(
+      createDetailSection(
+        "Rolle in der Abtauphase (Kreislaufumkehr)",
+        comp.defrostNote,
+        `defrost-note-box${isDefrost ? "" : " hidden"}`
+      )
+    );
+
     const serviceSection = createDetailSection(
       "Wichtige Messgröße für den Service",
       comp.service,
@@ -363,43 +483,119 @@ export function renderComponentDetail(
   });
 
   elements.componentList.replaceChildren(...cards);
+  elements.componentList.dataset.renderedCategory = state.category;
   elements.componentList.dataset.renderedSystem = sysKey;
   elements.componentList.dataset.renderedMode = state.mode;
 }
 
 /**
- * Schaltet die animierten Kältekreis-Leitungen zwischen Heizbetrieb und Abtauphase (Kreislaufumkehr).
+ * Aktualisiert die Sekundärluft-Darstellung für Split-Klima & VRV im SVG-Schema.
+ */
+function syncSecondaryAirLoop(elements: CircuitDomElements, state: AppState): void {
+  const isVrv = state.system === "vrv";
+  elements.airBoxTitle.textContent = isVrv ? "Raumzonen (1…n)" : "Raumzone";
+
+  if (state.mode === "heating") {
+    elements.airSupplyBase.setAttribute("stroke", "var(--c-vorlauf)");
+    elements.airSupplyFlow.setAttribute("stroke", "var(--c-vorlauf)");
+    elements.airSupplyFlow.setAttribute("marker-end", "url(#arrowVorlauf)");
+    elements.lblAirSupply.setAttribute("fill", "var(--c-vorlauf)");
+    elements.lblAirSupply.textContent = "Zuluft (warm)";
+    elements.airBoxSub1.textContent = "Heizregister-Betrieb";
+    elements.airBoxSub2.textContent = "Raumluft (R20)";
+    elements.airBoxFoot.textContent = "Warmstart-Regelung";
+  } else if (state.mode === "defrost") {
+    elements.airSupplyBase.setAttribute("stroke", "var(--c-sauggas)");
+    elements.airSupplyFlow.setAttribute("stroke", "var(--c-sauggas)");
+    elements.airSupplyFlow.setAttribute("marker-end", "url(#arrowSaug)");
+    elements.lblAirSupply.setAttribute("fill", "var(--c-sauggas)");
+    elements.lblAirSupply.textContent = "Lüfter Stopp";
+    elements.airBoxSub1.textContent = "Abtauung Außen-WT";
+    elements.airBoxSub2.textContent = "Kein Kaltluftzug";
+    elements.airBoxFoot.textContent = "Innenlüfter Aus";
+  } else {
+    elements.airSupplyBase.setAttribute("stroke", "var(--c-nassdampf)");
+    elements.airSupplyFlow.setAttribute("stroke", "var(--c-nassdampf)");
+    elements.airSupplyFlow.setAttribute("marker-end", "url(#arrowNass)");
+    elements.lblAirSupply.setAttribute("fill", "var(--c-nassdampf)");
+    elements.lblAirSupply.textContent = "Zuluft (kalt)";
+    elements.airBoxSub1.textContent = "Direktverdampfung";
+    elements.airBoxSub2.textContent = "Raumluft (R27)";
+    elements.airBoxFoot.textContent = "Kondensat-Ablauf";
+  }
+}
+
+/**
+ * Schaltet die animierten Kältekreis-Leitungen und Bauteilrollen zwischen den Betriebsmodi um.
  */
 export function renderOperationMode(
   elements: CircuitDomElements,
   state: AppState,
   onSelectComponent: (id: number) => void
 ): void {
+  const isHvac = state.category === "hvac";
+  const isCooling = state.mode === "cooling";
+  const isHeating = state.mode === "heating";
   const isDefrost = state.mode === "defrost";
-  elements.btnModeHeating.setAttribute("aria-selected", String(!isDefrost));
-  elements.btnModeDefrost.setAttribute("aria-selected", String(isDefrost));
-  elements.pipesHeating.classList.toggle("svg-layer-hidden", isDefrost);
-  elements.pipesDefrost.classList.toggle("svg-layer-hidden", !isDefrost);
-  elements.valvePathsHeating.classList.toggle("svg-layer-hidden", isDefrost);
-  elements.valvePathsDefrost.classList.toggle("svg-layer-hidden", !isDefrost);
-  elements.eevConesHeating.classList.toggle("svg-layer-hidden", isDefrost);
-  elements.eevConesDefrost.classList.toggle("svg-layer-hidden", !isDefrost);
+  const isReverseFlow = isCooling || isDefrost;
 
-  // Im Abtaubetrieb tauschen Außen-Wärmetauscher und Plattenwärmetauscher ihre Rollen
-  elements.comp1Title.textContent = isDefrost ? "Verflüssiger" : "Verdampfer";
-  elements.comp1Sub.textContent = isDefrost
-    ? "Außenluft-WT (taut ab)"
-    : "Außenluft-Wärmetauscher";
-  elements.comp3Title.textContent = isDefrost ? "Verdampfer" : "Verflüssiger";
-  elements.comp3Sub.textContent = isDefrost
-    ? "Platten-WT (Wärmeentzug)"
-    : "Plattenwärmetauscher";
+  elements.btnModeCooling.classList.toggle("hidden", !isHvac);
+  elements.btnModeHeating.textContent = isHvac
+    ? "Heizbetrieb (Umkehr)"
+    : "Heizbetrieb (Regelbetrieb)";
+
+  elements.btnModeCooling.setAttribute("aria-selected", String(isCooling));
+  elements.btnModeHeating.setAttribute("aria-selected", String(isHeating));
+  elements.btnModeDefrost.setAttribute("aria-selected", String(isDefrost));
+
+  elements.pipesHeating.classList.toggle("svg-layer-hidden", isReverseFlow);
+  elements.pipesDefrost.classList.toggle("svg-layer-hidden", !isReverseFlow);
+  elements.valvePathsHeating.classList.toggle("svg-layer-hidden", isReverseFlow);
+  elements.valvePathsDefrost.classList.toggle("svg-layer-hidden", !isReverseFlow);
+  elements.eevConesHeating.classList.toggle("svg-layer-hidden", isReverseFlow);
+  elements.eevConesDefrost.classList.toggle("svg-layer-hidden", !isReverseFlow);
+
+  elements.lblReverseHeissgas.textContent = isCooling
+    ? "Heißgas (HD)"
+    : "Heißgas (Abtauen)";
+
+  if (isHvac) {
+    if (isCooling) {
+      elements.comp1Title.textContent = "Verflüssiger";
+      elements.comp1Sub.textContent = "Außenluft-Wärmetauscher";
+      elements.comp3Title.textContent = "Verdampfer";
+      elements.comp3Sub.textContent = "Direktverdampfer · Raumluft";
+    } else if (isHeating) {
+      elements.comp1Title.textContent = "Verdampfer";
+      elements.comp1Sub.textContent = "Außenluft-Wärmetauscher";
+      elements.comp3Title.textContent = "Verflüssiger";
+      elements.comp3Sub.textContent = "Heizregister · Raumluft";
+    } else {
+      elements.comp1Title.textContent = "Verflüssiger";
+      elements.comp1Sub.textContent = "Außenluft-WT (taut ab)";
+      elements.comp3Title.textContent = "Verdampfer";
+      elements.comp3Sub.textContent = "Innengerät (Lüfter Stopp)";
+    }
+    syncSecondaryAirLoop(elements, state);
+  } else {
+    elements.comp1Title.textContent = isDefrost ? "Verflüssiger" : "Verdampfer";
+    elements.comp1Sub.textContent = isDefrost
+      ? "Außenluft-WT (taut ab)"
+      : "Außenluft-Wärmetauscher";
+    elements.comp3Title.textContent = isDefrost ? "Verdampfer" : "Verflüssiger";
+    elements.comp3Sub.textContent = isDefrost
+      ? "Platten-WT (Wärmeentzug)"
+      : "Plattenwärmetauscher";
+  }
+
+  const sys = SYSTEMS[state.system];
+  elements.headerRefPill.textContent = sys.refCondition[state.mode];
 
   renderComponentDetail(elements, state, onSelectComponent);
 }
 
 /**
- * Rendert das gewählte System (Monoblock vs. Split) samt Banner und SVG-Grenzen.
+ * Rendert die gewählte Anlagenkategorie und Bauart samt Banner, Sekundärkreis und SVG-Grenzen.
  */
 export function renderSystemView(
   elements: CircuitDomElements,
@@ -407,11 +603,29 @@ export function renderSystemView(
   onSelectComponent: (id: number) => void
 ): void {
   const sys = SYSTEMS[state.system];
-  const isMono = state.system === "monoblock";
+  const isHvac = state.category === "hvac";
+  const isVrv = state.system === "vrv";
 
-  elements.btnMonoblock.setAttribute("aria-selected", String(isMono));
-  elements.btnSplit.setAttribute("aria-selected", String(!isMono));
+  // Haupt-Reiter & Kopfbereich synchronisieren
+  elements.btnCatHeatpump.setAttribute("aria-selected", String(!isHvac));
+  elements.btnCatHvac.setAttribute("aria-selected", String(isHvac));
+  elements.brandMainTitle.textContent = isHvac
+    ? "Kältekreislauf Split-Klima & VRV"
+    : "Kältekreislauf Wärmepumpe";
+
+  // Bauart-Tabs je Kategorie ein- bzw. ausblenden
+  elements.btnMonoblock.classList.toggle("hidden", isHvac);
+  elements.btnSplit.classList.toggle("hidden", isHvac);
+  elements.btnKlimasplit.classList.toggle("hidden", !isHvac);
+  elements.btnVrv.classList.toggle("hidden", !isHvac);
+
+  elements.btnMonoblock.setAttribute("aria-selected", String(state.system === "monoblock"));
+  elements.btnSplit.setAttribute("aria-selected", String(state.system === "split"));
+  elements.btnKlimasplit.setAttribute("aria-selected", String(state.system === "klimasplit"));
+  elements.btnVrv.setAttribute("aria-selected", String(isVrv));
+
   elements.headerSystemText.textContent = sys.headerText;
+  elements.headerRefPill.textContent = sys.refCondition[state.mode];
 
   // Banner-Klassen und Inhalte setzen
   elements.refrigerantBanner.className = `refrigerant-banner ${sys.bannerClass}`;
@@ -420,7 +634,7 @@ export function renderSystemView(
   elements.bannerBadge.className = `badge-tag ${sys.badgeClass}`;
   elements.bannerBadge.textContent = sys.badgeText;
 
-  // SVG-Systemgrenze und Zonen-Geometrie anpassen (CSS-Transform für GPU-Compositor-Animation)
+  // SVG-Systemgrenze, Sekundärkreis und VRV-Refnet anpassen
   elements.buildingBoundary.setAttribute("transform", `translate(${sys.boundaryX}, 16)`);
   elements.buildingBoundary.style.transform = `translate3d(${sys.boundaryX}px, 16px, 0)`;
   elements.zoneOutdoor.setAttribute("width", String(sys.outdoorWidth));
@@ -430,6 +644,17 @@ export function renderSystemView(
   elements.labelIndoor.setAttribute("x", String(sys.indoorX + 14));
   elements.labelIndoor.textContent = sys.indoorLabel;
 
-  // Komponentendetails für neues Kältemittel aktualisieren
-  renderComponentDetail(elements, state, onSelectComponent);
+  elements.secondaryWaterLoop.classList.toggle("svg-layer-hidden", isHvac);
+  elements.secondaryAirLoop.classList.toggle("svg-layer-hidden", !isHvac);
+  elements.vrvBranchBadge.classList.toggle("svg-layer-hidden", !isVrv);
+
+  elements.comp4Title.textContent = isVrv ? "EEV (1…n)" : "EEV";
+  elements.comp4Sub.textContent = isVrv ? "Je Innengerät" : "Expansionsventil";
+
+  // Farblegende an Sekundärkreis anpassen
+  elements.legendVorlaufText.textContent = isHvac ? "Zuluft (Heizbetrieb)" : "Heizung Vorlauf";
+  elements.legendRuecklaufItem.classList.toggle("hidden", isHvac);
+  elements.legendVrvItem.classList.toggle("hidden", !isVrv);
+
+  renderOperationMode(elements, state, onSelectComponent);
 }

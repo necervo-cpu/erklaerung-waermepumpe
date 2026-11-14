@@ -5,9 +5,17 @@
  * Sicherheitsrelevanz: Strikte XSS-Sicherheit durch deklarativen Elementbau ohne HTML-String-Parsing.
  */
 
+import { HVAC_NICE_TO_KNOW } from "../data/hvacNiceToKnow";
 import { NICE_TO_KNOW } from "../data/niceToKnow";
-import type { NiceToKnowItem } from "../types/circuit";
+import type { CategoryType, NiceToKnowItem } from "../types/circuit";
 import { createMaterialIcon } from "./uiIcons";
+
+export interface NiceToKnowDomElements {
+  readonly grid: HTMLElement;
+  readonly headerKicker: HTMLElement;
+  readonly headerTitle: HTMLElement;
+  readonly headerDesc: HTMLElement;
+}
 
 interface NiceCategoryStyle {
   readonly icon: string;
@@ -112,13 +120,33 @@ function createNiceCard(item: NiceToKnowItem, index: number): HTMLElement {
 }
 
 /**
- * Rendert das gesamte Wissens-Grid vollständig ohne innerHTML.
+ * Rendert das gesamte Wissens-Grid passend zur gewählten Anlagenkategorie ohne innerHTML.
  */
-export function renderNiceToKnowView(container: HTMLElement): void {
-  // Statische Wissens-Karten bei erneutem Tab-Wechsel nicht neu aufbauen
-  if (container.childElementCount === NICE_TO_KNOW.length) {
+export function renderNiceToKnowView(
+  elements: NiceToKnowDomElements,
+  category: CategoryType
+): void {
+  const isHvac = category === "hvac";
+  elements.headerKicker.textContent = isHvac
+    ? "Fachwissen & Praxis-Tipps · Klima & VRV"
+    : "Fachwissen & Praxis-Tipps";
+  elements.headerTitle.textContent = isHvac
+    ? "Wissenswertes rund um Split-Klima & VRV/VRF"
+    : "Wissenswertes rund um Kältekreis & Wärmepumpe";
+  elements.headerDesc.textContent = isHvac
+    ? "Direktverdampfung, Unterkühlung (Subcooler), Stickstoff-Löttechnik, Ölrückführung, EN 378 und Lufthygiene praxisnah aufbereitet."
+    : "Thermodynamische Zusammenhänge, effiziente Betriebsführung, Hydraulik-Regeln und Akustik-Hinweise praxisnah aufbereitet.";
+
+  const activeItems = isHvac ? HVAC_NICE_TO_KNOW : NICE_TO_KNOW;
+
+  // Statische Wissens-Karten innerhalb derselben Kategorie nicht unnötig neu aufbauen
+  if (
+    elements.grid.dataset.renderedCategory === category &&
+    elements.grid.childElementCount === activeItems.length
+  ) {
     return;
   }
-  const cards = NICE_TO_KNOW.map((item, idx) => createNiceCard(item, idx));
-  container.replaceChildren(...cards);
+  const cards = activeItems.map((item, idx) => createNiceCard(item, idx));
+  elements.grid.replaceChildren(...cards);
+  elements.grid.dataset.renderedCategory = category;
 }

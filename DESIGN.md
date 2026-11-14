@@ -84,6 +84,8 @@ WCAG-AA-konform (mindestens 4,9:1 auf `#F2F2F7` und 5,1:1 auf `#FFFFFF` im Hell-
 - **Heizungswasser Vorlauf:** `--pastel-butter` (Fläche) / `--accent-text-butter` (Text, Linien, Marker)
 - **Heizungswasser Rücklauf:** `--pastel-mint` (Fläche) / `--accent-text-mint` (Text, Linien, Marker)
 - **Indikator / OK (Schauglas, Monoblock R290):** `--pastel-lime` (Fläche) / `--accent-text-lime` (Text, Linien, Marker)
+- **VRV / VRF Multi-Zonen-System-Akzent:** `--pastel-lavender` (Fläche) / `--accent-text-lavender` (Text, Linien, Marker)
+- **Raumluft-Umwälzung (Split-Klima / VRV):** Kühl-Zuluft `--accent-text-aqua`, Heiz-Zuluft `--accent-text-butter`, Raum-Umluft `--accent-text-sky`
 
 ---
 

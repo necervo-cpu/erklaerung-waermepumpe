@@ -1,18 +1,19 @@
 /**
- * Modul: Fachdaten der Wärmepumpen-Systemkonfigurationen (systems.ts)
- * Zweck: Definition der systemspezifischen Parameter für Monoblock (R290) und Split (R32/R410A).
- * Verantwortlichkeit: Enthält Kältemittel-Sicherheitsklassen, F-Gase-Hinweise und SVG-Zonengeometrie.
- * Sicherheitsrelevanz: Fachlich exakte Unterscheidung von A3 (brennbar, hermetisch) und A2L/A1 (F-Gase-Sachkunde).
+ * Modul: Fachdaten der Kältekreis-Systemkonfigurationen (systems.ts)
+ * Zweck: Definition der systemspezifischen Parameter für Wärmepumpen (Monoblock/Split) sowie Split-Klima & VRV/VRF.
+ * Verantwortlichkeit: Enthält Kältemittel-Sicherheitsklassen, F-Gase-/EN-378-Hinweise und SVG-Zonengeometrie.
+ * Sicherheitsrelevanz: Fachlich exakte Unterscheidung von A3 (brennbar, hermetisch), A2L/A1 (F-Gase-Sachkunde) und EN 378.
  */
 
 import type { SystemConfig, SystemType } from "../types/circuit";
 
 /**
- * Konfigurationsdaten für Monoblock- und Split-Wärmepumpen.
+ * Konfigurationsdaten für Wärmepumpen sowie Split-Klima- und VRV/VRF-Systeme.
  * Die Koordinaten spiegeln die Position der Wanddurchführung im SVG-Flussdiagramm wider.
  */
 export const SYSTEMS: Record<SystemType, SystemConfig> = {
   monoblock: {
+    category: "heatpump",
     name: "Monoblock-Wärmepumpe",
     refrigerant: "R290 (Propan)",
     headerText: "Monoblock-Bauart · R290 (Propan)",
@@ -27,9 +28,15 @@ export const SYSTEMS: Record<SystemType, SystemConfig> = {
     indoorX: 752,
     indoorWidth: 152,
     outdoorLabel: "AUSSENEINHEIT (KOMPLETTER KÄLTEKREIS)",
-    indoorLabel: "GEBÄUDE / INNEN"
+    indoorLabel: "GEBÄUDE / INNEN",
+    refCondition: {
+      heating: "Referenz: Heizbetrieb A2 / W35",
+      cooling: "Referenz: Kühlbetrieb A35 / W18",
+      defrost: "Referenz: Abtauphase (Kreislaufumkehr)"
+    }
   },
   split: {
+    category: "heatpump",
     name: "Split-Wärmepumpe",
     refrigerant: "R32 / R410A",
     headerText: "Split-Bauart · R32 / R410A",
@@ -44,6 +51,57 @@ export const SYSTEMS: Record<SystemType, SystemConfig> = {
     indoorX: 556,
     indoorWidth: 348,
     outdoorLabel: "AUSSENEINHEIT",
-    indoorLabel: "INNENEINHEIT / HYDROMODUL"
+    indoorLabel: "INNENEINHEIT / HYDROMODUL",
+    refCondition: {
+      heating: "Referenz: Heizbetrieb A2 / W35",
+      cooling: "Referenz: Kühlbetrieb A35 / W18",
+      defrost: "Referenz: Abtauphase (Kreislaufumkehr)"
+    }
+  },
+  klimasplit: {
+    category: "hvac",
+    name: "Split-Klimaanlage (Single / Multi)",
+    refrigerant: "R32 (Difluormethan)",
+    headerText: "Split-Klimaanlage · R32 (Direktverdampfung)",
+    bannerTitle: "Split-Klimaanlage (Single-/Multi-Split) · Luft/Luft-Direktverdampfung",
+    bannerDesc:
+      "R32 (Sicherheitsgruppe A2L, GWP 675): Direkter Wärmeaustausch zwischen Kältemittel und Raumluft ohne Heizungswasserkreis. Das Expansionsventil (EEV) sitzt meist in der Außeneinheit; gedämmte Einspritz- und Saugleitung führen zum Wand-, Truhen- oder Kassettengerät. F-Gase-Sachkunde Pflicht.",
+    badgeText: "R32 · A2L · F-Gase-Pflicht",
+    badgeClass: "r32",
+    bannerClass: "is-r32",
+    boundaryX: 540,
+    outdoorWidth: 518,
+    indoorX: 556,
+    indoorWidth: 348,
+    outdoorLabel: "AUSSENEINHEIT (CONDENSING UNIT)",
+    indoorLabel: "INNENGERÄT (DIREKTVERDAMPFER)",
+    refCondition: {
+      cooling: "Referenz: Kühlbetrieb A35 / R27",
+      heating: "Referenz: Heizbetrieb A7 / R20",
+      defrost: "Referenz: Abtauphase (Kreislaufumkehr)"
+    }
+  },
+  vrv: {
+    category: "hvac",
+    name: "VRV / VRF-Klima-Großanlage",
+    refrigerant: "R32 / R410A (VRV / VRF)",
+    headerText: "VRV / VRF-System · Variabler Kältemittelmassenstrom",
+    bannerTitle: "VRV / VRF-System (Variable Refrigerant Volume) · Mehrstrang-Direktverdampfung",
+    bannerDesc:
+      "Zentrale Außeneinheit mit Inverter-Scrollverdichtern und Unterkühler versorgt über ein verzweigtes Rohrnetz (Refnet-Abzweige) bis zu 64 Innengeräte. Jedes Innengerät besitzt ein eigenes elektronisches Expansionsventil (EEV) zur individuellen Leistungsregelung. Mindestraumvolumen & EN 378 Füllmengengrenzen beachten!",
+    badgeText: "VRV / VRF · EN 378 · Multi-Zone",
+    badgeClass: "vrv",
+    bannerClass: "is-vrv",
+    boundaryX: 540,
+    outdoorWidth: 518,
+    indoorX: 556,
+    indoorWidth: 348,
+    outdoorLabel: "VRV-AUSSENZENTRALE (INVERTER-SCROLL)",
+    indoorLabel: "INNENGERÄTE-NETZ (REFNET & DEZENTRALE EEVs)",
+    refCondition: {
+      cooling: "Referenz: Kühlbetrieb A35 / R27",
+      heating: "Referenz: Heizbetrieb A7 / R20",
+      defrost: "Referenz: Abtauphase (Kreislaufumkehr)"
+    }
   }
 };

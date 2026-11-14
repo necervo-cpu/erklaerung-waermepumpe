@@ -5,9 +5,9 @@
  * Sicherheitsrelevanz: Fachgerechte Druckbereiche und Sicherheitsgrenzen (Heißgasgrenze, Überhitzung, ND-Abschaltung).
  */
 
-import type { ComponentData } from "../types/circuit";
+import type { ComponentData, HeatpumpSystemType } from "../types/circuit";
 
-export const COMPONENTS: readonly ComponentData[] = [
+export const COMPONENTS: readonly ComponentData<HeatpumpSystemType>[] = [
   {
     id: 1,
     shortName: "Verdampfer",

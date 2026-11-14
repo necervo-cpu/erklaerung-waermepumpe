@@ -6,9 +6,15 @@
  * Sicherheitsrelevanz: Verhindert Laufzeitfehler bei ungültigen Komponenten- oder Bauart-IDs.
  */
 
-export type SystemType = "monoblock" | "split";
+export type CategoryType = "heatpump" | "hvac";
 
-export type OperationMode = "heating" | "defrost";
+export type HeatpumpSystemType = "monoblock" | "split";
+
+export type HvacSystemType = "klimasplit" | "vrv";
+
+export type SystemType = HeatpumpSystemType | HvacSystemType;
+
+export type OperationMode = "heating" | "cooling" | "defrost";
 
 export type ViewType = "circuit" | "faults" | "niceToKnow";
 
@@ -44,22 +50,24 @@ export interface ThermodynamicState {
 /**
  * Fachdaten einer Kältekreiskomponente inkl. Einbauort je nach Bauart.
  */
-export interface ComponentData {
+export interface ComponentData<S extends SystemType = SystemType> {
   readonly id: number;
   readonly shortName: string;
   readonly name: string;
-  readonly location: Record<SystemType, string>;
+  readonly location: Record<S, string>;
   readonly task: string;
-  readonly thermo: Record<SystemType, ThermodynamicState>;
+  readonly thermo: Record<S, ThermodynamicState>;
   readonly service: string;
   readonly serviceMetric: string;
   readonly defrostNote: string;
+  readonly modeNoteHeating?: string;
 }
 
 /**
- * Konfiguration der Wärmepumpen-Bauart (Monoblock vs. Split) mit Geometrie der SVG-Systemgrenze.
+ * Konfiguration einer Anlagen-Bauart (Wärmepumpe oder Split-Klima/VRV) mit SVG-Systemgrenze.
  */
 export interface SystemConfig {
+  readonly category: CategoryType;
   readonly name: string;
   readonly refrigerant: string;
   readonly headerText: string;
@@ -74,6 +82,7 @@ export interface SystemConfig {
   readonly indoorWidth: number;
   readonly outdoorLabel: string;
   readonly indoorLabel: string;
+  readonly refCondition: Record<OperationMode, string>;
 }
 
 /**
@@ -108,6 +117,7 @@ export interface NiceToKnowItem {
  * Gesamtzustand der Fachanwendung.
  */
 export interface AppState {
+  category: CategoryType;
   system: SystemType;
   mode: OperationMode;
   view: ViewType;

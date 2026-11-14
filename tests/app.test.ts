@@ -12,6 +12,9 @@ import { fileURLToPath } from "node:url";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { COMPONENTS } from "../src/data/components";
 import { FAULTS } from "../src/data/faults";
+import { HVAC_COMPONENTS } from "../src/data/hvacComponents";
+import { HVAC_FAULTS } from "../src/data/hvacFaults";
+import { HVAC_NICE_TO_KNOW } from "../src/data/hvacNiceToKnow";
 import { NICE_TO_KNOW } from "../src/data/niceToKnow";
 import { SYSTEMS } from "../src/data/systems";
 import {
@@ -124,21 +127,39 @@ describe("Theme-Management (theme-init.ts)", () => {
 });
 
 describe("Systemdaten-Integrität (systems.ts)", () => {
-  it("enthält gültige Konfigurationen für Monoblock und Split", () => {
+  it("enthält gültige Konfigurationen für Wärmepumpen (Monoblock/Split) und Klima/VRV", () => {
     expect(SYSTEMS).toHaveProperty("monoblock");
     expect(SYSTEMS).toHaveProperty("split");
+    expect(SYSTEMS).toHaveProperty("klimasplit");
+    expect(SYSTEMS).toHaveProperty("vrv");
 
-    const { monoblock, split } = SYSTEMS;
+    const { monoblock, split, klimasplit, vrv } = SYSTEMS;
 
+    expect(monoblock.category).toBe("heatpump");
     expect(monoblock.refrigerant).toContain("R290");
     expect(monoblock.badgeText).toContain("R290");
     expect(monoblock.boundaryX).toBeGreaterThan(0);
     expect(monoblock.outdoorWidth).toBeGreaterThan(0);
 
+    expect(split.category).toBe("heatpump");
     expect(split.refrigerant).toContain("R32");
     expect(split.badgeText).toContain("F-Gase");
     expect(split.boundaryX).toBeGreaterThan(0);
     expect(split.outdoorWidth).toBeGreaterThan(0);
+
+    expect(klimasplit.category).toBe("hvac");
+    expect(klimasplit.refrigerant).toContain("R32");
+    expect(klimasplit.badgeText).toContain("F-Gase");
+    expect(klimasplit.boundaryX).toBeGreaterThan(0);
+    expect(klimasplit.outdoorWidth).toBeGreaterThan(0);
+    expect(klimasplit.refCondition.cooling).toContain("A35");
+
+    expect(vrv.category).toBe("hvac");
+    expect(vrv.refrigerant).toContain("VRV");
+    expect(vrv.badgeText).toContain("EN 378");
+    expect(vrv.boundaryX).toBeGreaterThan(0);
+    expect(vrv.outdoorWidth).toBeGreaterThan(0);
+    expect(vrv.refCondition.heating).toContain("A7");
   });
 });
 
@@ -272,6 +293,100 @@ describe("Wissenskarten-Integrität (niceToKnow.ts)", () => {
   });
 });
 
+describe("Split-Klima & VRV Datenintegrität (hvac*.ts)", () => {
+  it("enthält exakt 9 fortlaufend nummerierte Klima-/VRV-Komponenten (1..9)", () => {
+    expect(HVAC_COMPONENTS).toHaveLength(9);
+    const ids = HVAC_COMPONENTS.map((c) => c.id);
+    expect(ids).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  });
+
+  it("definiert vollständige thermodynamische Daten für Split-Klima und VRV", () => {
+    const validPaletteColors = new Set([
+      "rose",
+      "peach",
+      "butter",
+      "lime",
+      "mint",
+      "aqua",
+      "sky",
+      "periwinkle",
+      "lavender",
+      "orchid"
+    ]);
+
+    for (const comp of HVAC_COMPONENTS) {
+      expect(comp.name).toBeTruthy();
+      expect(comp.shortName).toBeTruthy();
+      expect(comp.task).toBeTruthy();
+      expect(comp.location.klimasplit).toBeTruthy();
+      expect(comp.location.vrv).toBeTruthy();
+
+      for (const variant of [comp.thermo.klimasplit, comp.thermo.vrv]) {
+        expect(variant.inState).toBeTruthy();
+        expect(validPaletteColors.has(variant.inColor)).toBe(true);
+        expect(variant.inMetric).toBeTruthy();
+        expect(variant.inSub).toBeTruthy();
+        expect(variant.outState).toBeTruthy();
+        expect(validPaletteColors.has(variant.outColor)).toBe(true);
+        expect(variant.outMetric).toBeTruthy();
+        expect(variant.outSub).toBeTruthy();
+      }
+
+      expect(comp.service).toBeTruthy();
+      expect(comp.serviceMetric).toBeTruthy();
+      expect(comp.defrostNote).toBeTruthy();
+      expect(comp.modeNoteHeating).toBeTruthy();
+    }
+  });
+
+  it("definiert exakt 7 Störungsbilder für Split-Klima & VRV mit gültigen Referenzen", () => {
+    expect(HVAC_FAULTS).toHaveLength(7);
+    expect(HVAC_FAULTS.map((f) => f.id)).toEqual([
+      "condensate",
+      "indoor_ice",
+      "vrv_oil",
+      "eev_branch",
+      "comm_bus",
+      "hd_summer",
+      "smell_hygiene"
+    ]);
+
+    const validComponentIds = new Set(HVAC_COMPONENTS.map((c) => c.id));
+    for (const fault of HVAC_FAULTS) {
+      expect(fault.title).toBeTruthy();
+      expect(fault.symptoms).toBeTruthy();
+      expect(fault.causes.length).toBeGreaterThan(0);
+      expect(fault.checks.length).toBeGreaterThan(0);
+      expect(fault.relatedComponents.length).toBeGreaterThan(0);
+      for (const componentId of fault.relatedComponents) {
+        expect(validComponentIds.has(componentId)).toBe(true);
+      }
+    }
+  });
+
+  it("definiert exakt 7 Wissenskarten für Split-Klima & VRV", () => {
+    expect(HVAC_NICE_TO_KNOW).toHaveLength(7);
+    expect(HVAC_NICE_TO_KNOW.map((item) => item.id)).toEqual([
+      "seer-scop",
+      "subcooling-vrv",
+      "nitrogen-brazing",
+      "en378-r32",
+      "oil-return",
+      "dehumidification",
+      "hygiene-vdi6022"
+    ]);
+
+    for (const item of HVAC_NICE_TO_KNOW) {
+      expect(item.category).toBeTruthy();
+      expect(item.title).toBeTruthy();
+      expect(item.badge).toBeTruthy();
+      expect(item.summary.length).toBeGreaterThan(20);
+      expect(item.keyFacts.length).toBeGreaterThanOrEqual(3);
+      expect(item.proTip.length).toBeGreaterThan(20);
+    }
+  });
+});
+
 describe("DOM-Integrität (index.html)", () => {
   it("enthält alle von src/main.ts benötigten kritischen DOM-IDs", () => {
     const currentDir = fileURLToPath(new URL(".", import.meta.url));
@@ -319,7 +434,35 @@ describe("DOM-Integrität (index.html)", () => {
       "themeToggleIcon",
       "svgStageWrap",
       "svgStage",
-      "detailScrollTarget"
+      "detailScrollTarget",
+      "brandMainTitle",
+      "headerRefPill",
+      "btnCatHeatpump",
+      "btnCatHvac",
+      "btnKlimasplit",
+      "btnVrv",
+      "btnModeCooling",
+      "lblReverseHeissgas",
+      "comp4Title",
+      "comp4Sub",
+      "secondaryWaterLoop",
+      "secondaryAirLoop",
+      "vrvBranchBadge",
+      "airSupplyBase",
+      "airSupplyFlow",
+      "lblAirSupply",
+      "airBoxTitle",
+      "airBoxSub1",
+      "airBoxSub2",
+      "airBoxFoot",
+      "legendVorlaufItem",
+      "legendVorlaufText",
+      "legendRuecklaufItem",
+      "legendRuecklaufText",
+      "legendVrvItem",
+      "niceHeaderKicker",
+      "niceHeaderTitle",
+      "niceHeaderDesc"
     ];
 
     for (const id of requiredMainIds) {

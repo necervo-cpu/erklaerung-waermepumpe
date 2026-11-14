@@ -5,9 +5,10 @@
  * Sicherheitsrelevanz: Strikte XSS-Sicherheit durch deklarativen Elementbau ohne HTML-String-Parsing.
  */
 
-import { COMPONENTS } from "../data/components";
 import { FAULTS } from "../data/faults";
-import type { AppState, FaultData } from "../types/circuit";
+import { HVAC_FAULTS } from "../data/hvacFaults";
+import type { AppState, CategoryType, FaultData } from "../types/circuit";
+import { getComponentsForCategory } from "./circuitView";
 import { createChevronIcon, createMaterialIcon } from "./uiIcons";
 
 export interface FaultsDomElements {
@@ -53,6 +54,7 @@ function createBulletList(items: readonly string[]): HTMLUListElement {
  */
 function createAccordionPanel(
   fault: FaultData,
+  category: CategoryType,
   isOpen: boolean,
   onJumpToComponent: (componentId: number) => void
 ): HTMLDivElement {
@@ -98,10 +100,11 @@ function createAccordionPanel(
   );
 
   // Direktsprung-Buttons zu beteiligten Komponenten
+  const activeComponents = getComponentsForCategory(category);
   const actionsWrap = document.createElement("div");
   actionsWrap.className = "fault-actions";
   fault.relatedComponents.forEach((compId) => {
-    const comp = COMPONENTS.find((c) => c.id === compId);
+    const comp = activeComponents.find((c) => c.id === compId);
     if (!comp) return;
 
     const jumpBtn = document.createElement("button");
@@ -140,6 +143,15 @@ const FAULT_VISUAL_MAP: Record<string, FaultVisualStyle> = {
   heater: { icon: "bolt", bg: "var(--surface-field)" },
   flow: { icon: "water_drop", bg: "var(--surface-field)" },
 
+  // Primäre IDs für Split-Klima & VRV (data/hvacFaults.ts)
+  condensate: { icon: "water_drop", bg: "var(--surface-field)" },
+  indoor_ice: { icon: "severe_cold", bg: "var(--surface-field)" },
+  vrv_oil: { icon: "oil_barrel", bg: "var(--surface-field)" },
+  eev_branch: { icon: "tune", bg: "var(--surface-field)" },
+  comm_bus: { icon: "router", bg: "var(--surface-field)" },
+  hd_summer: { icon: "sunny", bg: "var(--surface-field)" },
+  smell_hygiene: { icon: "air", bg: "var(--surface-field)" },
+
   // Abwärtskompatible Deskriptor-Aliases
   hd_alarm: { icon: "warning", bg: "var(--surface-field)" },
   nd_alarm: { icon: "ac_unit", bg: "var(--surface-field)" },
@@ -159,12 +171,15 @@ export function renderFaultsView(
   onSelectFault: (faultId: string) => void,
   onJumpToComponent: (componentId: number) => void
 ): void {
+  const activeFaults = state.category === "hvac" ? HVAC_FAULTS : FAULTS;
+
   // In-Place-Update bei reinem Accordion-Toggle für < 200ms Reaktionszeit und flüssige Transition
   if (
     elements.faultList.dataset.rendered === "true" &&
-    elements.faultList.childElementCount === FAULTS.length
+    elements.faultList.dataset.renderedCategory === state.category &&
+    elements.faultList.childElementCount === activeFaults.length
   ) {
-    FAULTS.forEach((fault) => {
+    activeFaults.forEach((fault) => {
       const isOpen = fault.id === state.faultId;
       const card = document.getElementById(`fault-card-${fault.id}`);
       const trigger = card?.querySelector<HTMLButtonElement>(".fault-card-btn");
@@ -178,7 +193,7 @@ export function renderFaultsView(
     return;
   }
 
-  const cards: HTMLDivElement[] = FAULTS.map((fault) => {
+  const cards: HTMLDivElement[] = activeFaults.map((fault) => {
     const isOpen = fault.id === state.faultId;
     const visual = FAULT_VISUAL_MAP[fault.id] ?? {
       icon: "warning",
@@ -246,10 +261,11 @@ export function renderFaultsView(
     trigger.addEventListener("click", () => onSelectFault(fault.id));
 
     card.appendChild(trigger);
-    card.appendChild(createAccordionPanel(fault, isOpen, onJumpToComponent));
+    card.appendChild(createAccordionPanel(fault, state.category, isOpen, onJumpToComponent));
     return card;
   });
 
   elements.faultList.replaceChildren(...cards);
   elements.faultList.dataset.rendered = "true";
+  elements.faultList.dataset.renderedCategory = state.category;
 }
