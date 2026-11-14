@@ -103,16 +103,74 @@ const svgStageWrap = requireElement<HTMLElement>("#svgStageWrap");
 const svgStage = requireElement<HTMLElement>("#svgStage");
 
 /**
- * Aktualisiert die visuellen Wisch-Schatten links/rechts am mobilen SVG-Container.
+ * Aktualisiert die gleitenden Segmented-Control-Pills (.segmented-pill-indicator)
+ * mittels GPU-beschleunigtem translate3d auf allen Segmented-Leisten.
+ */
+function syncAllSegmentedPills(): void {
+  const containers = document.querySelectorAll<HTMLElement>(".segmented");
+  containers.forEach((container) => {
+    let pill = container.querySelector<HTMLElement>(".segmented-pill-indicator");
+    if (!pill) {
+      pill = document.createElement("span");
+      pill.className = "segmented-pill-indicator t-tabs-pill";
+      pill.setAttribute("aria-hidden", "true");
+      container.insertBefore(pill, container.firstChild);
+    }
+
+    const activeBtn = container.querySelector<HTMLButtonElement>(
+      '.segmented-btn[aria-selected="true"]'
+    );
+    if (!activeBtn || activeBtn.offsetWidth === 0) {
+      container.classList.remove("has-pill");
+      pill.style.opacity = "0";
+      return;
+    }
+
+    container.classList.add("has-pill");
+    pill.style.opacity = "1";
+    pill.style.width = `${activeBtn.offsetWidth}px`;
+    pill.style.height = `${activeBtn.offsetHeight}px`;
+    pill.style.transform = `translate3d(${activeBtn.offsetLeft}px, ${activeBtn.offsetTop}px, 0)`;
+
+    pill.classList.toggle("is-r290", activeBtn.dataset.system === "monoblock");
+    pill.classList.toggle("is-r32", activeBtn.dataset.system === "split");
+    pill.classList.toggle("is-defrost", activeBtn.dataset.mode === "defrost");
+  });
+}
+
+let scrollRafPending = false;
+let resizeRafPending = false;
+
+/**
+ * Aktualisiert die visuellen Wisch-Schatten links/rechts am mobilen SVG-Container
+ * gedrosselt über requestAnimationFrame gegen Layout-Thrashing.
  */
 function updateSvgScrollIndicators(): void {
-  const maxScroll = svgStage.scrollWidth - svgStage.clientWidth;
-  if (maxScroll <= 4) {
-    svgStageWrap.classList.remove("has-scroll-left", "has-scroll-right");
-    return;
-  }
-  svgStageWrap.classList.toggle("has-scroll-left", svgStage.scrollLeft > 4);
-  svgStageWrap.classList.toggle("has-scroll-right", svgStage.scrollLeft < maxScroll - 4);
+  if (scrollRafPending) return;
+  scrollRafPending = true;
+  window.requestAnimationFrame(() => {
+    scrollRafPending = false;
+    const maxScroll = svgStage.scrollWidth - svgStage.clientWidth;
+    if (maxScroll <= 4) {
+      svgStageWrap.classList.remove("has-scroll-left", "has-scroll-right");
+    } else {
+      svgStageWrap.classList.toggle("has-scroll-left", svgStage.scrollLeft > 4);
+      svgStageWrap.classList.toggle("has-scroll-right", svgStage.scrollLeft < maxScroll - 4);
+    }
+  });
+}
+
+/**
+ * Synchronisiert Scroll-Indikatoren und Segmented-Pills bei Viewport-Änderungen.
+ */
+function handleViewportResize(): void {
+  updateSvgScrollIndicators();
+  if (resizeRafPending) return;
+  resizeRafPending = true;
+  window.requestAnimationFrame(() => {
+    resizeRafPending = false;
+    syncAllSegmentedPills();
+  });
 }
 
 /**
@@ -130,20 +188,64 @@ function renderViewSwitcher(): void {
   viewCircuit.classList.toggle("hidden", !isCircuit);
   viewFaults.classList.toggle("hidden", !isFaults);
   viewNiceToKnow.classList.toggle("hidden", !isNice);
+  syncAllSegmentedPills();
 }
 
 /**
- * Aktualisiert die visuelle Darstellung des 3-Stufen-Theme-Buttons.
+ * Aktualisiert die visuelle Darstellung des 3-Stufen-Theme-Buttons mit sanftem Icon-Swap.
  */
-function updateThemeButton(mode: ThemeMode): void {
+function updateThemeButton(mode: ThemeMode, animate = false): void {
   const label = getThemeModeLabel(mode);
+  const nextIcon = mode === "auto" ? "◐" : mode === "light" ? "☼" : "☾";
+
+  if (animate) {
+    themeToggleIcon.classList.add("is-swapping");
+    window.setTimeout(() => {
+      themeToggleIcon.textContent = nextIcon;
+      themeToggleIcon.classList.remove("is-swapping");
+    }, 90);
+  } else {
+    themeToggleIcon.textContent = nextIcon;
+  }
+
   themeIconLabel.textContent = label;
-  themeToggleIcon.textContent = mode === "auto" ? "◐" : mode === "light" ? "☼" : "☾";
   btnThemeToggle.setAttribute(
     "aria-label",
     `Darstellungsmodus umschalten (aktuell: ${label})`
   );
   btnThemeToggle.setAttribute("data-theme-state", mode);
+}
+
+/**
+ * Führt einen Ansichts-Übergang über die native View Transitions API aus (mit Fallback
+ * und A11y-Fokus-Routing gemäß modern-web-guidance: same-document-transitions).
+ */
+function runViewTransition(updateDom: () => void, focusTarget?: HTMLElement): void {
+  const prefersReducedMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const docWithTransition = document as Document & {
+    startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+  };
+
+  if (!docWithTransition.startViewTransition || prefersReducedMotion) {
+    updateDom();
+    if (!prefersReducedMotion && focusTarget) {
+      focusTarget.classList.remove("is-fallback-enter");
+      void focusTarget.offsetWidth;
+      focusTarget.classList.add("is-fallback-enter");
+    }
+    focusTarget?.focus({ preventScroll: true });
+    return;
+  }
+
+  const transition = docWithTransition.startViewTransition(() => {
+    updateDom();
+  });
+  transition.finished.finally(() => {
+    focusTarget?.focus({ preventScroll: true });
+  });
 }
 
 /**
@@ -155,14 +257,23 @@ function handleSelectComponent(id: number): void {
 }
 
 /**
- * Öffnet gezielt eine Bauteil-Karte (z. B. nach Klick im SVG-Schema) und scrollt sie in den Blick.
+ * Öffnet gezielt eine Bauteil-Karte (z. B. nach Klick im SVG-Schema) und scrollt sie nach
+ * Anlaufen der Grid-Transition sanft in den sichtbaren Bereich.
  */
 function handleOpenComponent(id: number): void {
   state.componentId = id;
   renderComponentDetail(circuitElements, state, handleSelectComponent);
-  document.getElementById(`comp-card-${id}`)?.scrollIntoView({
-    behavior: "smooth",
-    block: "nearest"
+  window.requestAnimationFrame(() => {
+    const targetCard = document.getElementById(`comp-card-${id}`);
+    if (!targetCard) return;
+    const rect = targetCard.getBoundingClientRect();
+    const isFullyVisible = rect.top >= 72 && rect.bottom <= window.innerHeight - 16;
+    if (!isFullyVisible) {
+      targetCard.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+    }
   });
 }
 
@@ -183,44 +294,66 @@ function handleSelectFault(faultId: string): void {
  * Springt von einem Störungsbild direkt zu einer betroffenen Komponente im Schema.
  */
 function handleJumpToComponent(componentId: number): void {
-  state.view = "circuit";
-  state.componentId = componentId;
-  renderViewSwitcher();
-  renderComponentDetail(circuitElements, state, handleSelectComponent);
+  runViewTransition(() => {
+    state.view = "circuit";
+    state.componentId = componentId;
+    renderViewSwitcher();
+    renderComponentDetail(circuitElements, state, handleSelectComponent);
+  }, btnViewCircuit);
+
+  window.setTimeout(() => {
+    document.getElementById(`comp-card-${componentId}`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
+  }, 210);
 }
 
 /**
  * Schaltet das Wärmepumpensystem um (Monoblock vs. Split).
  */
 function handleSetSystem(system: SystemType): void {
+  if (state.system === system) return;
   state.system = system;
   renderSystemView(circuitElements, state, handleSelectComponent);
+  syncAllSegmentedPills();
 }
 
 /**
  * Schaltet den Betriebsmodus um (Heizbetrieb vs. Abtauphase).
  */
 function handleSetMode(mode: OperationMode): void {
+  if (state.mode === mode) return;
   state.mode = mode;
   renderOperationMode(circuitElements, state, handleSelectComponent);
+  syncAllSegmentedPills();
 }
 
 /**
- * Schaltet die aktive Ansicht um.
+ * Schaltet die aktive Ansicht flüssig um.
  */
 function handleSetView(view: ViewType): void {
-  state.view = view;
-  renderViewSwitcher();
-  if (view === "faults") {
-    renderFaultsView(
-      faultsElements,
-      state,
-      handleSelectFault,
-      handleJumpToComponent
-    );
-  } else if (view === "niceToKnow") {
-    renderNiceToKnowView(niceGrid);
+  if (state.view === view) return;
+  const activeContainer =
+    view === "circuit" ? viewCircuit : view === "faults" ? viewFaults : viewNiceToKnow;
+  if (!activeContainer.hasAttribute("tabindex")) {
+    activeContainer.setAttribute("tabindex", "-1");
   }
+
+  runViewTransition(() => {
+    state.view = view;
+    renderViewSwitcher();
+    if (view === "faults") {
+      renderFaultsView(
+        faultsElements,
+        state,
+        handleSelectFault,
+        handleJumpToComponent
+      );
+    } else if (view === "niceToKnow") {
+      renderNiceToKnowView(niceGrid);
+    }
+  }, activeContainer);
 }
 
 // -----------------------------------------------------------------------------
@@ -243,12 +376,12 @@ btnViewNiceToKnow.addEventListener("click", () => handleSetView("niceToKnow"));
 // 3-Stufen-Theme-Umschalter mit .t-icon-swap
 btnThemeToggle.addEventListener("click", () => {
   currentTheme = cycleThemeMode(currentTheme);
-  updateThemeButton(currentTheme);
+  updateThemeButton(currentTheme, true);
 });
 
 // Wisch-Indikator beim horizontalen Scrollen des SVG-Schemas aktualisieren
 svgStage.addEventListener("scroll", updateSvgScrollIndicators, { passive: true });
-window.addEventListener("resize", updateSvgScrollIndicators, { passive: true });
+window.addEventListener("resize", handleViewportResize, { passive: true });
 
 // SVG-Komponenten: Klick- und barrierefreie Tastaturbedienung (Enter / Leertaste)
 const compNodes = circuitElements.svgElement.querySelectorAll<SVGGElement>(".svg-comp");
@@ -278,3 +411,4 @@ renderFaultsView(
   handleJumpToComponent
 );
 renderNiceToKnowView(niceGrid);
+window.requestAnimationFrame(syncAllSegmentedPills);

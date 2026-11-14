@@ -9,10 +9,11 @@
   <title>Kältekreislauf Wärmepumpe – Interaktives Fachschema &amp; Fehleranalyse</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-  <!-- Synchrones iOS-Safari Reflow-Skript zur Vermeidung des Chin-Gaps -->
+  <!-- Synchrones iOS-Safari Reflow-Skript zur Vermeidung des Chin-Gaps (danach Freigabe der Top-Layer für flüssige View Transitions) -->
   <script>
     document.documentElement.style.transform = "translateZ(0)";
     void document.documentElement.offsetHeight;
+    document.documentElement.style.removeProperty("transform");
     window.scrollTo(0, 0);
   </script>
 </head>

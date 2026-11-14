@@ -138,12 +138,14 @@ export function renderComponentDetail(
     node.setAttribute("aria-pressed", String(active));
   });
 
-  // In-Place-Update bei reinem Accordion-Toggle: spart DOM-Neuaufbau und erhält 180ms-Transition
-  if (
-    elements.componentList.dataset.renderedSystem === sysKey &&
-    elements.componentList.dataset.renderedMode === state.mode &&
-    elements.componentList.childElementCount === COMPONENTS.length
-  ) {
+  // Falls die 9 Bauteil-Karten bereits im DOM liegen, immer in-place aktualisieren:
+  // verhindert teures DOM-Teardown/Rebuild bei System-, Modus- und Accordion-Wechseln
+  // und erhält alle laufenden CSS-Transitionen (insbesondere .t-acc-panel 0fr <-> 1fr).
+  if (elements.componentList.childElementCount === COMPONENTS.length) {
+    const systemOrModeChanged =
+      elements.componentList.dataset.renderedSystem !== sysKey ||
+      elements.componentList.dataset.renderedMode !== state.mode;
+
     COMPONENTS.forEach((comp) => {
       const isOpen = comp.id === state.componentId;
       const card = document.getElementById(`comp-card-${comp.id}`);
@@ -154,7 +156,59 @@ export function renderComponentDetail(
       trigger?.setAttribute("aria-expanded", String(isOpen));
       panel?.classList.toggle("is-open", isOpen);
       panel?.setAttribute("data-open", String(isOpen));
+
+      if (systemOrModeChanged && card) {
+        const thermo = comp.thermo[sysKey];
+        const displayName =
+          isDefrost && comp.id === 1
+            ? "Verflüssiger – Außenluft-WT (Abtau)"
+            : isDefrost && comp.id === 3
+              ? "Verdampfer – Platten-WT (Abtau)"
+              : comp.name;
+        const badgeColorId =
+          isDefrost && comp.id === 1 ? 3 : isDefrost && comp.id === 3 ? 1 : comp.id;
+        const badgeBg =
+          COMPONENT_BADGE_COLORS[badgeColorId] ?? "var(--gradient-dusk)";
+
+        const badgeEl = card.querySelector<HTMLElement>(".comp-icon-badge");
+        if (badgeEl) badgeEl.style.background = badgeBg;
+
+        const titleEl = card.querySelector<HTMLElement>(".comp-card-title");
+        if (titleEl) titleEl.textContent = displayName;
+
+        const previewEl = card.querySelector<HTMLElement>(".comp-card-preview");
+        if (previewEl) previewEl.textContent = comp.location[sysKey];
+
+        const metricPill = card.querySelector<HTMLElement>(".comp-metric-pill");
+        if (metricPill) metricPill.textContent = thermo.outMetric;
+
+        const kickerEl = card.querySelector<HTMLElement>(".detail-kicker");
+        if (kickerEl) {
+          kickerEl.textContent = `Komponente ${comp.id} von 9 · ${sysConfig.refrigerant}${isDefrost ? " · Abtauphase" : ""}`;
+        }
+
+        const locPill = card.querySelector<HTMLElement>(".location-pill");
+        if (locPill) {
+          locPill.textContent = `Einbauort: ${comp.location[sysKey]}`;
+        }
+
+        const thermoGrid = card.querySelector<HTMLElement>(".thermo-grid");
+        if (thermoGrid) {
+          thermoGrid.replaceChildren(
+            createThermoBox("Eintritt", thermo.inState, thermo.inColor, thermo.inMetric, thermo.inSub),
+            createThermoBox("Austritt", thermo.outState, thermo.outColor, thermo.outMetric, thermo.outSub)
+          );
+        }
+
+        const defrostBox = card.querySelector<HTMLElement>(".defrost-note-box");
+        if (defrostBox) {
+          defrostBox.classList.toggle("hidden", !isDefrost);
+        }
+      }
     });
+
+    elements.componentList.dataset.renderedSystem = sysKey;
+    elements.componentList.dataset.renderedMode = state.mode;
     return;
   }
 
@@ -280,16 +334,13 @@ export function renderComponentDetail(
     thermoSection.appendChild(thermoGrid);
     body.appendChild(thermoSection);
 
-    // Abtauphasen-Hinweis (nur bei aktiver Abtauphase)
-    if (isDefrost) {
-      body.appendChild(
-        createDetailSection(
-          "Rolle in der Abtauphase (Kreislaufumkehr)",
-          comp.defrostNote,
-          "defrost-note-box"
-        )
-      );
-    }
+    // Abtauphasen-Hinweis (immer im DOM vorhalten und per .hidden steuern für reibungslose In-Place-Updates)
+    const defrostSection = createDetailSection(
+      "Rolle in der Abtauphase (Kreislaufumkehr)",
+      comp.defrostNote,
+      `defrost-note-box${isDefrost ? "" : " hidden"}`
+    );
+    body.appendChild(defrostSection);
 
     // Service-Messgröße
     const serviceSection = createDetailSection(
@@ -369,8 +420,9 @@ export function renderSystemView(
   elements.bannerBadge.className = `badge-tag ${sys.badgeClass}`;
   elements.bannerBadge.textContent = sys.badgeText;
 
-  // SVG-Systemgrenze und Zonen-Geometrie anpassen
+  // SVG-Systemgrenze und Zonen-Geometrie anpassen (CSS-Transform für GPU-Compositor-Animation)
   elements.buildingBoundary.setAttribute("transform", `translate(${sys.boundaryX}, 16)`);
+  elements.buildingBoundary.style.transform = `translate3d(${sys.boundaryX}px, 16px, 0)`;
   elements.zoneOutdoor.setAttribute("width", String(sys.outdoorWidth));
   elements.zoneIndoor.setAttribute("x", String(sys.indoorX));
   elements.zoneIndoor.setAttribute("width", String(sys.indoorWidth));

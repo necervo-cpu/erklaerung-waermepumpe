@@ -197,13 +197,49 @@ body {
   border: 1px solid var(--border);
   min-width: 0;
   max-width: 100%;
+  isolation: isolate;
+}
+
+.segmented-pill-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: var(--radius-control);
+  background: var(--surface-card);
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-card);
+  will-change: transform, width, height;
+  transition:
+    transform 240ms var(--ease-spring),
+    width 240ms var(--ease-spring),
+    height 240ms var(--ease-spring),
+    background-color 180ms ease,
+    border-color 180ms ease,
+    opacity 150ms ease;
+}
+
+.segmented-pill-indicator.is-r290 {
+  background: var(--badge-r290-bg);
+  border-color: var(--badge-r290-border);
+}
+
+.segmented-pill-indicator.is-r32 {
+  background: var(--badge-r32-bg);
+  border-color: var(--badge-r32-border);
+}
+
+.segmented-pill-indicator.is-defrost {
+  background: color-mix(in srgb, var(--pastel-aqua) 20%, transparent);
+  border-color: color-mix(in srgb, var(--pastel-aqua) 42%, transparent);
 }
 
 .segmented-btn {
   position: relative;
   z-index: 2;
   appearance: none;
-  border: 0;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--muted);
   font-family: inherit;
@@ -214,7 +250,11 @@ body {
   border-radius: var(--radius-control);
   cursor: pointer;
   white-space: nowrap;
-  transition: color var(--dur-fast) ease, background var(--dur-fast) ease;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform var(--dur-fast) var(--ease-spring);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -231,16 +271,28 @@ body {
   box-shadow: var(--shadow-card);
 }
 
+.segmented.has-pill .segmented-btn[aria-selected="true"] {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
 .segmented-btn.is-system[aria-selected="true"][data-system="monoblock"] {
   background: var(--badge-r290-bg);
-  border: 1px solid var(--badge-r290-border);
+  border-color: var(--badge-r290-border);
   color: var(--badge-r290-ink);
 }
 
 .segmented-btn.is-system[aria-selected="true"][data-system="split"] {
   background: var(--badge-r32-bg);
-  border: 1px solid var(--badge-r32-border);
+  border-color: var(--badge-r32-border);
   color: var(--badge-r32-ink);
+}
+
+.segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="monoblock"],
+.segmented.has-pill .segmented-btn.is-system[aria-selected="true"][data-system="split"] {
+  background: transparent;
+  border-color: transparent;
 }
 
 .dot-indicator {
@@ -412,15 +464,45 @@ svg#circuitSvg {
   user-select: none;
 }
 
-/* Zonen-Hintergründe im SVG */
+/* Zonen-Hintergründe & Systemgrenze im SVG (flüssige Übergänge bei Monoblock <-> Split) */
+#buildingBoundary {
+  transition: transform 280ms var(--ease-spring);
+  will-change: transform;
+}
+
 #zoneOutdoor {
   fill: var(--svg-zone-outdoor-fill);
   stroke: var(--svg-zone-outdoor-stroke);
+  transition:
+    width 280ms var(--ease-spring),
+    fill 200ms ease,
+    stroke 200ms ease;
 }
 
 #zoneIndoor {
   fill: var(--svg-zone-indoor-fill);
   stroke: var(--svg-zone-indoor-stroke);
+  transition:
+    x 280ms var(--ease-spring),
+    width 280ms var(--ease-spring),
+    fill 200ms ease,
+    stroke 200ms ease;
+}
+
+#labelIndoor,
+#labelOutdoor {
+  transition: fill 200ms ease;
+}
+
+#pipesHeating,
+#pipesDefrost,
+#valvePathsHeating,
+#valvePathsDefrost,
+#eevConesHeating,
+#eevConesDefrost {
+  transition:
+    opacity 220ms var(--ease-out-quart),
+    visibility 220ms var(--ease-out-quart);
 }
 
 .mode-switch-bar {
@@ -443,7 +525,12 @@ svg#circuitSvg {
 .segmented-btn.is-defrost-btn[aria-selected="true"] {
   background: color-mix(in srgb, var(--pastel-aqua) 20%, transparent);
   color: var(--accent-text-aqua);
-  border: 1px solid color-mix(in srgb, var(--pastel-aqua) 42%, transparent);
+  border-color: color-mix(in srgb, var(--pastel-aqua) 42%, transparent);
+}
+
+.segmented.has-pill .segmented-btn.is-defrost-btn[aria-selected="true"] {
+  background: transparent;
+  border-color: transparent;
 }
 
 .defrost-note-box {
@@ -649,8 +736,6 @@ svg#circuitSvg {
   gap: 0;
   min-width: 0;
   background: var(--surface-card);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
@@ -660,8 +745,7 @@ svg#circuitSvg {
 .comp-accordion-card {
   position: relative;
   overflow: hidden;
-  contain: layout style;
-  transition: background var(--dur-fast) ease;
+  transition: background-color 180ms ease;
 }
 
 .comp-accordion-card + .comp-accordion-card::before {
@@ -1029,8 +1113,6 @@ svg#circuitSvg {
   gap: 0;
   min-width: 0;
   background: var(--surface-card);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
@@ -1040,8 +1122,7 @@ svg#circuitSvg {
 .fault-accordion-card {
   position: relative;
   overflow: hidden;
-  contain: layout style;
-  transition: background var(--dur-fast) ease;
+  transition: background-color 180ms ease;
 }
 
 .fault-accordion-card + .fault-accordion-card::before {
@@ -1453,6 +1534,45 @@ svg#circuitSvg {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+.svg-layer-hidden .pipe-flow {
+  animation-play-state: paused;
+}
+
+@keyframes viewEnterFade {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.workspace-grid.is-fallback-enter:not(.hidden),
+.faults-layout.is-fallback-enter:not(.hidden),
+.nice-layout.is-fallback-enter:not(.hidden) {
+  animation: viewEnterFade 220ms var(--ease-spring) both;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 190ms;
+  animation-timing-function: var(--ease-spring);
+}
+
+.t-icon-swap.is-swapping {
+  opacity: 0;
+  transform: scale(0.72) rotate(-25deg);
+  filter: blur(2px);
+}
+
+.refrigerant-banner {
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease;
 }
 
 .hidden {

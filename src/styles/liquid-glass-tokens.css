@@ -304,12 +304,17 @@ button,
 .t-acc-panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows var(--dur-normal) var(--ease-spring);
+  opacity: 0;
+  transition:
+    grid-template-rows 240ms var(--ease-spring),
+    opacity 180ms var(--ease-out-quart);
 }
 .t-acc-panel[data-open="true"] {
   grid-template-rows: 1fr;
+  opacity: 1;
 }
 .t-acc-panel-inner {
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -333,7 +338,11 @@ button,
   user-select: none;
   color: var(--icon-color-inactive);
   font-variation-settings: "FILL" 0, "wght" 300, "GRAD" var(--icon-grad), "opsz" 24;
-  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transition:
+    color 0.2s cubic-bezier(0.2, 0, 0, 1),
+    font-variation-settings 0.2s cubic-bezier(0.2, 0, 0, 1),
+    filter 0.2s cubic-bezier(0.2, 0, 0, 1),
+    transform 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .ag-icon--xs {
@@ -372,14 +381,34 @@ button,
   }
 }
 
-/* Barrierefreiheit: Reduzierte Bewegung */
+/* Barrierefreiheit: Reduzierte Bewegung (dämpft räumliche Bewegung/Daueranimationen, erhält Farb-Feedback) */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  html {
     scroll-behavior: auto !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  .pipe-flow,
+  .workspace-grid:not(.hidden),
+  .faults-layout:not(.hidden),
+  .nice-layout:not(.hidden) {
+    animation: none !important;
+  }
+  .t-acc-panel,
+  .t-tabs-pill,
+  .segmented-pill-indicator,
+  .t-icon-swap,
+  .press-card,
+  .press-btn,
+  .press-icon,
+  .comp-chevron,
+  .fault-chevron,
+  #buildingBoundary,
+  #zoneOutdoor,
+  #zoneIndoor {
+    transition-duration: 0s !important;
   }
 }
