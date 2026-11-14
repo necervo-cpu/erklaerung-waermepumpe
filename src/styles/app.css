@@ -204,6 +204,10 @@ body {
   isolation: isolate;
 }
 
+#categoryTabs {
+  grid-auto-columns: auto;
+}
+
 .segmented-pill-indicator {
   position: absolute;
   top: 0;
@@ -507,6 +511,9 @@ body {
    ========================================================================== */
 .svg-stage {
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   border-radius: var(--radius-well);
   background: var(--svg-stage-bg);
   border: 1px solid var(--border);
@@ -1674,10 +1681,10 @@ svg#circuitSvg {
    ========================================================================== */
 @media (max-width: 1080px) {
   .workspace-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .faults-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1690,16 +1697,29 @@ svg#circuitSvg {
     position: static;
     padding: 12px;
     gap: 10px;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .brand-group {
+    max-width: 100%;
   }
   .controls-row {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     gap: 8px;
   }
   .segmented {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     gap: 4px;
+  }
+  .badge-tag,
+  .legend-item {
+    white-space: normal;
   }
   .segmented-btn {
     flex: 1 1 auto;
