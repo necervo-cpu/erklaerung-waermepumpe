@@ -7,19 +7,19 @@
 
 import { NICE_TO_KNOW } from "../data/niceToKnow";
 import type { NiceToKnowItem } from "../types/circuit";
+import { createMaterialIcon } from "./uiIcons";
 
 interface NiceCategoryStyle {
   readonly icon: string;
-  readonly bg: string;
 }
 
 const NICE_CATEGORY_PALETTE: readonly NiceCategoryStyle[] = [
-  { icon: "★", bg: "var(--gradient-ocean)" },
-  { icon: "⚡", bg: "var(--gradient-honey)" },
-  { icon: "✓", bg: "var(--gradient-meadow)" },
-  { icon: "♨", bg: "var(--gradient-blossom)" },
-  { icon: "❄", bg: "var(--gradient-lagoon)" },
-  { icon: "⚙", bg: "var(--gradient-iris)" }
+  { icon: "star" },
+  { icon: "bolt" },
+  { icon: "check_circle" },
+  { icon: "local_fire_department" },
+  { icon: "ac_unit" },
+  { icon: "tune" }
 ];
 
 /**
@@ -40,9 +40,8 @@ function createNiceCard(item: NiceToKnowItem, index: number): HTMLElement {
 
   const iconDot = document.createElement("span");
   iconDot.className = "nice-icon-badge";
-  iconDot.style.background = palette.bg;
   iconDot.setAttribute("aria-hidden", "true");
-  iconDot.textContent = palette.icon;
+  iconDot.appendChild(createMaterialIcon(palette.icon, "xs"));
 
   const categoryEl = document.createElement("span");
   categoryEl.className = "nice-category";
@@ -91,10 +90,8 @@ function createNiceCard(item: NiceToKnowItem, index: number): HTMLElement {
   const tipHeader = document.createElement("div");
   tipHeader.className = "nice-tip-header";
 
-  const tipIcon = document.createElement("span");
-  tipIcon.className = "nice-tip-icon";
-  tipIcon.setAttribute("aria-hidden", "true");
-  tipIcon.textContent = "💡";
+  const tipIcon = createMaterialIcon("lightbulb", "xs");
+  tipIcon.classList.add("nice-tip-icon");
 
   const tipLabel = document.createElement("strong");
   tipLabel.className = "nice-tip-label";

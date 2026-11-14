@@ -196,7 +196,8 @@ function renderViewSwitcher(): void {
  */
 function updateThemeButton(mode: ThemeMode, animate = false): void {
   const label = getThemeModeLabel(mode);
-  const nextIcon = mode === "auto" ? "◐" : mode === "light" ? "☼" : "☾";
+  const nextIcon =
+    mode === "auto" ? "contrast" : mode === "light" ? "light_mode" : "dark_mode";
 
   if (animate) {
     themeToggleIcon.classList.add("is-swapping");

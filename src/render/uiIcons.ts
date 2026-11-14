@@ -1,31 +1,32 @@
 /**
- * Modul: Wiederverwendbare Vektor-UI-Icons (uiIcons.ts)
- * Zweck: Erzeugt präzise, barrierefreie SVG-Icons im Apple-SF-Symbols-Stil ohne HTML-Strings.
- * Verantwortlichkeit: Stellt das animierbare Accordion-Chevron für Bauteil- und Störungskarten bereit.
- * Sicherheitsrelevanz: Reine createElementNS-DOM-Erstellung ohne innerHTML (vollständige XSS-Sicherheit).
+ * Modul: Wiederverwendbare Google-Material-Symbols-Icons (uiIcons.ts)
+ * Zweck: Erzeugt monochrome, barrierefreie Google Material Symbols Rounded Icons ohne HTML-Strings.
+ * Verantwortlichkeit: Stellt das animierbare Accordion-Chevron sowie einheitliche Material-Ligaturen gemäß ICONS.md bereit.
+ * Sicherheitsrelevanz: Reine createElement-DOM-Erstellung ohne innerHTML (vollständige XSS-Sicherheit).
  */
 
-const SVG_NS = "http://www.w3.org/2000/svg";
+export type AgIconSize = "xs" | "sm" | "md" | "lg";
 
 /**
- * Erzeugt ein feines SVG-Chevron-Icon (14×14 px) mit abgerundeten Linienenden.
+ * Erzeugt ein monochromes Google Material Symbols Rounded Icon als Text-Ligatur.
  */
-export function createChevronSvg(): SVGSVGElement {
-  const svg = document.createElementNS(SVG_NS, "svg");
-  svg.setAttribute("viewBox", "0 0 16 16");
-  svg.setAttribute("width", "14");
-  svg.setAttribute("height", "14");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("aria-hidden", "true");
-  svg.classList.add("acc-chevron-svg");
+export function createMaterialIcon(
+  name: string,
+  size: AgIconSize = "md",
+  active = false
+): HTMLSpanElement {
+  const span = document.createElement("span");
+  const sizeClass = size === "md" ? "" : ` ag-icon--${size}`;
+  const activeClass = active ? " ag-icon--active" : "";
+  span.className = `ag-icon${sizeClass}${activeClass}`;
+  span.setAttribute("aria-hidden", "true");
+  span.textContent = name;
+  return span;
+}
 
-  const path = document.createElementNS(SVG_NS, "path");
-  path.setAttribute("d", "M3.75 6.25L8 10.5l4.25-4.25");
-  path.setAttribute("stroke", "currentColor");
-  path.setAttribute("stroke-width", "2.1");
-  path.setAttribute("stroke-linecap", "round");
-  path.setAttribute("stroke-linejoin", "round");
-
-  svg.appendChild(path);
-  return svg;
+/**
+ * Erzeugt das Accordion-Chevron über Google Material Symbols Rounded (`expand_more`).
+ */
+export function createChevronIcon(): HTMLSpanElement {
+  return createMaterialIcon("expand_more", "sm");
 }

@@ -8,7 +8,7 @@
 import { COMPONENTS } from "../data/components";
 import { FAULTS } from "../data/faults";
 import type { AppState, FaultData } from "../types/circuit";
-import { createChevronSvg } from "./uiIcons";
+import { createChevronIcon, createMaterialIcon } from "./uiIcons";
 
 export interface FaultsDomElements {
   readonly faultList: HTMLElement;
@@ -131,23 +131,23 @@ interface FaultVisualStyle {
 }
 
 const FAULT_VISUAL_MAP: Record<string, FaultVisualStyle> = {
-  // Primäre IDs aus data/faults.ts
-  hd: { icon: "!", bg: "var(--gradient-blossom)" },
-  nd: { icon: "❄", bg: "var(--gradient-ocean)" },
-  hotgas: { icon: "♨", bg: "var(--gradient-sorbet)" },
-  ice: { icon: "❄", bg: "var(--gradient-lagoon)" },
-  cycling: { icon: "⚙", bg: "var(--gradient-honey)" },
-  heater: { icon: "⚡", bg: "var(--gradient-spring)" },
-  flow: { icon: "≈", bg: "var(--gradient-meadow)" },
+  // Primäre IDs aus data/faults.ts (offizielle Google Material Symbols Rounded Namen)
+  hd: { icon: "warning", bg: "var(--surface-field)" },
+  nd: { icon: "ac_unit", bg: "var(--surface-field)" },
+  hotgas: { icon: "local_fire_department", bg: "var(--surface-field)" },
+  ice: { icon: "severe_cold", bg: "var(--surface-field)" },
+  cycling: { icon: "autorenew", bg: "var(--surface-field)" },
+  heater: { icon: "bolt", bg: "var(--surface-field)" },
+  flow: { icon: "water_drop", bg: "var(--surface-field)" },
 
   // Abwärtskompatible Deskriptor-Aliases
-  hd_alarm: { icon: "!", bg: "var(--gradient-blossom)" },
-  nd_alarm: { icon: "❄", bg: "var(--gradient-ocean)" },
-  superheat_high: { icon: "♨", bg: "var(--gradient-sorbet)" },
-  icing_evaporator: { icon: "❄", bg: "var(--gradient-lagoon)" },
-  liquid_slugging: { icon: "⚙", bg: "var(--gradient-honey)" },
-  subcooling_low: { icon: "⚡", bg: "var(--gradient-spring)" },
-  water_flow_low: { icon: "≈", bg: "var(--gradient-meadow)" }
+  hd_alarm: { icon: "warning", bg: "var(--surface-field)" },
+  nd_alarm: { icon: "ac_unit", bg: "var(--surface-field)" },
+  superheat_high: { icon: "local_fire_department", bg: "var(--surface-field)" },
+  icing_evaporator: { icon: "severe_cold", bg: "var(--surface-field)" },
+  liquid_slugging: { icon: "autorenew", bg: "var(--surface-field)" },
+  subcooling_low: { icon: "bolt", bg: "var(--surface-field)" },
+  water_flow_low: { icon: "water_drop", bg: "var(--surface-field)" }
 };
 
 /**
@@ -181,8 +181,8 @@ export function renderFaultsView(
   const cards: HTMLDivElement[] = FAULTS.map((fault) => {
     const isOpen = fault.id === state.faultId;
     const visual = FAULT_VISUAL_MAP[fault.id] ?? {
-      icon: "!",
-      bg: "var(--gradient-blossom)"
+      icon: "warning",
+      bg: "var(--surface-field)"
     };
 
     const card = document.createElement("div");
@@ -204,9 +204,8 @@ export function renderFaultsView(
 
     const iconBadge = document.createElement("span");
     iconBadge.className = "fault-icon-badge";
-    iconBadge.style.background = visual.bg;
     iconBadge.setAttribute("aria-hidden", "true");
-    iconBadge.textContent = visual.icon;
+    iconBadge.appendChild(createMaterialIcon(visual.icon, "sm"));
 
     const textCol = document.createElement("div");
     textCol.className = "fault-card-textcol";
@@ -235,7 +234,7 @@ export function renderFaultsView(
     const chevron = document.createElement("span");
     chevron.className = "fault-chevron";
     chevron.setAttribute("aria-hidden", "true");
-    chevron.appendChild(createChevronSvg());
+    chevron.appendChild(createChevronIcon());
 
     rightGroup.appendChild(codeBadge);
     rightGroup.appendChild(chevron);
