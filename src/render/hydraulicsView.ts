@@ -18,7 +18,12 @@ export interface HydraulicsDomElements {
   readonly hydBannerBadge: HTMLElement;
   readonly hydraulicsSvg: SVGSVGElement;
   readonly hydPipesSeries: SVGGElement;
+  readonly hydPipesTee: SVGGElement;
   readonly hydPipesParallel: SVGGElement;
+  readonly hydPipesCombi: SVGGElement;
+  readonly hydSepWwTank: SVGGElement;
+  readonly hydCombiWwTap: SVGGElement;
+  readonly hydCombiTankInternals: SVGGElement;
   readonly hydBypassSeries: SVGGElement;
   readonly hydPumpSecParallel: SVGGElement;
   readonly hydBufferTitle: SVGTextElement;
@@ -70,6 +75,9 @@ export function renderHydraulicsView(
 ): void {
   const bufData = BUFFER_VARIANTS[state.bufferVariant];
   const isSeries = state.bufferVariant === "seriesReturn";
+  const isTee = state.bufferVariant === "teeBranch";
+  const isParallel = state.bufferVariant === "parallel4Pipe";
+  const isCombi = state.bufferVariant === "combiTank";
   const mappedVariant: HydraulicsVariant = isSeries ? "series" : "parallel";
   const variant = HYDRAULICS_VARIANTS[mappedVariant];
 
@@ -80,9 +88,14 @@ export function renderHydraulicsView(
   elements.hydBannerBadge.dataset.color = bufData.color;
   elements.hydBannerBadge.textContent = bufData.efficiencyBadge;
 
-  // SVG-Layer zwischen Reihenschaltung (1 Pumpe + ÜSV) und entkoppelten Schaltungen (2 Pumpen) umschalten
+  // SVG-Layer exakt für alle 4 Pufferspeicher-Schaltungen umschalten
   elements.hydPipesSeries.classList.toggle("svg-layer-hidden", !isSeries);
-  elements.hydPipesParallel.classList.toggle("svg-layer-hidden", isSeries);
+  elements.hydPipesTee.classList.toggle("svg-layer-hidden", !isTee);
+  elements.hydPipesParallel.classList.toggle("svg-layer-hidden", !isParallel);
+  elements.hydPipesCombi.classList.toggle("svg-layer-hidden", !isCombi);
+  elements.hydSepWwTank.classList.toggle("svg-layer-hidden", isCombi);
+  elements.hydCombiWwTap.classList.toggle("svg-layer-hidden", !isCombi);
+  elements.hydCombiTankInternals.classList.toggle("svg-layer-hidden", !isCombi);
   elements.hydBypassSeries.classList.toggle("svg-layer-hidden", !isSeries);
   elements.hydPumpSecParallel.classList.toggle("svg-layer-hidden", isSeries);
 

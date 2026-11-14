@@ -716,7 +716,7 @@ svg#installSvg {
 .hc-slider-label input[type="range"] {
   width: 100%;
   accent-color: var(--pastel-mint);
-  min-height: 28px;
+  min-height: 44px;
 }
 
 .is-svg-hidden {
@@ -2030,6 +2030,15 @@ svg#installSvg {
   .svg-stage {
     overflow: hidden;
   }
+  .workspace-grid.is-schema-expanded .svg-stage {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .workspace-grid.is-schema-expanded svg#circuitSvg,
+  .workspace-grid.is-schema-expanded svg#hvacCircuitSvg,
+  .workspace-grid.is-schema-expanded svg#hydraulicsSvg {
+    min-width: 720px;
+  }
   svg#circuitSvg,
   svg#hvacCircuitSvg,
   svg#hydraulicsSvg,
@@ -2436,6 +2445,7 @@ svg#installSvg {
 
 .calc-input-group input[type="range"] {
   width: 100%;
+  min-height: 44px;
   accent-color: var(--pastel-mint);
   cursor: pointer;
 }
@@ -2451,8 +2461,9 @@ svg#installSvg {
 
 .calc-number-input {
   width: 84px;
-  min-height: 36px;
+  min-height: 44px;
   padding: 6px 10px;
+  font-size: 16px;
   border-radius: var(--radius-control);
   border: 1px solid var(--border);
   background: var(--surface-field);
