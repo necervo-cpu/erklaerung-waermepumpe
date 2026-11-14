@@ -79,6 +79,7 @@
   --tile: color-mix(in srgb, var(--pastel-sky) 16%, transparent);
 
   /* --- Typografie-Stacks --- */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", "Segoe UI", sans-serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Plus Jakarta Sans", "Segoe UI", sans-serif;
   --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 

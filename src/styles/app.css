@@ -428,14 +428,14 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 34px;
+  min-height: 36px;
   padding: 6px 12px;
-  border-radius: var(--radius-btn, 10px);
+  border-radius: var(--radius-control);
   border: 1px solid var(--border);
   background: var(--surface-field);
   color: var(--ink);
   font: inherit;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-out-quart);
@@ -456,6 +456,7 @@ body {
 /* Banner für Kältemittel & Bauart: Einfarbige Fläche mit farbiger Akzentkante */
 .refrigerant-banner {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
@@ -493,13 +494,21 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  max-width: 100%;
   padding: 5px 11px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.hc-efficiency-row .badge-tag,
+.refrigerant-banner .badge-tag {
+  white-space: normal;
+  line-height: 1.35;
+  flex-shrink: 1;
 }
 
 .badge-tag.r290 {
@@ -1389,9 +1398,9 @@ svg#installSvg {
 }
 
 .state-chip {
-  font-size: 0.70rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 3px 8px;
   border-radius: 999px;
   white-space: nowrap;
 }
@@ -1630,9 +1639,9 @@ svg#installSvg {
 }
 
 .fault-code {
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--pastel-rose) 16%, transparent);
   color: var(--accent-text-rose);
@@ -1799,7 +1808,7 @@ svg#installSvg {
 }
 
 .nice-category {
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1807,7 +1816,7 @@ svg#installSvg {
 }
 
 .nice-badge {
-  font-size: 0.70rem;
+  font-size: 0.75rem;
   font-weight: 650;
   padding: 3px 9px;
   border-radius: 999px;
@@ -2025,25 +2034,26 @@ svg#installSvg {
     align-items: flex-start;
   }
   .svg-swipe-hint {
-    display: none;
+    display: inline-flex;
   }
   .svg-stage {
-    overflow: hidden;
-  }
-  .workspace-grid.is-schema-expanded .svg-stage {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
   .workspace-grid.is-schema-expanded svg#circuitSvg,
   .workspace-grid.is-schema-expanded svg#hvacCircuitSvg,
   .workspace-grid.is-schema-expanded svg#hydraulicsSvg {
-    min-width: 720px;
+    min-width: 820px;
   }
   svg#circuitSvg,
   svg#hvacCircuitSvg,
   svg#hydraulicsSvg,
   svg#bufferSvg,
-  svg#installSvg,
+  svg#installSvg {
+    min-width: 660px;
+    width: 100%;
+    height: auto;
+  }
   svg#heatingCurveSvg {
     min-width: 0;
     width: 100%;
@@ -2112,7 +2122,7 @@ svg#installSvg {
   text-align: left;
   border-radius: var(--radius-well);
   border: 1px solid var(--border);
-  background: var(--glass-bg);
+  background: var(--surface-field);
   color: var(--ink);
   font: inherit;
   font-size: 0.92rem;
@@ -2125,7 +2135,8 @@ svg#installSvg {
 }
 
 .quiz-option-btn:hover:not(:disabled) {
-  border-color: var(--ink-muted, var(--muted));
+  background: var(--surface-hover);
+  border-color: var(--muted);
 }
 
 .quiz-option-btn.is-correct {
@@ -2152,7 +2163,7 @@ svg#installSvg {
   justify-content: center;
   font-weight: 700;
   font-size: 0.82rem;
-  background: var(--well-bg, rgba(128, 128, 128, 0.16));
+  background: var(--surface-hover);
   color: var(--ink);
 }
 
@@ -2170,7 +2181,7 @@ svg#installSvg {
   padding: 14px 16px;
   border-radius: var(--radius-well);
   border: 1px solid var(--border);
-  background: var(--glass-bg);
+  background: var(--surface-field);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -2206,9 +2217,9 @@ svg#installSvg {
   gap: 6px;
   min-height: 44px;
   padding: 10px 16px;
-  border-radius: var(--radius-btn, 12px);
+  border-radius: var(--radius-control);
   border: 1px solid var(--border);
-  background: var(--glass-bg);
+  background: var(--surface-field);
   color: var(--ink);
   font: inherit;
   font-size: 0.88rem;
@@ -2275,9 +2286,9 @@ svg#installSvg {
 
 .view-nav-segmented {
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
-  grid-auto-flow: row;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 4px;
 }
 
@@ -2285,17 +2296,24 @@ svg#installSvg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  min-width: 0;
-  padding: 8px 6px;
-  font-size: 0.75rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: max-content;
+  padding: 8px 11px;
+  font-size: 0.78rem;
+  white-space: nowrap;
 }
 
 @media (max-width: 1280px) {
   .view-nav-segmented {
+    display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .view-nav-btn {
+    min-width: 0;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
   }
 }
 
@@ -2452,18 +2470,28 @@ svg#installSvg {
 
 .calc-label-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  font-size: 0.84rem;
+  gap: 8px 12px;
+  min-width: 0;
+  font-size: 0.85rem;
   color: var(--muted);
 }
 
+.calc-label-row label {
+  flex: 1 1 170px;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
 .calc-number-input {
-  width: 84px;
+  flex-shrink: 0;
+  min-width: 88px;
+  width: auto;
+  max-width: 112px;
   min-height: 44px;
   padding: 6px 10px;
-  font-size: 16px;
   border-radius: var(--radius-control);
   border: 1px solid var(--border);
   background: var(--surface-field);
