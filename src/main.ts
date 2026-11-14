@@ -102,10 +102,10 @@ const state: AppState = {
   system: "monoblock",
   mode: "heating",
   view: "circuit",
-  componentId: 0,
+  componentId: 2,
   faultId: "hd",
   hydraulicsVariant: "series",
-  hydraulicComponentId: 1,
+  hydraulicComponentId: 3,
   bufferVariant: "seriesReturn",
   waterMaterial: "noAluminum",
   waterTreatment: "lowSalt",
@@ -273,6 +273,7 @@ const quizElements: QuizDomElements = {
   btnReset: requireElement<HTMLButtonElement>("#btnQuizReset"),
   progressText: requireElement<HTMLElement>("#quizProgressText"),
   scoreText: requireElement<HTMLElement>("#quizScoreText"),
+  progressBarFill: requireElement<HTMLElement>("#quizProgressBarFill"),
   questionHost: requireElement<HTMLElement>("#quizQuestionHost")
 };
 
@@ -292,6 +293,7 @@ const heatingCurveElements: HeatingCurveDomElements = {
   label10: requireElement<SVGTextElement>("#hcLabel10"),
   label0: requireElement<SVGTextElement>("#hcLabel0"),
   labelMinus12: requireElement<SVGTextElement>("#hcLabelMinus12"),
+  efficiencyBadge: requireElement<HTMLElement>("#hcEfficiencyBadge"),
   metricsGrid: requireElement<HTMLElement>("#hcMetricsGrid"),
   rulesGrid: requireElement<HTMLElement>("#hcRulesGrid")
 };
@@ -311,7 +313,6 @@ const installationElements: InstallationDomElements = {
 // Globale Layout-Elemente
 const viewCircuit = requireElement<HTMLElement>("#viewCircuit");
 const viewHydraulics = requireElement<HTMLElement>("#viewHydraulics");
-const viewBufferStorage = requireElement<HTMLElement>("#viewBufferStorage");
 const viewWaterQuality = requireElement<HTMLElement>("#viewWaterQuality");
 const viewHeatingCurve = requireElement<HTMLElement>("#viewHeatingCurve");
 const viewInstallation = requireElement<HTMLElement>("#viewInstallation");
@@ -320,13 +321,16 @@ const viewNiceToKnow = requireElement<HTMLElement>("#viewNiceToKnow");
 const viewQuiz = requireElement<HTMLElement>("#viewQuiz");
 const btnViewCircuit = requireElement<HTMLButtonElement>("#btnViewCircuit");
 const btnViewHydraulics = requireElement<HTMLButtonElement>("#btnViewHydraulics");
-const btnViewBufferStorage = requireElement<HTMLButtonElement>("#btnViewBufferStorage");
 const btnViewWaterQuality = requireElement<HTMLButtonElement>("#btnViewWaterQuality");
 const btnViewHeatingCurve = requireElement<HTMLButtonElement>("#btnViewHeatingCurve");
 const btnViewInstallation = requireElement<HTMLButtonElement>("#btnViewInstallation");
 const btnViewFaults = requireElement<HTMLButtonElement>("#btnViewFaults");
 const btnViewNiceToKnow = requireElement<HTMLButtonElement>("#btnViewNiceToKnow");
 const btnViewQuiz = requireElement<HTMLButtonElement>("#btnViewQuiz");
+const btnMobileViewMenu = requireElement<HTMLButtonElement>("#btnMobileViewMenu");
+const mobileViewIcon = requireElement<HTMLElement>("#mobileViewIcon");
+const mobileViewLabel = requireElement<HTMLElement>("#mobileViewLabel");
+const viewTabs = requireElement<HTMLElement>("#viewTabs");
 const btnThemeToggle = requireElement<HTMLButtonElement>("#btnThemeToggle");
 const themeIconLabel = requireElement<HTMLElement>("#themeIconLabel");
 const themeToggleIcon = requireElement<HTMLElement>("#themeToggleIcon");
@@ -414,10 +418,20 @@ function handleViewportResize(): void {
 /**
  * Aktualisiert die Ansichtsauswahl (Kältekreis vs. Störungsbilder vs. Nice to Know).
  */
+const VIEW_META: Readonly<Record<ViewType, { readonly icon: string; readonly label: string }>> = {
+  circuit: { icon: "ac_unit", label: "Kältekreis" },
+  hydraulics: { icon: "plumbing", label: "Hydraulik & Puffer" },
+  waterQuality: { icon: "water_drop", label: "Heizungswasser" },
+  heatingCurve: { icon: "show_chart", label: "Heizkurve" },
+  installation: { icon: "home_work", label: "Aufstellung" },
+  faults: { icon: "warning", label: "Störungen (9)" },
+  niceToKnow: { icon: "lightbulb", label: "Nice to Know" },
+  quiz: { icon: "quiz", label: "Prüfung" }
+};
+
 function renderViewSwitcher(): void {
   const isCircuit = state.view === "circuit";
   const isHydraulics = state.view === "hydraulics";
-  const isBuffer = state.view === "bufferStorage";
   const isWater = state.view === "waterQuality";
   const isHeatingCurve = state.view === "heatingCurve";
   const isInstallation = state.view === "installation";
@@ -427,7 +441,6 @@ function renderViewSwitcher(): void {
 
   btnViewCircuit.setAttribute("aria-selected", String(isCircuit));
   btnViewHydraulics.setAttribute("aria-selected", String(isHydraulics));
-  btnViewBufferStorage.setAttribute("aria-selected", String(isBuffer));
   btnViewWaterQuality.setAttribute("aria-selected", String(isWater));
   btnViewHeatingCurve.setAttribute("aria-selected", String(isHeatingCurve));
   btnViewInstallation.setAttribute("aria-selected", String(isInstallation));
@@ -437,13 +450,19 @@ function renderViewSwitcher(): void {
 
   viewCircuit.classList.toggle("hidden", !isCircuit);
   viewHydraulics.classList.toggle("hidden", !isHydraulics);
-  viewBufferStorage.classList.toggle("hidden", !isBuffer);
   viewWaterQuality.classList.toggle("hidden", !isWater);
   viewHeatingCurve.classList.toggle("hidden", !isHeatingCurve);
   viewInstallation.classList.toggle("hidden", !isInstallation);
   viewFaults.classList.toggle("hidden", !isFaults);
   viewNiceToKnow.classList.toggle("hidden", !isNice);
   viewQuiz.classList.toggle("hidden", !isQuiz);
+
+  const meta = VIEW_META[state.view];
+  mobileViewIcon.textContent = meta.icon;
+  mobileViewLabel.textContent = meta.label;
+  viewTabs.classList.remove("is-mobile-open");
+  btnMobileViewMenu.setAttribute("aria-expanded", "false");
+
   syncAllSegmentedPills();
 }
 
@@ -587,7 +606,7 @@ function handleSetCategory(category: CategoryType): void {
     state.system = restored.system;
     state.mode = restored.mode;
     state.faultId = restored.faultId;
-    state.componentId = 0;
+    state.componentId = 2;
 
     document.title =
       category === "hvac"
@@ -710,7 +729,6 @@ function handleSetView(view: ViewType): void {
   const viewContainerMap: Readonly<Record<ViewType, HTMLElement>> = {
     circuit: viewCircuit,
     hydraulics: viewHydraulics,
-    bufferStorage: viewBufferStorage,
     waterQuality: viewWaterQuality,
     heatingCurve: viewHeatingCurve,
     installation: viewInstallation,
@@ -793,10 +811,14 @@ circuitElements.btnModeCooling.addEventListener("click", () => handleSetMode("co
 circuitElements.btnModeHeating.addEventListener("click", () => handleSetMode("heating"));
 circuitElements.btnModeDefrost.addEventListener("click", () => handleSetMode("defrost"));
 
-// Ansichts-Tabs
+// Ansichts-Tabs & Mobile-Menü
+btnMobileViewMenu.addEventListener("click", () => {
+  const isOpen = viewTabs.classList.toggle("is-mobile-open");
+  btnMobileViewMenu.setAttribute("aria-expanded", String(isOpen));
+});
+
 btnViewCircuit.addEventListener("click", () => handleSetView("circuit"));
 btnViewHydraulics.addEventListener("click", () => handleSetView("hydraulics"));
-btnViewBufferStorage.addEventListener("click", () => handleSetView("bufferStorage"));
 btnViewWaterQuality.addEventListener("click", () => handleSetView("waterQuality"));
 btnViewHeatingCurve.addEventListener("click", () => handleSetView("heatingCurve"));
 btnViewInstallation.addEventListener("click", () => handleSetView("installation"));

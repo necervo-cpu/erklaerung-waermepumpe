@@ -97,14 +97,14 @@ export function getWaterQualityMetrics(
 export const WATER_EQUIPMENT: readonly WaterEquipmentItem[] = [
   {
     id: "systemtrenner",
-    name: "Systemtrenner Typ BA (DIN EN 1717)",
-    norm: "Pflicht bei jeder Befüllverbindung!",
+    name: "Systemtrenner BA / CA (DIN EN 1717)",
+    norm: "Pflicht bei jeder Befüllung (Kat. 3 / 4)!",
     color: "rose",
     purpose:
-      "Trennt das Trinkwassernetz sicher vom Heizungswasser (Flüssigkeitskategorie 3 bzw. 4 bei Inhibitoren). Verhindert bei Druckabfall im Trinkwassernetz zuverlässig das Rücksaugen von Heizungswasser.",
+      "Trennt das Trinkwassernetz sicher vom Heizungswasser. Nach DIN EN 1717 ist bei Heizungswasser mit Inhibitoren oder Glykol (Flüssigkeitskategorie 4) zwingend ein Systemtrenner Typ BA vorgeschrieben; ohne Zusätze (Flüssigkeitskategorie 3) ist mindestens ein Systemtrenner Typ CA (bzw. ebenfalls BA) erforderlich.",
     installRule:
-      "Immer zwischen Trinkwasser-Zapfstelle und Befüllschlauch bzw. in der festen Nachfüllstation einbauen. Niemals nur einen einfachen Rückflussverhinderer nutzen – und Füllschlauch nach dem Befüllen abklemmen, falls kein fester Systemtrenner installiert ist!",
-    azubiCheck: "Abfluss-Trichter unter dem Systemtrenner BA frei? Jährliche Wartung der drei Kammern (Vor-, Mittel-, Hinterdruckzone) beachten."
+      "Immer zwischen Trinkwasser-Zapfstelle und Befüllschlauch bzw. in der festen Nachfüllstation einbauen. Niemals nur einen einfachen Rückflussverhinderer nutzen – und Füllschlauch nach dem Befüllen abklemmen, falls kein fester Systemtrenner BA/CA installiert ist!",
+    azubiCheck: "Abfluss-Trichter unter dem Systemtrenner BA frei? Kategorie des Heizungswassers (BA für Kat. 4 mit Inhibitoren/Glykol, CA für Kat. 3 ohne Zusätze) und jährliche Wartung prüfen."
   },
   {
     id: "mischbettharz",

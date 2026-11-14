@@ -91,7 +91,7 @@ export const HYDRAULIC_COMPONENTS: readonly HydraulicComponentData[] = [
     task:
       "Speichert thermische Energie, verhindert häufiges Takten des Verdichters bei geringer Gebäude-Heizlast und liefert beim Abtauen der Außeneinheit die benötigte Mindest-Wassermenge ohne Auskühlen des Estrichs.",
     azubiRule:
-      "Merke: Beim Reihenpuffer fließt das Wasser einfach durch (keine Temperaturvermischung → höchste Effizienz). Beim Parallelpuffer niemals die Fühlerhülse vergessen – der Vorlauffühler bestimmt, wann die Wärmepumpe abschaltet!",
+      "Merke: Beim Reihenpuffer fließt das Wasser einfach durch (keine Temperaturvermischung → höchste Effizienz). Beim Parallelpuffer droht ohne exakten Abgleich von Primär- (V̇_WP) und Sekundärvolumenstrom (V̇_HK) eine Exergievernichtung durch Durchmischung: Die WP muss 2–5 K heißer fahren als nötig und die JAZ sinkt deutlich!",
     commonMistake:
       "Beim Parallelpuffer ist der Sekundär-Volumenstrom größer als der Primär-Volumenstrom → kaltes Rücklaufwasser wird in den Vorlauf beigemischt (Vorlauftemperatur sinkt, Wärmepumpe läuft unnötig heiß).",
     checkValue: "Temperaturen an Vorlauf WP, Vorlauf Heizkreis und Pufferfühler vergleichen (max. 1–2 K Verlust)."
@@ -107,9 +107,9 @@ export const HYDRAULIC_COMPONENTS: readonly HydraulicComponentData[] = [
     badgeColor: "butter",
     metricBadge: "Differenzdruck: 250–350 mbar",
     task:
-      "Öffnet selbsttätig, wenn in der Übergangszeit viele Einzelraumregler (ERR) schließen. Dadurch strömt das Heizungswasser kurzgeschlossen durch den Reihenpuffer zurück zur Wärmepumpe und verhindert eine Durchfluss-Störung.",
+      "Öffnet selbsttätig, wenn Einzelraumregler (ERR) schließen, und muss exakt auf den Mindestvolumenstrom der Wärmepumpe bei geschlossenen ERR eingestellt werden. Im Normalbetrieb darf es NICHT dauerhaft überströmen (sonst hydraulischer Kurzschluss, Rücklaufanhebung und Takten der WP).",
     azubiRule:
-      "Merke: Das Überströmventil muss im Normalbetrieb (alle Heizkreise offen) komplett geschlossen sein! Öffnet es zu früh, fließt heißes Vorlaufwasser direkt in den Rücklauf → die Wärmepumpe taktet und verliert Effizienz.",
+      "Merke: Das Überströmventil (ÜSV) wird exakt auf den Mindestvolumenstrom bei geschlossenen ERR einreguliert und muss im Normalbetrieb komplett geschlossen bleiben! Dauerhaftes Überströmen erzeugt einen hydraulischen Kurzschluss, hebt den Rücklauf an und lässt die WP takten.",
     commonMistake:
       "Überströmventil in Richtung des falschen Pfeils eingebaut oder auf zu niedrigen Druck (z. B. 100 mbar) gestellt → ständiger Kurzschluss im Heizbetrieb.",
     checkValue: "Bei voll geöffneten Heizkreisen darf die Rücklaufleitung hinter dem Überströmventil nicht wärmer werden."

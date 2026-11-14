@@ -17,6 +17,7 @@ export interface QuizDomElements {
   readonly btnReset: HTMLButtonElement;
   readonly progressText: HTMLElement;
   readonly scoreText: HTMLElement;
+  readonly progressBarFill: HTMLElement;
   readonly questionHost: HTMLElement;
 }
 
@@ -144,8 +145,11 @@ export function renderQuizView(
   }
 
   const pct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+  const progressPct = total > 0 ? Math.round(((safeIndex + 1) / total) * 100) : 0;
   elements.progressText.textContent = `Frage ${safeIndex + 1} von ${total}`;
   elements.scoreText.textContent = `Richtig: ${correctCount} / ${answeredCount} (${pct} %)`;
+  elements.progressBarFill.style.width = `${progressPct}%`;
+  elements.progressBarFill.setAttribute("aria-valuenow", String(progressPct));
 
   if (!current) {
     elements.questionHost.replaceChildren();
@@ -217,6 +221,72 @@ export function renderQuizView(
 
   navRow.append(btnPrev, btnNext);
   card.appendChild(navRow);
+
+  // Zusammenfassung der falsch beantworteten Fragen am Ende (sobald alle beantwortet sind oder auf der letzten Frage nach Antwort)
+  const isCompleted = answeredCount === total || (isLast && selectedIndex !== undefined);
+  if (isCompleted && answeredCount > 0) {
+    const wrongQuestions = questions.filter((q) => {
+      const ans = state.quizAnswers[q.id];
+      return ans !== undefined && ans !== q.correctIndex;
+    });
+
+    const summaryCard = document.createElement("article");
+    summaryCard.className = "quiz-summary-card liquid-glass-card";
+
+    const sumHead = document.createElement("div");
+    sumHead.className = "quiz-feedback-head";
+    sumHead.appendChild(
+      createMaterialIcon(wrongQuestions.length === 0 ? "emoji_events" : "assignment_late", "sm")
+    );
+    const sumTitle = document.createElement("h3");
+    sumTitle.className = "detail-title";
+    sumTitle.textContent =
+      wrongQuestions.length === 0
+        ? `Top-Ergebnis: ${correctCount} von ${answeredCount} Fragen richtig!`
+        : `Auswertung: ${wrongQuestions.length} falsch beantwortete ${wrongQuestions.length === 1 ? "Frage" : "Fragen"}`;
+    sumHead.appendChild(sumTitle);
+    summaryCard.appendChild(sumHead);
+
+    if (wrongQuestions.length === 0) {
+      const okText = document.createElement("p");
+      okText.className = "section-text";
+      okText.textContent =
+        "Alle beantworteten Prüfungsfragen in diesem Themenbereich sitzen. Du bist bestens auf die Gesellenprüfung vorbereitet!";
+      summaryCard.appendChild(okText);
+    } else {
+      const list = document.createElement("div");
+      list.className = "quiz-wrong-list";
+
+      for (const wq of wrongQuestions) {
+        const wrongIdx = state.quizAnswers[wq.id];
+        const item = document.createElement("div");
+        item.className = "quiz-wrong-item";
+
+        const qHead = document.createElement("p");
+        qHead.className = "quiz-wrong-question";
+        qHead.textContent = wq.question;
+
+        const ansMeta = document.createElement("p");
+        ansMeta.className = "quiz-wrong-answers";
+        const yourAns =
+          wrongIdx !== undefined ? wq.options[wrongIdx] ?? "–" : "–";
+        const rightAns = wq.options[wq.correctIndex];
+        ansMeta.textContent = `Deine Antwort: ${yourAns} · Richtig: ${rightAns}`;
+
+        const exp = document.createElement("p");
+        exp.className = "section-text";
+        exp.textContent = wq.explanation;
+
+        item.append(qHead, ansMeta, exp);
+        list.appendChild(item);
+      }
+
+      summaryCard.appendChild(list);
+    }
+
+    elements.questionHost.replaceChildren(card, summaryCard);
+    return;
+  }
 
   elements.questionHost.replaceChildren(card);
 }

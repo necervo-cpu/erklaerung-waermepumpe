@@ -660,6 +660,16 @@ export function renderOperationMode(
   const sys = SYSTEMS[state.system];
   elements.headerRefPill.textContent = sys.refCondition[state.mode];
 
+  // Farblegende dynamisch an Kategorie, Bauart und Betriebsmodus anpassen
+  const isVrv = state.system === "vrv";
+  const showVorlaufLegend = !isHvac || isHeating;
+  elements.legendVorlaufItem.classList.toggle("hidden", !showVorlaufLegend);
+  elements.legendVorlaufText.textContent = isHvac
+    ? "Zuluft (warm · Heizbetrieb)"
+    : "Heizung Vorlauf";
+  elements.legendRuecklaufItem.classList.toggle("hidden", isHvac);
+  elements.legendVrvItem.classList.toggle("hidden", !isVrv);
+
   renderComponentDetail(elements, state, onSelectComponent);
 }
 
@@ -758,8 +768,12 @@ export function renderSystemView(
     elements.comp4Sub.textContent = "Expansionsventil";
   }
 
-  // Farblegende an Sekundärkreis anpassen
-  elements.legendVorlaufText.textContent = isHvac ? "Zuluft (Heizbetrieb)" : "Heizung Vorlauf";
+  // Farblegende an Sekundärkreis und Betriebsmodus anpassen
+  const showVorlaufLegend = !isHvac || state.mode === "heating";
+  elements.legendVorlaufItem.classList.toggle("hidden", !showVorlaufLegend);
+  elements.legendVorlaufText.textContent = isHvac
+    ? "Zuluft (warm · Heizbetrieb)"
+    : "Heizung Vorlauf";
   elements.legendRuecklaufItem.classList.toggle("hidden", isHvac);
   elements.legendVrvItem.classList.toggle("hidden", !isVrv);
 

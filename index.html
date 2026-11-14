@@ -120,100 +120,6 @@
           </button>
         </div>
 
-        <!-- Ansichts-Umschalter -->
-        <div class="segmented" role="tablist" aria-label="Ansicht wählen">
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="circuit"
-            role="tab"
-            aria-selected="true"
-            id="btnViewCircuit"
-          >
-            Kältekreis-Interaktiv
-          </button>
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="hydraulics"
-            role="tab"
-            aria-selected="false"
-            id="btnViewHydraulics"
-          >
-            Hydraulik-Kreis
-          </button>
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="bufferStorage"
-            role="tab"
-            aria-selected="false"
-            id="btnViewBufferStorage"
-          >
-            Pufferspeicher
-          </button>
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="waterQuality"
-            role="tab"
-            aria-selected="false"
-            id="btnViewWaterQuality"
-          >
-            Heizungswasser
-          </button>
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="heatingCurve"
-            role="tab"
-            aria-selected="false"
-            id="btnViewHeatingCurve"
-          >
-            Heizkurve
-          </button>
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="installation"
-            role="tab"
-            aria-selected="false"
-            id="btnViewInstallation"
-          >
-            Aufstellung &amp; Schall
-          </button>
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="faults"
-            role="tab"
-            aria-selected="false"
-            id="btnViewFaults"
-          >
-            Störungsbilder (7)
-          </button>
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="niceToKnow"
-            role="tab"
-            aria-selected="false"
-            id="btnViewNiceToKnow"
-          >
-            Nice to Know
-          </button>
-          <button
-            type="button"
-            class="segmented-btn press-btn"
-            data-view="quiz"
-            role="tab"
-            aria-selected="false"
-            id="btnViewQuiz"
-          >
-            Prüfungstraining
-          </button>
-        </div>
-
         <!-- 3-Stufen-Theme-Toggle: Auto / Hell / Dunkel -->
         <button
           type="button"
@@ -225,6 +131,114 @@
           <span id="themeIconLabel">Auto</span>
         </button>
       </div>
+
+      <!-- Hauptnavigation: 8 Ansichten (Desktop: strukturierte Leiste mit Icons · Mobile: kompakter Dropdown-Picker) -->
+      <nav class="view-nav-bar" aria-label="Hauptnavigation">
+        <button
+          type="button"
+          class="mobile-view-trigger press-btn"
+          id="btnMobileViewMenu"
+          aria-expanded="false"
+          aria-controls="viewTabs"
+        >
+          <span class="mobile-view-trigger-lead">
+            <span class="ag-icon ag-icon--sm" id="mobileViewIcon" aria-hidden="true">ac_unit</span>
+            <span id="mobileViewLabel">Kältekreis</span>
+          </span>
+          <span class="ag-icon ag-icon--sm mobile-view-chevron" aria-hidden="true">expand_more</span>
+        </button>
+
+        <div class="segmented view-nav-segmented" role="tablist" aria-label="Ansicht wählen" id="viewTabs">
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
+            data-view="circuit"
+            role="tab"
+            aria-selected="true"
+            id="btnViewCircuit"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">ac_unit</span>
+            <span>Kältekreis</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
+            data-view="hydraulics"
+            role="tab"
+            aria-selected="false"
+            id="btnViewHydraulics"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">plumbing</span>
+            <span>Hydraulik &amp; Puffer</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
+            data-view="waterQuality"
+            role="tab"
+            aria-selected="false"
+            id="btnViewWaterQuality"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">water_drop</span>
+            <span>Heizungswasser</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
+            data-view="heatingCurve"
+            role="tab"
+            aria-selected="false"
+            id="btnViewHeatingCurve"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">show_chart</span>
+            <span>Heizkurve</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
+            data-view="installation"
+            role="tab"
+            aria-selected="false"
+            id="btnViewInstallation"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">home_work</span>
+            <span>Aufstellung</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
+            data-view="faults"
+            role="tab"
+            aria-selected="false"
+            id="btnViewFaults"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">warning</span>
+            <span>Störungen (9)</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
+            data-view="niceToKnow"
+            role="tab"
+            aria-selected="false"
+            id="btnViewNiceToKnow"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">lightbulb</span>
+            <span>Nice to Know</span>
+          </button>
+          <button
+            type="button"
+            class="segmented-btn view-nav-btn press-btn"
+            data-view="quiz"
+            role="tab"
+            aria-selected="false"
+            id="btnViewQuiz"
+          >
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">quiz</span>
+            <span>Prüfung</span>
+          </button>
+        </div>
+      </nav>
     </header>
 
     <!-- ANSICHT 1: KÄLTEKREIS INTERAKTIV (HAUPTANSICHT) -->
@@ -287,12 +301,7 @@
             <span data-expand-label>Großansicht</span>
           </button>
         </div>
-        <div class="svg-swipe-hint" aria-hidden="true">
-          <span class="ag-icon ag-icon--xs">arrow_back</span>
-          <span>Schema seitlich wischen</span>
-          <span class="ag-icon ag-icon--xs">arrow_forward</span>
-        </div>
-        <div id="svgStageWrap" class="svg-stage-wrap has-scroll-right">
+        <div id="svgStageWrap" class="svg-stage-wrap">
           <div id="svgStage" class="svg-stage">
           <svg id="circuitSvg" viewBox="0 0 920 530" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktives Schema des Kältekreislaufs">
             <defs>
@@ -1152,7 +1161,8 @@
     </section>
 
     <!-- ANSICHT 4: HYDRAULIK & HEIZUNGSWASSERKREIS (AZUBI-DASHBOARD) -->
-    <section id="viewHydraulics" class="workspace-grid hidden" aria-label="Hydraulik und Heizungswasserkreis">
+    <section id="viewHydraulics" class="water-layout hidden" aria-label="Hydraulik und Pufferspeicher">
+      <div class="workspace-grid">
       <section class="schema-card liquid-glass-card">
         <div class="refrigerant-banner is-r290" id="hydBanner">
           <div>
@@ -1396,61 +1406,11 @@
       <aside class="detail-card" aria-label="Hydraulik-Bauteile">
         <div id="hydraulicsAccordionList" class="comp-list"></div>
       </aside>
-    </section>
-
-    <!-- ANSICHT 5: HEIZUNGSWASSER NACH VDI 2035 (AZUBI-DASHBOARD) -->
-    <section id="viewWaterQuality" class="water-layout hidden" aria-label="Heizungswasser nach VDI 2035">
-      <div class="nice-header-banner liquid-glass-card">
-        <div class="nice-header-copy">
-          <p class="detail-kicker">Luft/Wasser-Wärmepumpe · VDI 2035 &amp; DIN EN 1717</p>
-          <h2 class="detail-title">Wie muss unser Heizungswasser sein?</h2>
-          <p class="section-text" style="margin-top:4px;">
-            Wähle die verbauten Werkstoffe und die Aufbereitungsart, um die verbindlichen Sollwerte,
-            Aufbereitungsbauteile und die Schritt-für-Schritt-Befüllung für die Praxis anzuzeigen.
-          </p>
-        </div>
       </div>
-
-      <div class="water-controls-card liquid-glass-card">
-        <div class="water-filter-group">
-          <span class="mode-switch-label">Werkstoffe im Heizkreis:</span>
-          <div class="segmented" role="tablist" aria-label="Werkstoffe wählen">
-            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnMatNoAlu">
-              Ohne Aluminium (Kupfer / Stahl / Edelstahl)
-            </button>
-            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnMatWithAlu">
-              Mit Aluminium / AlSi-Wärmetauscher
-            </button>
-          </div>
-        </div>
-        <div class="water-filter-group">
-          <span class="mode-switch-label">Aufbereitungsart:</span>
-          <div class="segmented" role="tablist" aria-label="Aufbereitungsart wählen">
-            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnTreatLowSalt">
-              Salzarm (Vollentsalzung · Standard WP)
-            </button>
-            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnTreatSaline">
-              Salzhaltig (Nur Enthärtung)
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div id="waterMetricsGrid" class="water-metrics-grid"></div>
 
       <div class="water-section-head">
-        <h3 class="detail-title">Bauteile für Befüllung, Schutz &amp; Messung</h3>
+        <h3 class="detail-title">Pufferspeicher-Einbindungsvarianten &amp; Schichtung</h3>
       </div>
-      <div id="waterEquipmentGrid" class="nice-grid"></div>
-
-      <div class="water-section-head">
-        <h3 class="detail-title">Praxis-Checkliste: Spülen, Befüllen &amp; typische Schäden</h3>
-      </div>
-      <div id="waterPracticeGrid" class="nice-grid"></div>
-    </section>
-
-    <!-- ANSICHT 6: PUFFERSPEICHER-EINBINDUNGEN (AZUBI-DASHBOARD) -->
-    <section id="viewBufferStorage" class="water-layout hidden" aria-label="Pufferspeicher-Einbindungen">
       <div class="refrigerant-banner is-r290" id="bufBanner">
         <div class="banner-copy">
           <p class="banner-title" id="bufBannerTitle">Reihenpuffer im Rücklauf + Überströmventil</p>
@@ -1489,10 +1449,6 @@
               <span class="ag-icon ag-icon--xs" aria-hidden="true">open_in_full</span>
               <span data-expand-label>Großansicht</span>
             </button>
-          </div>
-          <div class="svg-swipe-hint">
-            <span class="ag-icon ag-icon--xs" aria-hidden="true">swipe</span>
-            <span>Schema horizontal wischen für Details</span>
           </div>
           <div class="svg-stage-wrap">
             <div class="svg-stage">
@@ -1605,11 +1561,7 @@
             </div>
           </div>
 
-          <div class="legend-bar" aria-label="Farblegende Pufferspeicher">
-            <div class="legend-item"><span class="legend-swatch is-vorlauf"></span>Heizung Vorlauf (warm)</div>
-            <div class="legend-item"><span class="legend-swatch is-ruecklauf"></span>Heizung Rücklauf (abgekühlt)</div>
-            <div class="legend-item"><span class="legend-swatch is-heissgas"></span>TWW-Zone / Fühler</div>
-          </div>
+
         </section>
 
         <aside class="detail-card" id="bufferDetailPanel" aria-label="Analyse der Pufferspeicher-Einbindung"></aside>
@@ -1619,6 +1571,57 @@
         <h3 class="detail-title">Praxisregeln: Auslegung, Schichtung &amp; Fühler</h3>
       </div>
       <div id="bufferPracticeGrid" class="nice-grid"></div>
+    </section>
+
+    <!-- ANSICHT 5: HEIZUNGSWASSER NACH VDI 2035 (AZUBI-DASHBOARD) -->
+    <section id="viewWaterQuality" class="water-layout hidden" aria-label="Heizungswasser nach VDI 2035">
+      <div class="nice-header-banner liquid-glass-card">
+        <div class="nice-header-copy">
+          <p class="detail-kicker">Luft/Wasser-Wärmepumpe · VDI 2035 &amp; DIN EN 1717</p>
+          <h2 class="detail-title">Wie muss unser Heizungswasser sein?</h2>
+          <p class="section-text" style="margin-top:4px;">
+            Wähle die verbauten Werkstoffe und die Aufbereitungsart, um die verbindlichen Sollwerte,
+            Aufbereitungsbauteile und die Schritt-für-Schritt-Befüllung für die Praxis anzuzeigen.
+          </p>
+        </div>
+      </div>
+
+      <div class="water-controls-card liquid-glass-card">
+        <div class="water-filter-group">
+          <span class="mode-switch-label">Werkstoffe im Heizkreis:</span>
+          <div class="segmented" role="tablist" aria-label="Werkstoffe wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnMatNoAlu">
+              Ohne Aluminium (Kupfer / Stahl / Edelstahl)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnMatWithAlu">
+              Mit Aluminium / AlSi-Wärmetauscher
+            </button>
+          </div>
+        </div>
+        <div class="water-filter-group">
+          <span class="mode-switch-label">Aufbereitungsart:</span>
+          <div class="segmented" role="tablist" aria-label="Aufbereitungsart wählen">
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnTreatLowSalt">
+              Salzarm (Vollentsalzung · Standard WP)
+            </button>
+            <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnTreatSaline">
+              Salzhaltig (Nur Enthärtung)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="waterMetricsGrid" class="water-metrics-grid"></div>
+
+      <div class="water-section-head">
+        <h3 class="detail-title">Bauteile für Befüllung, Schutz &amp; Messung</h3>
+      </div>
+      <div id="waterEquipmentGrid" class="nice-grid"></div>
+
+      <div class="water-section-head">
+        <h3 class="detail-title">Praxis-Checkliste: Spülen, Befüllen &amp; typische Schäden</h3>
+      </div>
+      <div id="waterPracticeGrid" class="nice-grid"></div>
     </section>
 
     <!-- ANSICHT 7: AZUBI-PRÜFUNGSTRAINING (GESELLENPRÜFUNG TEIL 1 & 2) -->
@@ -1642,19 +1645,22 @@
           <span class="mode-switch-label">Themenbereich:</span>
           <div class="segmented" role="tablist" aria-label="Prüfungsthema wählen">
             <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="true" id="btnQuizTopicAll">
-              Alle Themen (16)
+              Alle Themen (28)
             </button>
             <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnQuizTopicHeatpump">
-              Luft/Wasser-WP (8)
+              Luft/Wasser-WP (14)
             </button>
             <button type="button" class="segmented-btn press-btn" role="tab" aria-selected="false" id="btnQuizTopicHvac">
-              Luft/Luft-WP (8)
+              Luft/Luft-WP (14)
             </button>
           </div>
         </div>
         <div class="quiz-status-pills">
-          <span class="ref-pill tabular" id="quizProgressText">Frage 1 von 16</span>
+          <span class="ref-pill tabular" id="quizProgressText">Frage 1 von 28</span>
           <span class="ref-pill tabular" id="quizScoreText">Richtig: 0 / 0 (0 %)</span>
+        </div>
+        <div class="quiz-progress-track">
+          <div class="quiz-progress-fill" id="quizProgressBarFill" role="progressbar" aria-label="Prüfungsfortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="4"></div>
         </div>
       </div>
 
@@ -1698,6 +1704,9 @@
             <span>Parallelverschiebung: <strong class="tabular" id="hcShiftValue">0,0 K</strong></span>
             <input type="range" id="hcShiftSlider" min="-5" max="5" step="0.5" value="0" />
           </label>
+        </div>
+        <div class="hc-efficiency-row">
+          <span class="badge-tag" id="hcEfficiencyBadge" data-color="mint">Grün (Optimal) · Pro 1 K höhere Vorlauftemperatur sinkt der COP / die JAZ um ca. 2,5 %</span>
         </div>
       </div>
 
@@ -1772,10 +1781,6 @@
       </div>
 
       <div class="schema-card">
-        <div class="svg-swipe-hint">
-          <span class="ag-icon ag-icon--xs" aria-hidden="true">swipe</span>
-          <span>Aufstellungs-Skizze horizontal wischen für Abstände</span>
-        </div>
         <div class="svg-stage-wrap">
           <div class="svg-stage">
             <svg id="installSvg" viewBox="0 0 920 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Aufstellungsschema für Außeneinheiten mit R290-Schutzzone und Schallschutz">

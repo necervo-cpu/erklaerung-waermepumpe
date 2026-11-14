@@ -12,11 +12,11 @@ export const FAULTS: readonly FaultData[] = [
   {
     id: "hd",
     code: "HD-Alarm",
-    title: "Hochdruckstörung (HD-Störung)",
+    title: "Verflüssiger verschmutzt / Wasserdurchfluss am PWT zu gering",
     severity: "Sicherheitsabschaltung HD",
-    preview: "Verflüssigungsdruck & -temperatur steigen unzulässig hoch an.",
+    preview: "HD extrem hoch bis zur HD-Störung, Spreizung ΔT wasserseitig > 8–10 K statt 5 K.",
     symptoms:
-      "Anlage schaltet über den Hochdruckpressostaten (HD) mit Störmeldung ab. Verflüssigungsdruck und Verflüssigungstemperatur schießen innerhalb kurzer Zeit steil nach oben, während die Wärme nicht ins Heizungssystem abgeführt wird.",
+      "Hochdruck (HD) steigt extrem steil bis zur HD-Störabschaltung. Die wasserseitige Spreizung ΔT zwischen Vorlauf und Rücklauf am Plattenwärmetauscher (PWT) liegt deutlich über 8–10 K (Sollwert ca. 5 K). Unterkühlung oft normal bis leicht erhöht, Überhitzung unauffällig.",
     causes: [
       "Fehlender Volumenstrom auf der Heizungsseite: Umwälzpumpe defekt oder blockiert, Luft im Plattenwärmetauscher, Schmutzfänger / Schlammabscheider zugesetzt, alle Heizkörper- bzw. FBH-Stellantriebe geschlossen.",
       "Plattenwärmetauscher (Verflüssiger) wasserseitig verkalkt oder verschlammt (schlechter Wärmeübergang).",
@@ -76,11 +76,11 @@ export const FAULTS: readonly FaultData[] = [
   {
     id: "ice",
     code: "Abtaufehler",
-    title: "Starke Vereisung / Abtaufehler am Verdampfer",
+    title: "Verdampfer vereist / Lüfter defekt",
     severity: "Wärmeübergang blockiert",
-    preview: "Verdampfer wächst komplett zu, Abtauung startet nicht oder bricht ab.",
+    preview: "ND fällt stark ab, Sauggastemperatur sinkt, Überhitzung bricht ein → Gefahr von Flüssigkeitsschlägen!",
     symptoms:
-      "Der Lamellenverdampfer vereist vollständig zu einem massiven Eisblock. Der Luftstrom bricht zusammen, die Abtauung startet gar nicht, läuft endlos oder bricht vorzeitig ab.",
+      "Der Niederdruck (ND) fällt stark ab, die Sauggastemperatur sinkt und die Überhitzung bricht ein (oft < 2–3 K) → akute Gefahr von Flüssigkeitsschlägen am Verdichter! Der Lamellenverdampfer vereist zum massiven Eisblock, der Luftstrom bricht zusammen.",
     causes: [
       "4-Wege-Umschaltventil schaltet mechanisch nicht sauber um oder klemmt (kein heißes Kältemittel gelangt in den Verdampfer).",
       "Abtaufühler / Verdampferfühler dejustiert, abgerutscht oder mit falschem Widerstandswert.",
@@ -159,5 +159,44 @@ export const FAULTS: readonly FaultData[] = [
       "Pumpen-Durchflusswert in der Regelung (l/min bzw. m³/h) ablesen und mit dem Mindestvolumenstrom der Wärmepumpe vergleichen."
     ],
     relatedComponents: [3, 9]
+  },
+  {
+    id: "leakage",
+    code: "KM-Mangel",
+    title: "Kältemittelmangel / Leckage",
+    severity: "Leistungsverlust & Verdichterüberhitzung",
+    preview: "ND zu tief, HD zu tief, Überhitzung zu hoch, Unterkühlung zu klein / Flashgas im Schauglas.",
+    symptoms:
+      "Sowohl Niederdruck (ND) als auch Hochdruck (HD) sind zu tief. Die Sauggasüberhitzung steigt stark an (> 12–15 K, dadurch hohe Heißgastemperatur), während die Unterkühlung am Verflüssigeraustritt zu klein ist (< 1–2 K) und im Schauglas Blasenbildung (Flashgas) sichtbar wird.",
+    causes: [
+      "Undichtigkeit im Kältekreis (z. B. Bördelverbindungen bei Split-Anlagen, Schraderventile, Lötstellen oder Schwingungsrisse).",
+      "Schleichender Kältemittelverlust über längere Betriebszeit ohne fachgerechte Dichtheitsprüfung nach F-Gase-VO."
+    ],
+    checks: [
+      "Überhitzung (zu hoch) und Unterkühlung (zu klein) parallel messen und Schauglas auf Flashgas prüfen.",
+      "Anlage drucklos mit trockenem Stickstoff (OFN) abdrücken und Lecksuchspray / elektronischen Lecksucher einsetzen.",
+      "Leckage beheben, evakuieren (< 0,3 mbar) und Kältemittel exakt nach Typenschild-Gewicht neu befüllen (bei R290/R32 Sicherheitsvorschriften beachten)."
+    ],
+    relatedComponents: [1, 2, 4, 8, 9]
+  },
+  {
+    id: "eev",
+    code: "EEV-Fehler",
+    title: "Expansionsventil (EEV) klemmt zu weit zu vs. zu weit offen",
+    severity: "Fehlregelung Überhitzung",
+    preview: "Zu weit zu: wie KM-Mangel, aber normale/hohe Unterkühlung. Zu weit offen: ND zu hoch, Überhitzung ~0 K.",
+    symptoms:
+      "Klemmt das EEV zu weit zu (Mangel-Speisung): ND zu tief, Überhitzung extrem hoch (> 15 K) – genau wie bei KM-Mangel, ABER die Unterkühlung vor dem EEV ist normal bis erhöht (> 5 K, kein Flashgas!). Klemmt das EEV zu weit offen (Überflutung): ND zu hoch, Überhitzung fällt auf fast 0 K → nasse Verdichtung und akute Flüssigkeitsschlag-Gefahr.",
+    causes: [
+      "Schrittmotor des EEV defekt, Spule durchgebrannt oder Steckverbindung zur Platine korrodiert.",
+      "Verschmutzung / Späne im Ventilsitz (fehlender oder zugesetzter Filtertrockner).",
+      "Defekter Sauggas-NTC oder Saugdrucktransmitter liefert falsche Überhitzungswerte an den EEV-Treiber."
+    ],
+    checks: [
+      "Spulenwiderstand des EEV-Schrittmotors (meist 40–50 Ω je Wicklung) und Ansteuerimpulse prüfen.",
+      "Unterkühlung vs. Überhitzung gegeneinander abgleichen (Unterscheidung KM-Mangel vs. klemmendes EEV!).",
+      "Sauggas-Temperaturfühler (korrekte Rohranlage + Wärmeleitpaste) und Drucktransmitter auf Plausibilität prüfen."
+    ],
+    relatedComponents: [4, 7, 1, 2]
   }
 ];

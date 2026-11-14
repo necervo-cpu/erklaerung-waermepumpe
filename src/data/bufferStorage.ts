@@ -96,7 +96,7 @@ export const BUFFER_VARIANTS: Readonly<Record<BufferVariant, BufferVariantData>>
       "Überbrückt kurze Takt- oder EVU-Abschaltzeiten zuverlässig"
     ],
     cons: [
-      "Mischungsverluste im Puffer: WP muss oft 2–5 K wärmer fahren als der Heizkreis benötigt",
+      "Exergievernichtung durch Durchmischung: Sind Primärvolumenstrom (V̇_WP) und Sekundärvolumenstrom (V̇_HK) nicht exakt abgeglichen, mischt sich das Wasser im Speicher und die WP muss 2–5 K heißer fahren als nötig (JAZ sinkt deutlich)",
       "Höherer Platzbedarf, mehr Verrohrung und zwei oder mehr Umwälzpumpen",
       "Schlechte JAZ, wenn Primär- und Sekundärströme nicht aufeinander abgestimmt sind"
     ],

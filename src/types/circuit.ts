@@ -19,7 +19,6 @@ export type OperationMode = "heating" | "cooling" | "defrost";
 export type ViewType =
   | "circuit"
   | "hydraulics"
-  | "bufferStorage"
   | "waterQuality"
   | "heatingCurve"
   | "installation"

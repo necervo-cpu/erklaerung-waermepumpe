@@ -30,10 +30,10 @@ export const INSTALL_SYSTEMS: Readonly<Record<InstallSystemType, InstallSystemCo
   r290: {
     id: "r290",
     label: "Luft/Wasser Monoblock (R290 · A3)",
-    bannerTitle: "Aufstellung R290-Monoblock · Schutzzone & Kondensat beachten",
+    bannerTitle: "Aufstellung R290-Monoblock · Schutzzone & Kondensatsiphon beachten",
     bannerDesc:
-      "R290 (Propan, Gruppe A3) ist schwerer als Luft und sinkt bei einer Leckage zu Boden. Schutzzone rund um die Außeneinheit frei von Öffnungen und Zündquellen halten!",
-    badgeText: "R290 · A3 · Schutzzone 1 m",
+      "R290 (Propan, Gruppe A3, UEG 1,7 Vol.-% / OEG 10,8 Vol.-%) ist schwerer als Luft und sinkt zu Boden. Schutzzone (am Gerät 1 m, am Boden kegel-/trapezförmig je nach Hersteller bis 1,5–3,0 m) frei von Öffnungen & Zündquellen halten!",
+    badgeText: "R290 · A3 · Schutzzone 1–3 m",
     badgeColor: "mint"
   },
   r32: {
@@ -52,13 +52,13 @@ export const INSTALL_RULES: readonly InstallRuleCard[] = [
     id: "r290-zone",
     icon: "shield",
     badge: "Sicherheit · A3",
-    title: "R290-Schutzbereich (mind. 1 m rundum)",
+    title: "R290-Schutzbereich (Kegel-/Trapezform bis 3 m)",
     summary:
-      "Propan hat eine höhere Dichte als Luft und sammelt sich am Boden oder in Vertiefungen.",
+      "R290 (Propan, Gruppe A3, schwerer als Luft, UEG 1,7 Vol.-% / OEG 10,8 Vol.-%) breitet sich im Leckagefall bodennah aus.",
     bullets: [
-      "Keine zu öffnenden Fenster, Türen, Kellerlichtschächte oder Lüftungsschächte innerhalb der Hersteller-Schutzzone (meist 1 m seitlich/vorne).",
-      "Keine ungeschützten Abflüsse, Gullys oder Zündquellen (Steckdosen, Lichtschalter, Gartenleuchten) im Schutzbereich.",
-      "Abweichungen (z. B. Fenster oberhalb) nur nach exakt dokumentierter Herstellerfreigabe."
+      "Die Schutzzone ist oft kegel-/trapezförmig: direkt am Gerät mind. 1 m, am Boden je nach Hersteller bis zu 1,5–3,0 m.",
+      "Innerhalb der Zone sind Kellerschächte, Lichtschächte, Kellerfenster, Türen, ungesicherte Fallrohre sowie Zündquellen (Steckdosen, Lichtschalter, Klingeln) streng verboten.",
+      "Abweichungen (z. B. Wandmontage oder Fenster oberhalb) nur exakt nach freigegebenem Hersteller-Schutzzonendiagramm."
     ]
   },
   {
@@ -83,7 +83,7 @@ export const INSTALL_RULES: readonly InstallRuleCard[] = [
       "Beim Abtauen fallen pro Tag 20–50 Liter Kondenswasser an – friert es ein, bildet sich eine Eisplatte.",
     bullets: [
       "Streifenfundament oder Betonplatten frostfrei gründen und Schwingungsdämpfer (Gummipuffer / BigFoots) montieren.",
-      "Kondensat über ein Kies-/Sickerbett unterhalb der Frostgrenze (ca. 80 cm) abführen oder frostsicher mit Begleitheizung verlegen.",
+      "Kondensat entweder frei ins frostfreie Kies-/Sickerbett (ca. 80 cm) abführen oder bei Anschluss an das Abwassernetz zwingend über einen frostsicheren Siphon (Geruchsverschluss) führen – damit bei R290-Leckage kein Propan in die Kanalisation strömt!",
       "Bei Wandkonsolen von Split-Geräten auf körperschallentkoppelte Dübel und Gummipuffer achten."
     ]
   },

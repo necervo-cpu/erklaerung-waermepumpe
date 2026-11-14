@@ -316,5 +316,208 @@ export const QUIZ_QUESTIONS: readonly QuizQuestion[] = [
       "Beim Kühlen entfeuchtet das Innengerät die Raumluft – es fällt viel Kondensat an. Ist der Ablauf verstopft oder die Kondensatpumpe defekt, löst der Schwimmerschalter als Wasserschadensschutz aus und stoppt das Gerät.",
     examTip:
       "Bei der Wartung immer Kondensatwanne reinigen, Ablauf mit Wasser fluten und Schwimmerschalter-Funktion testen!"
+  },
+  {
+    id: "lw-9",
+    topic: "heatpump",
+    badge: "Rechenaufgabe · COP",
+    examLevel: "Gesellenprüfung Teil 1",
+    question:
+      "Rechenaufgabe: Eine Luft/Wasser-Wärmepumpe liefert bei A2/W35 eine thermische Heizleistung von 9,6 kW und nimmt dabei 2,4 kW elektrische Leistung auf. Wie groß ist der aktuelle COP?",
+    options: ["COP = 3,2", "COP = 4,0", "COP = 4,8", "COP = 2,4"],
+    correctIndex: 1,
+    explanation:
+      "Der COP (Coefficient of Performance) ist das Verhältnis aus abgegebener Wärmeleistung (Q̇_Heiz = 9,6 kW) zur aufgenommenen elektrischen Leistung (P_el = 2,4 kW): COP = 9,6 / 2,4 = 4,0.",
+    examTip:
+      "Formel merken: COP = Q̇_Heiz / P_el. Je kleiner die Temperaturdifferenz zwischen Quelle und Senke, desto höher der COP!"
+  },
+  {
+    id: "lw-10",
+    topic: "heatpump",
+    badge: "Rechenaufgabe · Volumenstrom",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Rechenaufgabe: Eine Wärmepumpe hat 10 kW Heizleistung bei einer Spreizung ΔT = 5 K (c_Wasser ≈ 1,16 Wh/(kg·K)). Welcher Heizwasser-Volumenstrom wird benötigt?",
+    options: ["ca. 860 l/h", "ca. 1.724 l/h", "ca. 3.450 l/h", "ca. 430 l/h"],
+    correctIndex: 1,
+    explanation:
+      "Aus Q̇ = ṁ · c · ΔT folgt ṁ = Q̇ / (c · ΔT) = 10.000 W / (1,16 Wh/(kg·K) · 5 K) ≈ 1.724 kg/h ≈ 1.724 l/h. Bei ΔT = 10 K wäre es nur die Hälfte (862 l/h).",
+    examTip:
+      "Merksatz: Halbe Spreizung (5 K statt 10 K) bedeutet doppelter Volumenstrom – deshalb brauchen Wärmepumpen dickere Rohre als Gaskessel!"
+  },
+  {
+    id: "lw-11",
+    topic: "heatpump",
+    badge: "Rechenaufgabe · Überhitzung",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Rechenaufgabe: Am ND-Manometer liest du für R290 eine Verdampfungstemperatur t₀ = −6 °C ab. Das Anlege-Thermometer am Verdampferaustritt (Sauggas) misst +1 °C. Wie groß ist die Überhitzung?",
+    options: ["5 K (im Soll)", "7 K (im Soll)", "−5 K (Flüssigkeitsschlag)", "12 K (zu hoch)"],
+    correctIndex: 1,
+    explanation:
+      "Überhitzung = Sauggastemperatur minus Verdampfungstemperatur: (+1 °C) − (−6 °C) = 7 K. Dieser Wert liegt genau im optimalen Sollbereich von 5–8 K.",
+    examTip:
+      "Bei negativen Verdampfungstemperaturen das Vorzeichen beachten: +1 °C minus (−6 °C) = +7 K!"
+  },
+  {
+    id: "lw-12",
+    topic: "heatpump",
+    badge: "VDI 2035 & DIN EN 1717",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Welcher Systemtrenner nach DIN EN 1717 ist beim Nachfüllen von Heizungswasser mit Inhibitoren oder Glykol (Flüssigkeitskategorie 4) zwingend vorgeschrieben?",
+    options: [
+      "Einfacher Rückflussverhinderer EA",
+      "Systemtrenner Typ CA",
+      "Systemtrenner Typ BA",
+      "Rohrtrenner ohne Ablauftrichter"
+    ],
+    correctIndex: 2,
+    explanation:
+      "Heizungswasser mit Inhibitoren/Frostschutz zählt zur Flüssigkeitskategorie 4 (gesundheitsgefährdende Stoffe) und erfordert zwingend einen Systemtrenner Typ BA. Ohne Zusätze (Kat. 3) reicht Typ CA (bzw. BA).",
+    examTip:
+      "Merke: Kategorie 4 (Zusätze/Inhibitoren) = BA; Kategorie 3 (reines Heizungswasser) = CA oder BA."
+  },
+  {
+    id: "lw-13",
+    topic: "heatpump",
+    badge: "§ 14a EnWG",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Was passiert bei einer netzorientierten Steuerung nach § 14a EnWG im Netzengpass bei einer modernen EFH-Wärmepumpe?",
+    options: [
+      "Der Netzbetreiber schaltet die gesamte Wärmepumpe per Schütz für 2 Stunden komplett stromlos.",
+      "Die elektrische Wirkleistung wird auf mindestens 4,2 kW gedimmt – der Verdichter läuft meist normal weiter, primär wird der Heizstab begrenzt.",
+      "Die Vorlauftemperatur wird automatisch auf 70 °C angehoben.",
+      "Die Anlage schaltet zwangsweise in den Kühlbetrieb um."
+    ],
+    correctIndex: 1,
+    explanation:
+      "§ 14a EnWG erlaubt keine harte Komplettabschaltung mehr! Es wird nur auf mindestens 4,2 kW elektrische Bezugsleistung gedimmt (über Steuerbox + EEBUS/Relais). Da der Verdichter im EFH meist deutlich unter 4,2 kW zieht, läuft er weiter.",
+    examTip:
+      "Alte EVU-Sperrzeiten = Komplett-Aus; neuer § 14a EnWG = Dimmung auf min. 4,2 kW elektrisch!"
+  },
+  {
+    id: "lw-14",
+    topic: "heatpump",
+    badge: "Hydraulik · Puffer",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Welches Problem entsteht bei einem Parallelpuffer (hydraulische Weiche), wenn Primär- und Sekundärvolumenstrom nicht exakt abgeglichen sind?",
+    options: [
+      "Das Überströmventil öffnet dauerhaft.",
+      "Exergievernichtung durch Durchmischung: Die Wärmepumpe muss 2–5 K heißer fahren als nötig und die JAZ sinkt.",
+      "Der Kältemitteldruck fällt unter 0 bar ü.",
+      "Der Systemtrenner BA löst sofort aus."
+    ],
+    correctIndex: 1,
+    explanation:
+      "Bei ungleichen Volumenströmen im Parallelpuffer mischt sich heißer Vorlauf mit kälterem Rücklauf. Durch diese Exergievernichtung muss die Wärmepumpe eine höhere Vorlauftemperatur bereitstellen, was pro Kelvin ca. 2,5 % Effizienz kostet.",
+    examTip:
+      "Bei Flächenheizungen ohne Mischer ist der Reihenpuffer im Rücklauf dem Parallelpuffer fast immer überlegen!"
+  },
+  {
+    id: "ll-9",
+    topic: "hvac",
+    badge: "Rechenaufgabe · Unterkühlung",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Rechenaufgabe: Am HD-Manometer misst du eine Verflüssigungstemperatur t_c = +44 °C. Das Thermometer an der Flüssigkeitsleitung am Verflüssigeraustritt zeigt +39 °C. Wie groß ist die Unterkühlung?",
+    options: ["5 K (im Soll 3–7 K)", "−5 K (Flashgas)", "83 K", "0 K (keine Unterkühlung)"],
+    correctIndex: 0,
+    explanation:
+      "Unterkühlung = Verflüssigungstemperatur minus Flüssigkeitsleitungstemperatur: 44 °C − 39 °C = 5 K. Dieser Wert liegt ideal im Sollbereich von 3–7 K und verhindert Flashgas vor dem EEV.",
+    examTip:
+      "Überhitzung = T_Sauggas − t₀ (Verdampfer); Unterkühlung = t_c − T_Flüssig (Verflüssiger)!"
+  },
+  {
+    id: "ll-10",
+    topic: "hvac",
+    badge: "Störungsdiagnose · EEV",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Eine Anlage zeigt zu tiefen Niederdruck (ND) und eine sehr hohe Überhitzung (> 15 K) – genau wie bei Kältemittelmangel. Die Unterkühlung vor dem EEV ist aber normal bis erhöht (6–8 K) und das Schauglas ist blasenfrei. Was ist die Ursache?",
+    options: [
+      "Kältemittelmangel durch Leckage",
+      "Das Expansionsventil (EEV) klemmt zu weit zu oder der Filtertrockner vor dem EEV ist verstopft",
+      "Der Plattenwärmetauscher ist wasserseitig verkalkt",
+      "Der Verdichter läuft rückwärts"
+    ],
+    correctIndex: 1,
+    explanation:
+      "Bei Kältemittelmangel fehlt Kältemittel im Verflüssiger → Unterkühlung ist zu klein (< 2 K) und es entsteht Flashgas. Ist die Unterkühlung jedoch normal/hoch und der Verdampfer verhungert trotzdem, staut sich das flüssige Kältemittel vor dem klemmenden EEV oder einem verstopften Filtertrockner.",
+    examTip:
+      "Unterkühlung ist der Schlüssel zur Unterscheidung: KM-Mangel = niedrige Unterkühlung; klemmendes EEV = normale/hohe Unterkühlung!"
+  },
+  {
+    id: "ll-11",
+    topic: "hvac",
+    badge: "Störungsdiagnose · EEV offen",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Was passiert im Kältekreis, wenn das EEV mechanisch zu weit offen klemmt?",
+    options: [
+      "ND steigt zu hoch an, Überhitzung fällt auf fast 0 K → nasse Verdichtung und akute Flüssigkeitsschlag-Gefahr",
+      "ND fällt unter 0 bar ü und Überhitzung steigt auf 25 K",
+      "Die Unterkühlung steigt auf 20 K",
+      "Der Heizstab schaltet sofort ab"
+    ],
+    correctIndex: 0,
+    explanation:
+      "Ein zu weit geöffnetes EEV überflutet den Verdampfer: Zu viel Kältemittel strömt nach, der Saugdruck (ND) steigt, das Kältemittel verdampft nicht mehr vollständig und die Überhitzung bricht auf ~0 K ein. Flüssiges Kältemittel gelangt in den Verdichter.",
+    examTip:
+      "Überhitzung nahe 0 K bedeutet immer Lebensgefahr für den Verdichter (Flüssigkeitsschlag / Ölverdünnung)!"
+  },
+  {
+    id: "ll-12",
+    topic: "hvac",
+    badge: "R290 · Schutzzone",
+    examLevel: "Gesellenprüfung Teil 2",
+    question:
+      "Warum muss bei einer R290-Monoblock-Wärmepumpe der Kondensatanschluss ans Abwassernetz zwingend über einen frostsicheren Siphon geführt werden?",
+    options: [
+      "Um den Wasserdruck im Heizkreis auf 1,5 bar zu halten",
+      "Damit im Leckagefall kein schwereres Propan (UEG 1,7 Vol.-%) über das Kondensatrohr in die Kanalisation strömen kann",
+      "Um die Überhitzung am Verdampfer konstant auf 6 K zu halten",
+      "Weil sonst die Umwälzpumpe Luft zieht"
+    ],
+    correctIndex: 1,
+    explanation:
+      "R290 (Propan, Gruppe A3) ist schwerer als Luft und sinkt zu Boden. Ohne Geruchsverschluss (Siphon) oder freie Versickerung ins Kiesbett könnte ausgetretenes Gas über den Kondensatablauf in die Kanalisation oder ins Gebäude wandern.",
+    examTip:
+      "Kellerfenster, Lichtschächte, ungesicherte Fallrohre und Zündquellen sind in der R290-Schutzzone (1 m am Gerät, bis 1,5–3,0 m am Boden) tabu!"
+  },
+  {
+    id: "ll-13",
+    topic: "hvac",
+    badge: "Störung · Verflüssiger",
+    examLevel: "Gesellenprüfung Teil 1",
+    question:
+      "Die Anlage schaltet mit HD-Störung ab. Am Plattenwärmetauscher (Verflüssiger) misst du Vorlauf 48 °C und Rücklauf 36 °C (Spreizung ΔT = 12 K statt 5 K). Was liegt vor?",
+    options: [
+      "Zu geringer Wasserdurchfluss am PWT (z. B. Schmutzfänger zu, Pumpe zu schwach, ERR geschlossen) oder PWT verkalkt",
+      "Kältemittelmangel im Verdampfer",
+      "Außenventilator dreht zu schnell",
+      "EEV klemmt zu weit offen"
+    ],
+    correctIndex: 0,
+    explanation:
+      "Wenn zu wenig Heizungswasser durch den Verflüssiger strömt oder die Platten verschmutzt/verkalkt sind, kann die Wärme nicht abgeführt werden. Die Spreizung steigt auf > 8–10 K und der Hochdruck (HD) schießt bis zur Sicherheitsabschaltung hoch.",
+    examTip:
+      "Hoher HD + große wasserseitige Spreizung (> 8–10 K) = Durchflussproblem oder verschmutzter PWT!"
+  },
+  {
+    id: "ll-14",
+    topic: "hvac",
+    badge: "Heizkurve · Effizienz",
+    examLevel: "Gesellenprüfung Teil 1",
+    question:
+      "Um wie viel Prozent sinkt der COP bzw. die JAZ einer Wärmepumpe ungefähr pro 1 Kelvin höherer Vorlauftemperatur?",
+    options: ["ca. 0,2 %", "ca. 2,5 %", "ca. 10 %", "ca. 25 %"],
+    correctIndex: 1,
+    explanation:
+      "Als wichtige Praxis-Faustformel gilt: Pro 1 K höherer Vorlauftemperatur sinkt der COP / die JAZ um ca. 2,5 %. Schon 4 K zu hohe Heizkurve kosten also rund 10 % Strom mehr!",
+    examTip:
+      "Genau deshalb wird beim thermischen Abgleich mit voll geöffneten ERR die Heizkurve so weit wie möglich abgesenkt."
   }
 ];

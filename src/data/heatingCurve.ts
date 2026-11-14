@@ -53,13 +53,13 @@ export const HEATING_CURVE_RULES: readonly HeatingCurveRuleCard[] = [
     id: "thermal-balance",
     icon: "tune",
     badge: "Thermischer Abgleich",
-    title: "Heizkurve statt Thermostat-Drosselung",
+    title: "Thermischer Abgleich statt ERR-Drosselung",
     summary:
-      "Eine Wärmepumpe arbeitet am sparsamsten, wenn alle Heizkreise möglichst offen sind und die Vorlauftemperatur exakt zum Wärmebedarf passt.",
+      "Eine Wärmepumpe arbeitet am sparsamsten, wenn alle Einzelraumregler (ERR) voll geöffnet sind und die Vorlauftemperatur exakt zum Wärmebedarf passt.",
     bullets: [
-      "Erst hydraulischen Abgleich (Volumenströme pro Heizkreis) durchführen, danach Heizkurve schrittweise absenken.",
-      "Wird es im Wohnzimmer zu warm: nicht den Thermostat zudrehen, sondern die Heizkurve um 1–2 K senken.",
-      "Jedes Kelvin niedrigere Vorlauftemperatur verbessert den COP/JAZ um ca. 2,5 %."
+      "Alle ERR (Einzelraumregler) voll öffnen und die Durchflussmengen an den Topmetern/Ventilen gemäß Heizlastberechnung abgleichen.",
+      "Heizkurve schrittweise so weit absenken, bis der ungünstigste Raum (z. B. Bad oder kältester Wohnraum) gerade noch seine Wunschtemperatur hält.",
+      "Pro 1 K höhere Vorlauftemperatur sinkt der COP / die JAZ um ca. 2,5 % – jeder abgesenkte Kelvin spart bares Geld."
     ]
   },
   {
@@ -79,13 +79,13 @@ export const HEATING_CURVE_RULES: readonly HeatingCurveRuleCard[] = [
     id: "enwg-14a",
     icon: "electric_meter",
     badge: "§ 14a EnWG",
-    title: "Netzorientierte Steuerung (Dimmung)",
+    title: "Netzorientierte Steuerung (Dimmung auf min. 4,2 kW)",
     summary:
-      "Seit 2024 sind Wärmepumpen > 4,2 kW elektrische Anschlussleistung steuerbare Verbrauchseinrichtungen nach § 14a EnWG.",
+      "Keine Komplettabschaltung mehr wie bei alten EVU-Sperren! Der Netzbetreiber darf bei Netzüberlastung nur noch auf mindestens 4,2 kW elektrische Wirkleistung dimmen.",
     bullets: [
-      "Der Netzbetreiber darf bei Netzengpass die elektrische Leistungsaufnahme temporär auf mindestens 4,2 kW dimmen.",
-      "Die Wärmepumpe läuft gedrosselt weiter (kein harter Total-Ausfall mehr wie bei alten EVU-Sperrzeiten).",
-      "Steuerleitung / EEBUS-Schnittstelle bei Inbetriebnahme nach Vorgabe des Netzbetreibers anschließen und testen."
+      "Die Dimmung erfolgt über eine Steuerbox + EEBUS oder Relais / SG-Ready-Kontakt – niemals durch hartes Abschalten per Schütz.",
+      "Da eine normale EFH-Wärmepumpe im Verdichterbetrieb meist deutlich unter 4,2 kW elektrisch zieht, läuft der Verdichter einfach weiter.",
+      "In der Praxis wird durch § 14a EnWG primär der elektrische Heizstab (Zuheizer) begrenzt bzw. gesperrt."
     ]
   },
   {

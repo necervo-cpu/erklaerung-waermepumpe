@@ -248,8 +248,8 @@ describe("Bauteildaten-Integrität (components.ts)", () => {
 });
 
 describe("Störungsbilder-Integrität (faults.ts)", () => {
-  it("definiert exakt 7 praxisrelevante Störungsfälle", () => {
-    expect(FAULTS).toHaveLength(7);
+  it("definiert exakt 9 praxisrelevante Störungsfälle inkl. KM-Mangel & EEV-Fehler", () => {
+    expect(FAULTS).toHaveLength(9);
 
     const faultIds = FAULTS.map((f) => f.id);
     expect(faultIds).toEqual([
@@ -259,7 +259,9 @@ describe("Störungsbilder-Integrität (faults.ts)", () => {
       "ice",
       "cycling",
       "heater",
-      "flow"
+      "flow",
+      "leakage",
+      "eev"
     ]);
   });
 
@@ -543,8 +545,10 @@ describe("DOM-Integrität (index.html)", () => {
       "waterMetricsGrid",
       "waterEquipmentGrid",
       "waterPracticeGrid",
-      "btnViewBufferStorage",
-      "viewBufferStorage",
+      "btnMobileViewMenu",
+      "mobileViewIcon",
+      "mobileViewLabel",
+      "viewTabs",
       "btnBufSeriesReturn",
       "btnBufTeeBranch",
       "btnBufParallel4Pipe",
@@ -564,6 +568,7 @@ describe("DOM-Integrität (index.html)", () => {
       "btnQuizTopicHvac",
       "quizProgressText",
       "quizScoreText",
+      "quizProgressBarFill",
       "quizQuestionHost",
       "btnViewHeatingCurve",
       "viewHeatingCurve",
@@ -572,6 +577,7 @@ describe("DOM-Integrität (index.html)", () => {
       "btnHcPresetOldHk",
       "hcSlopeSlider",
       "hcShiftSlider",
+      "hcEfficiencyBadge",
       "heatingCurveSvg",
       "hcCurvePath",
       "hcMetricsGrid",
@@ -704,12 +710,12 @@ describe("Azubi-Dashboards: Hydraulik-Kreis & Heizungswasser (VDI 2035)", () => 
     }
   });
 
-  it("liefert 16 Prüfungsfragen (je 8 Luft/Wasser und Luft/Luft) mit gültigen Antwortindizes", () => {
-    expect(QUIZ_QUESTIONS).toHaveLength(16);
+  it("liefert 28 Prüfungsfragen (je 14 Luft/Wasser und Luft/Luft) mit gültigen Antwortindizes", () => {
+    expect(QUIZ_QUESTIONS).toHaveLength(28);
     const heatpumpQuestions = QUIZ_QUESTIONS.filter((q) => q.topic === "heatpump");
     const hvacQuestions = QUIZ_QUESTIONS.filter((q) => q.topic === "hvac");
-    expect(heatpumpQuestions).toHaveLength(8);
-    expect(hvacQuestions).toHaveLength(8);
+    expect(heatpumpQuestions).toHaveLength(14);
+    expect(hvacQuestions).toHaveLength(14);
 
     for (const q of QUIZ_QUESTIONS) {
       expect(q.question.length).toBeGreaterThan(15);

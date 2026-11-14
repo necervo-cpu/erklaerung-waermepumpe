@@ -30,6 +30,7 @@ export interface HeatingCurveDomElements {
   readonly label10: SVGTextElement;
   readonly label0: SVGTextElement;
   readonly labelMinus12: SVGTextElement;
+  readonly efficiencyBadge: HTMLElement;
   readonly metricsGrid: HTMLElement;
   readonly rulesGrid: HTMLElement;
 }
@@ -184,6 +185,17 @@ export function renderHeatingCurveView(
         : tMinus12 <= 58
           ? { text: "Grenzwertig (COP sinkt)", color: "peach" as const }
           : { text: "Zu hoch für WP!", color: "rose" as const };
+
+  // Live-Effizienz-Badge (Grün / Gelb / Rot)
+  const liveEff =
+    tMinus12 <= 42
+      ? { color: "mint", label: "Grün (Optimal)" }
+      : tMinus12 <= 55
+        ? { color: "peach", label: "Gelb (Erhöht)" }
+        : { color: "rose", label: "Rot (Ineffizient)" };
+
+  elements.efficiencyBadge.dataset.color = liveEff.color;
+  elements.efficiencyBadge.textContent = `${liveEff.label} · Pro 1 K höhere Vorlauftemperatur sinkt der COP / die JAZ um ca. 2,5 %`;
 
   elements.metricsGrid.replaceChildren(
     createMetricCard(

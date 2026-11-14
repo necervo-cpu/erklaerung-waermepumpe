@@ -17,7 +17,7 @@ export const COMPONENTS: readonly ComponentData<HeatpumpSystemType>[] = [
       split: "Außeneinheit (Außenluftseite)"
     },
     task:
-      "Nimmt Umweltwärme aus der Außenluft auf. Das kalte, unter niedrigem Druck stehende Kältemittel siedet in den Rohrschlangen, verdampft vollständig und wird am Austritt leicht überhitzt, um Flüssigkeitsschläge im Verdichter sicher zu verhindern.",
+      "Nimmt Umweltwärme aus der Außenluft auf. Das kalte, unter niedrigem Druck stehende Kältemittel siedet als Nassdampf in den Rohrschlangen, verdampft vollständig und wird am Verdampferaustritt (Sauggas) gezielt um 5–8 K überhitzt – als sicherer Flüssigkeitsschlag-Schutz für den Verdichter.",
     thermo: {
       monoblock: {
         inState: "Nassdampf",
@@ -27,7 +27,7 @@ export const COMPONENTS: readonly ComponentData<HeatpumpSystemType>[] = [
         outState: "Sauggas",
         outColor: "sky",
         outMetric: "ca. 3,0 bar ü · +1 °C",
-        outSub: "Gasförmig, ca. 6 K überhitzt"
+        outSub: "Gasförmig, ca. 6 K überhitzt (Richtwert 5–8 K)"
       },
       split: {
         inState: "Nassdampf",
@@ -37,12 +37,12 @@ export const COMPONENTS: readonly ComponentData<HeatpumpSystemType>[] = [
         outState: "Sauggas",
         outColor: "sky",
         outMetric: "ca. 5,7 bar ü · +1 °C",
-        outSub: "Gasförmig, ca. 6 K überhitzt"
+        outSub: "Gasförmig, ca. 6 K überhitzt (Richtwert 5–8 K)"
       }
     },
     service:
-      "Überhitzung (Sauggastemperatur minus Verdampfungstemperatur) sowie gleichmäßige Bereifung über die gesamte Lamellenfläche prüfen.",
-    serviceMetric: "Soll-Überhitzung: 5 – 8 K · ΔT Luft: ca. 3 – 5 K",
+      "Überhitzung (Sauggastemperatur am Verdampferaustritt minus Verdampfungstemperatur aus dem ND-Manometer) sowie gleichmäßige Bereifung über die gesamte Lamellenfläche prüfen.",
+    serviceMetric: "Soll-Überhitzung (Sauggas): 5 – 8 K · ΔT Luft: ca. 3 – 5 K",
     defrostNote:
       "Arbeitet in der Abtauphase kurzzeitig als Verflüssiger: Heißes Druckgas schmilzt den Eisansatz von innen ab, der Außenlüfter bleibt ausgeschaltet."
   },
@@ -93,7 +93,7 @@ export const COMPONENTS: readonly ComponentData<HeatpumpSystemType>[] = [
       split: "Inneneinheit / Hydromodul (Gebäudeinneres, frostsicher)"
     },
     task:
-      "Überträgt die thermische Energie (Enthitzung, Kondensation und leichte Unterkühlung) im Gegenstrom vom heißen Kältemittel auf das Heizungswasser. Im Monoblock findet dies draußen statt; im Split-System sitzt der Wärmetauscher im Innengerät.",
+      "Überträgt die thermische Energie (Enthitzung des Heißgases, Kondensation und Unterkühlung) im Gegenstrom auf das Heizungswasser. Am Verflüssigeraustritt (Flüssigkeitsleitung) wird das Kältemittel um 3–7 K unterkühlt, um Flashgas (Vorverdampfung) vor dem EEV sicher zu vermeiden.",
     thermo: {
       monoblock: {
         inState: "Heißgas",
@@ -103,7 +103,7 @@ export const COMPONENTS: readonly ComponentData<HeatpumpSystemType>[] = [
         outState: "Flüssig",
         outColor: "peach",
         outMetric: "ca. 13,3 bar ü · +36 °C",
-        outSub: "Flüssig, ca. 4 K unterkühlt (W35)"
+        outSub: "Flüssig, ca. 4 K unterkühlt (Richtwert 3–7 K)"
       },
       split: {
         inState: "Heißgas",
@@ -113,12 +113,12 @@ export const COMPONENTS: readonly ComponentData<HeatpumpSystemType>[] = [
         outState: "Flüssig",
         outColor: "peach",
         outMetric: "ca. 23,5 bar ü · +36 °C",
-        outSub: "Flüssig, ca. 4 K unterkühlt (W35)"
+        outSub: "Flüssig, ca. 4 K unterkühlt (Richtwert 3–7 K)"
       }
     },
     service:
-      "Unterkühlung (Verflüssigungstemperatur minus Flüssigkeitsaustritt) und wasserseitige Spreizung (Vorlauf minus Rücklauf) messen.",
-    serviceMetric: "Unterkühlung: 3 – 6 K · Spreizung Wasser: 4 – 7 K",
+      "Unterkühlung (Verflüssigungstemperatur aus HD-Manometer minus Temperatur an der Flüssigkeitsleitung am Verflüssigeraustritt) sowie wasserseitige Spreizung (Vorlauf minus Rücklauf) messen.",
+    serviceMetric: "Soll-Unterkühlung: 3 – 7 K · Spreizung Wasser: 4 – 7 K",
     defrostNote:
       "Kehrt seine Funktion um und arbeitet als Verdampfer: Entzieht dem Heizungswasser für ca. 45–120 s Wärme. Ein gesicherter Mindestvolumenstrom (Puffer/Überströmventil) ist Pflicht; je nach Hersteller stützt ein elektrischer Zuheizer (z. B. Bosch) oder rein das Heizwasservolumen (z. B. Lambda)."
   },

@@ -964,18 +964,30 @@ svg#installSvg {
 .svg-comp .comp-box {
   fill: var(--svg-comp-bg);
   stroke: var(--svg-comp-stroke);
-  transition: stroke var(--dur-fast) ease, fill var(--dur-fast) ease, stroke-width var(--dur-fast) ease;
+  transition: stroke var(--dur-fast) ease, fill var(--dur-fast) ease, stroke-width var(--dur-fast) ease, filter var(--dur-fast) ease;
 }
 
 .svg-comp:hover .comp-box {
   stroke: var(--brand-accent);
+  stroke-width: 1.8;
   fill: var(--svg-comp-hover);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--pastel-sky) 35%, transparent));
+}
+
+@keyframes svgCompPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--pastel-sky) 55%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--pastel-sky) 85%, transparent));
+  }
 }
 
 .svg-comp.is-active .comp-box {
   stroke: var(--brand-accent);
-  stroke-width: 2.2;
+  stroke-width: 2.4;
   fill: var(--svg-comp-active-bg);
+  animation: svgCompPulse 2.4s ease-in-out infinite;
 }
 
 .svg-comp .comp-num-bg {
@@ -1944,9 +1956,6 @@ svg#installSvg {
    Responsive & A11y
    ========================================================================== */
 @media (max-width: 1080px) {
-  .schema-toolbar {
-    display: none;
-  }
   .workspace-grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2016,21 +2025,20 @@ svg#installSvg {
     align-items: flex-start;
   }
   .svg-swipe-hint {
-    display: inline-flex;
+    display: none;
   }
   .svg-stage {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
   }
   svg#circuitSvg,
   svg#hvacCircuitSvg,
   svg#hydraulicsSvg,
   svg#bufferSvg,
-  svg#installSvg {
-    min-width: 680px;
-  }
+  svg#installSvg,
   svg#heatingCurveSvg {
-    min-width: 480px;
+    min-width: 0;
+    width: 100%;
+    height: auto;
   }
   .fault-card-btn {
     padding: 14px;
@@ -2210,6 +2218,163 @@ svg#installSvg {
   border-color: transparent;
 }
 
+/* ==========================================================================
+   Strukturierte Hauptnavigation (8 Ansichten: Desktop-Leiste + Mobile-Picker)
+   ========================================================================== */
+.view-nav-bar {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.mobile-view-trigger {
+  display: none;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border);
+  background: var(--surface-field);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.mobile-view-trigger-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mobile-view-chevron {
+  transition: transform var(--dur-fast) ease;
+}
+
+.mobile-view-trigger[aria-expanded="true"] .mobile-view-chevron {
+  transform: rotate(180deg);
+}
+
+.view-nav-segmented {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.view-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 1080px) {
+  .view-nav-segmented {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .mobile-view-trigger {
+    display: flex;
+  }
+  .view-nav-segmented {
+    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 6px;
+  }
+  .view-nav-segmented.is-mobile-open {
+    display: grid;
+  }
+  .view-nav-btn {
+    justify-content: flex-start;
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+}
+
+/* ==========================================================================
+   Quiz-Fortschrittsbalken, Fehler-Zusammenfassung & Heizkurven-Badge
+   ========================================================================== */
+.quiz-progress-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-field);
+  overflow: hidden;
+}
+
+:root[data-theme="light"] .quiz-progress-track {
+  background: var(--surface-hover);
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--pastel-mint), var(--pastel-aqua), var(--pastel-sky));
+  transition: width 260ms var(--ease-spring);
+}
+
+.quiz-summary-card {
+  padding: 18px;
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quiz-wrong-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-wrong-item {
+  padding: 12px 14px;
+  border-radius: var(--radius-well);
+  background: var(--surface-field);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quiz-wrong-question {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
+.quiz-wrong-answers {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-text-rose);
+}
+
+.hc-efficiency-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 @media (forced-colors: active) {
   .segmented-btn[role="tab"][aria-selected="true"]::after {
     content: "";
@@ -2224,5 +2389,8 @@ svg#installSvg {
   #secondaryAirLoop,
   #vrvBranchBadge {
     transition-duration: 0s !important;
+  }
+  .svg-comp.is-active .comp-box {
+    animation: none !important;
   }
 }
