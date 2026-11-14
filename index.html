@@ -280,6 +280,13 @@
         </div>
 
         <!-- SVG Flussdiagramm -->
+        <div class="schema-toolbar">
+          <span class="schema-toolbar-hint">Tipp: Bauteil im Fließbild anklicken für Details</span>
+          <button type="button" class="schema-zoom-btn press-btn" data-toggle-schema-expand aria-pressed="false">
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">open_in_full</span>
+            <span data-expand-label>Großansicht</span>
+          </button>
+        </div>
         <div class="svg-swipe-hint" aria-hidden="true">
           <span class="ag-icon ag-icon--xs">arrow_back</span>
           <span>Schema seitlich wischen</span>
@@ -673,7 +680,7 @@
 
                 <path class="pipe-base" stroke="var(--c-nassdampf)" d="M 494 412 L 554 412 L 554 296 L 590 296" />
                 <path class="pipe-flow" stroke="var(--c-nassdampf)" marker-end="url(#hvacArrowNass)" d="M 494 412 L 554 412 L 554 296 L 584 296" />
-                <text x="566" y="416" text-anchor="start" fill="var(--c-nassdampf)" font-size="9.5" font-weight="650">Einspritzleitung (ND)</text>
+                <text x="560" y="434" text-anchor="middle" fill="var(--c-nassdampf)" font-size="9.5" font-weight="650">Einspritzleitung (ND)</text>
 
                 <path class="pipe-base" stroke="var(--c-sauggas)" d="M 590 164 L 356 164" />
                 <path class="pipe-flow" stroke="var(--c-sauggas)" marker-end="url(#hvacArrowSaug)" d="M 590 164 L 363 164" />
@@ -1181,6 +1188,13 @@
           </div>
         </div>
 
+        <div class="schema-toolbar">
+          <span class="schema-toolbar-hint">Tipp: Bauteil im Hydraulik-Fließbild anklicken</span>
+          <button type="button" class="schema-zoom-btn press-btn" data-toggle-schema-expand aria-pressed="false">
+            <span class="ag-icon ag-icon--xs" aria-hidden="true">open_in_full</span>
+            <span data-expand-label>Großansicht</span>
+          </button>
+        </div>
         <div class="svg-stage-wrap" id="hydSvgStageWrap">
           <div id="hydSvgStage" class="svg-stage">
             <svg id="hydraulicsSvg" viewBox="0 0 920 530" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktives Hydraulik-Schema für Wärmepumpen">
@@ -1469,6 +1483,13 @@
 
       <div class="workspace-grid">
         <section class="schema-card" aria-label="Pufferspeicher-Schema">
+          <div class="schema-toolbar">
+            <span class="schema-toolbar-hint">Fließbild der gewählten Speicher-Einbindung</span>
+            <button type="button" class="schema-zoom-btn press-btn" data-toggle-schema-expand aria-pressed="false">
+              <span class="ag-icon ag-icon--xs" aria-hidden="true">open_in_full</span>
+              <span data-expand-label>Großansicht</span>
+            </button>
+          </div>
           <div class="svg-swipe-hint">
             <span class="ag-icon ag-icon--xs" aria-hidden="true">swipe</span>
             <span>Schema horizontal wischen für Details</span>
@@ -1478,37 +1499,40 @@
               <svg id="bufferSvg" viewBox="0 0 920 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schema verschiedener Pufferspeicher-Einbindungen an Luft/Wasser-Wärmepumpen">
                 <!-- Wärmepumpe links -->
                 <rect class="hyd-zone-box" x="20" y="130" width="150" height="200" rx="18" stroke-width="1.5" />
-                <text class="svg-title-text" x="95" y="164" text-anchor="middle" font-size="12" font-weight="700">Luft/Wasser-WP</text>
-                <text class="svg-sub-text" x="95" y="184" text-anchor="middle" font-size="9.5">Wärmeerzeuger</text>
-                <rect class="comp-box" x="45" y="205" width="100" height="44" rx="10" stroke-width="1.4" />
-                <text class="svg-title-text" x="95" y="227" text-anchor="middle" font-size="9.5" font-weight="700">Primärpumpe</text>
-                <text class="svg-sub-text" x="95" y="241" text-anchor="middle" font-size="8">Vorlauf / Rücklauf</text>
+                <text class="svg-title-text" x="95" y="164" text-anchor="middle" font-size="13" font-weight="700">Luft/Wasser-WP</text>
+                <text class="svg-sub-text" x="95" y="184" text-anchor="middle" font-size="10.5">Wärmeerzeuger</text>
+                <rect class="comp-box" x="40" y="205" width="110" height="46" rx="10" stroke-width="1.4" />
+                <text class="svg-title-text" x="95" y="226" text-anchor="middle" font-size="10.5" font-weight="700">Primärpumpe</text>
+                <text class="svg-sub-text" x="95" y="242" text-anchor="middle" font-size="9.5">Vorlauf / Rücklauf</text>
 
                 <!-- Pufferspeicher Mitte -->
                 <rect class="comp-box" x="390" y="64" width="150" height="320" rx="26" stroke-width="2" />
-                <text class="svg-title-text" x="465" y="96" text-anchor="middle" font-size="12" font-weight="700">Pufferspeicher</text>
+                <text class="svg-title-text" x="465" y="96" text-anchor="middle" font-size="13" font-weight="700">Pufferspeicher</text>
 
                 <!-- Heizkreis rechts -->
                 <rect class="hyd-zone-box" x="740" y="130" width="160" height="200" rx="18" stroke-width="1.5" />
-                <text class="svg-title-text" x="820" y="164" text-anchor="middle" font-size="12" font-weight="700">Heizkreis</text>
-                <text class="svg-sub-text" x="820" y="184" text-anchor="middle" font-size="9.5">FBH / Heizkörper</text>
-                <rect class="comp-box" x="765" y="205" width="110" height="44" rx="10" stroke-width="1.4" />
-                <text class="svg-title-text" x="820" y="227" text-anchor="middle" font-size="9.5" font-weight="700">Wärmeabgabe</text>
-                <text class="svg-sub-text" x="820" y="241" text-anchor="middle" font-size="8">Verteiler / ERR</text>
+                <text class="svg-title-text" x="820" y="164" text-anchor="middle" font-size="13" font-weight="700">Heizkreis</text>
+                <text class="svg-sub-text" x="820" y="184" text-anchor="middle" font-size="10.5">FBH / Heizkörper</text>
+                <rect class="comp-box" x="760" y="205" width="120" height="46" rx="10" stroke-width="1.4" />
+                <text class="svg-title-text" x="820" y="226" text-anchor="middle" font-size="10.5" font-weight="700">Wärmeabgabe</text>
+                <text class="svg-sub-text" x="820" y="242" text-anchor="middle" font-size="9.5">Verteiler / ERR</text>
 
                 <!-- LAYER 1: REIHENPUFFER IM RÜCKLAUF -->
                 <g id="bufLayerSeriesReturn">
-                  <text class="svg-sub-text" x="465" y="114" text-anchor="middle" font-size="9">Rücklaufpuffer (in Reihe)</text>
+                  <text class="svg-sub-text" x="465" y="116" text-anchor="middle" font-size="10.5">Rücklaufpuffer (in Reihe)</text>
                   <!-- Vorlauf direkt WP -> Heizkreis -->
-                  <path d="M 170 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="5" stroke-linecap="round" />
-                  <text class="svg-sub-text" x="465" y="42" text-anchor="middle" font-size="9.5" font-weight="700">Vorlauf direkt zum Heizkreis (kein Mischverlust)</text>
+                  <path d="M 170 156 L 740 156" fill="none" stroke="var(--c-vorlauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 170 156 L 740 156" class="pipe-flow-soft" stroke="var(--c-vorlauf)" />
+                  <text class="svg-sub-text" x="465" y="42" text-anchor="middle" font-size="11" font-weight="700">Vorlauf direkt zum Heizkreis (kein Mischverlust)</text>
                   <!-- Überströmventil -->
                   <line x1="270" y1="156" x2="270" y2="300" stroke="var(--c-vorlauf)" stroke-width="2.5" stroke-dasharray="5 4" />
-                  <rect class="comp-box" x="218" y="212" width="104" height="34" rx="9" stroke-width="1.4" />
-                  <text class="svg-title-text" x="270" y="233" text-anchor="middle" font-size="9" font-weight="700">Überströmventil</text>
+                  <rect class="comp-box" x="212" y="210" width="116" height="36" rx="9" stroke-width="1.4" />
+                  <text class="svg-title-text" x="270" y="232" text-anchor="middle" font-size="10.5" font-weight="700">Überströmventil</text>
                   <!-- Rücklauf Heizkreis -> Puffer -> WP -->
-                  <path d="M 740 300 L 540 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
-                  <path d="M 465 300 L 465 180 L 390 180 L 350 180 L 350 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 740 300 L 540 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 740 300 L 540 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
+                  <path d="M 465 300 L 465 180 L 390 180 L 350 180 L 350 300 L 170 300" fill="none" stroke="var(--c-ruecklauf)" stroke-width="6" stroke-linecap="round" opacity="0.32" />
+                  <path d="M 465 300 L 465 180 L 390 180 L 350 180 L 350 300 L 170 300" class="pipe-flow-soft" stroke="var(--c-ruecklauf)" />
                 </g>
 
                 <!-- LAYER 2: STICHANBINDUNG (T-STÜCK) -->
@@ -1673,9 +1697,14 @@
               <!-- Achsen & Hilfslinien -->
               <line x1="68" y1="44" x2="68" y2="270" stroke="var(--border)" stroke-width="1.5" />
               <line x1="68" y1="270" x2="600" y2="270" stroke="var(--border)" stroke-width="1.5" />
+              <line x1="68" y1="202" x2="600" y2="202" stroke="var(--border)" stroke-width="0.8" opacity="0.35" />
+              <line x1="68" y1="134" x2="600" y2="134" stroke="var(--border)" stroke-width="0.8" opacity="0.35" />
+              <line x1="216" y1="44" x2="216" y2="270" stroke="var(--border)" stroke-width="0.8" opacity="0.35" />
+              <line x1="364" y1="44" x2="364" y2="270" stroke="var(--border)" stroke-width="0.8" opacity="0.35" />
+              <line x1="541" y1="44" x2="541" y2="270" stroke="var(--border)" stroke-width="0.8" opacity="0.35" />
               <!-- 55 °C Effizienzgrenze (Y = 270 - (35/50)*226 = 111.8) -->
-              <line x1="68" y1="112" x2="600" y2="112" stroke="var(--c-heissgas)" stroke-width="1.4" stroke-dasharray="6 4" />
-              <text x="596" y="104" text-anchor="end" class="svg-sub-text" font-size="9">55 °C WP-Grenze (darüber sinkt COP)</text>
+              <line x1="68" y1="112" x2="600" y2="112" stroke="var(--c-heissgas)" stroke-width="1.6" stroke-dasharray="6 4" />
+              <text x="78" y="102" text-anchor="start" class="svg-sub-text" font-size="10.5" font-weight="600">55 °C WP-Grenze (darüber sinkt COP)</text>
               <!-- Y-Achse Beschriftung -->
               <text x="58" y="274" text-anchor="end" class="svg-sub-text" font-size="9.5">20 °C</text>
               <text x="58" y="206" text-anchor="end" class="svg-sub-text" font-size="9.5">35 °C</text>

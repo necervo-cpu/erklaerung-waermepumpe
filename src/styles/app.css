@@ -395,9 +395,54 @@ body {
    ========================================================================== */
 .workspace-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.48fr) minmax(330px, 1fr);
+  grid-template-columns: minmax(0, 1.72fr) minmax(320px, 0.92fr);
   gap: 16px;
   align-items: start;
+}
+
+.workspace-grid.is-schema-expanded {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1081px) {
+  .workspace-grid:not(.is-schema-expanded) > .schema-card {
+    position: sticky;
+    top: 14px;
+  }
+}
+
+.schema-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 32px;
+}
+
+.schema-toolbar-hint {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.schema-zoom-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border-radius: var(--radius-btn, 10px);
+  border: 1px solid var(--border);
+  background: var(--surface-field);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out-quart);
+}
+
+.schema-zoom-btn:hover {
+  background: var(--surface-hover);
 }
 
 .schema-card {
@@ -554,7 +599,7 @@ body {
   background: var(--svg-stage-bg);
   border: 1px solid var(--border);
   overflow: hidden;
-  padding: 6px;
+  padding: 10px;
   transition: background var(--dur-normal) var(--ease-spring);
 }
 
@@ -978,7 +1023,16 @@ svg#installSvg {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 10 8;
-  animation: flowForward 1.05s linear infinite;
+  animation: flowForward 1.15s linear infinite;
+}
+
+.pipe-flow-soft {
+  fill: none;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 12 10;
+  animation: flowForward 1.45s linear infinite;
 }
 
 .pipe-flow.slow {
@@ -1890,6 +1944,9 @@ svg#installSvg {
    Responsive & A11y
    ========================================================================== */
 @media (max-width: 1080px) {
+  .schema-toolbar {
+    display: none;
+  }
   .workspace-grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1969,9 +2026,11 @@ svg#installSvg {
   svg#hvacCircuitSvg,
   svg#hydraulicsSvg,
   svg#bufferSvg,
-  svg#heatingCurveSvg,
   svg#installSvg {
-    min-width: 560px;
+    min-width: 680px;
+  }
+  svg#heatingCurveSvg {
+    min-width: 480px;
   }
   .fault-card-btn {
     padding: 14px;

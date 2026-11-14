@@ -923,6 +923,27 @@ attachSvgComponentListeners(circuitElements.hvacSvgElement);
 
 attachTablistKeyboardNavigation();
 
+// Großansicht / Fokus-Modus für alle Fließbilder (.workspace-grid)
+document
+  .querySelectorAll<HTMLButtonElement>("[data-toggle-schema-expand]")
+  .forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const grid = btn.closest<HTMLElement>(".workspace-grid");
+      if (!grid) return;
+      const expanded = grid.classList.toggle("is-schema-expanded");
+      btn.setAttribute("aria-pressed", String(expanded));
+      const icon = btn.querySelector<HTMLElement>(".ag-icon");
+      const label = btn.querySelector<HTMLElement>("[data-expand-label]");
+      if (icon) {
+        icon.textContent = expanded ? "close_fullscreen" : "open_in_full";
+      }
+      if (label) {
+        label.textContent = expanded ? "Normalansicht" : "Großansicht";
+      }
+      window.requestAnimationFrame(updateSvgScrollIndicators);
+    });
+  });
+
 // -----------------------------------------------------------------------------
 // Initiale Ausführung
 // -----------------------------------------------------------------------------
