@@ -1,11 +1,17 @@
 {
   "name": "Azubi-Portal Wärmepumpen",
   "short_name": "WP-Portal",
+  "description": "Interaktives Azubi- & Service-Portal für Wärmepumpen, Kältekreis, Hydraulik (VDI 2035) und Praxiskalkulation.",
   "id": "./",
   "scope": "./",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "lang": "de"
+  "lang": "de",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
 }

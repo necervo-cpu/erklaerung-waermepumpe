@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Azubi-Portal Wärmepumpen Icon">
+  <defs>
+    <radialGradient id="wpGlow" cx="50%" cy="46%" r="54%">
+      <stop offset="0%" stop-color="#5E9BFF" stop-opacity="0.34" />
+      <stop offset="55%" stop-color="#5E9BFF" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#5E9BFF" stop-opacity="0" />
+    </radialGradient>
+    <clipPath id="compClip">
+      <circle cx="256" cy="148" r="26" />
+    </clipPath>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="#0B1220" />
+  <rect width="512" height="512" rx="112" fill="url(#wpGlow)" />
+
+  <!-- Kalte Niederdruckseite (Verdampfer / Quelle) -->
+  <path
+    d="M 228 364 H 192 Q 142 364 142 314 V 198 Q 142 148 192 148 H 224"
+    fill="none"
+    stroke="#5AD8E6"
+    stroke-width="22"
+    stroke-linecap="butt"
+    stroke-linejoin="round"
+  />
+
+  <!-- Warme Hochdruckseite (Verflüssiger / Senke) -->
+  <path
+    d="M 288 148 H 320 Q 370 148 370 198 V 314 Q 370 364 320 364 H 284"
+    fill="none"
+    stroke="#FF6961"
+    stroke-width="22"
+    stroke-linecap="butt"
+    stroke-linejoin="round"
+  />
+
+  <!-- Verdichter-Symbol (DIN R&I: Kreis mit konvergierenden Drucklinien nach rechts) -->
+  <circle cx="256" cy="148" r="31" fill="#0B1220" stroke="#5E9BFF" stroke-width="12" />
+  <g clip-path="url(#compClip)">
+    <path
+      d="M 244 121 L 284 142 M 244 175 L 284 154"
+      fill="none"
+      stroke="#5E9BFF"
+      stroke-width="8"
+      stroke-linecap="round"
+    />
+  </g>
+
+  <!-- Expansionsventil (EEV) -->
+  <path
+    d="M 222 346 L 256 364 L 222 382 Z M 290 346 L 256 364 L 290 382 Z"
+    fill="#5E9BFF"
+  />
+
+  <!-- Zentraler Wärmetauscher (symmetrische Rohrschlange) -->
+  <path
+    d="M 192 256 L 208 228 L 240 284 L 272 228 L 304 284 L 320 256"
+    fill="none"
+    stroke="#5E9BFF"
+    stroke-width="18"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

@@ -1,6 +1,6 @@
 {
   "name": "erklaerung-waermepumpe",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "buildDate": "2026-11-19",
-  "changelog": "Umstellung auf den Minimal-Standard 2026-11-21: Inhalt ohne Kacheln, Glas nur für Modal-Karten, neue Design-Tokens."
+  "changelog": "Crossplatform- & Multi-Device-Upgrade: Mobile-Hochformat-Fließbilder, 44px-Stepper, iOS-Negativ-Eingaben, PWA-Icons, Settings-Modal & modulare Struktur."
 }
