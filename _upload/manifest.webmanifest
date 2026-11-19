@@ -1,0 +1,11 @@
+{
+  "name": "Azubi-Portal Wärmepumpen",
+  "short_name": "WP-Portal",
+  "id": "./",
+  "scope": "./",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "de"
+}
