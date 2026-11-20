@@ -1,4 +1,4 @@
-const CACHE_NAME = "erklaerung-waermepumpe-v1.8.0";
+const CACHE_NAME = "erklaerung-waermepumpe-v1.9.0";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -8,7 +8,7 @@ const CORE_ASSETS = [
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png",
-  "./assets/index-KmSAcnb4.js", "./assets/index-MQ2XlCF-.css"
+  "./assets/index-DoKEr8ld.js", "./assets/index-f2EJPSTM.css"
 ];
 
 self.addEventListener("install", (event) => {

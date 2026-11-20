@@ -1,6 +1,6 @@
 {
   "name": "erklaerung-waermepumpe",
-  "version": "1.8.0",
-  "buildDate": "2026-11-19",
-  "changelog": "Crossplatform- & Multi-Device-Upgrade: Mobile-Hochformat-Fließbilder, 44px-Stepper, iOS-Negativ-Eingaben, PWA-Icons, Settings-Modal & modulare Struktur."
+  "version": "1.9.0",
+  "buildDate": "2026-11-20",
+  "changelog": "R&I-Fließbilder auf 2D-Hairline-Stil nach DIN EN ISO 10628 umgestellt (Medienfarben/Monochrom, Kreislauf-Tour, horizontales Wischen)."
 }
